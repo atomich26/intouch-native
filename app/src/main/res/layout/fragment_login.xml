@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/loginAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_weight="0">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/loginAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorSurface"
+            android:paddingHorizontal="@dimen/materialHorizontalPadding">
+            <TextView
+                android:id="@+id/loginDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/login_description"
+                android:textSize="18dp"/>
+
+            <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+                android:id="@+id/loginEmailInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:errorEnabled="true"
+                app:startIconDrawable="@drawable/baseline_alternate_email_24"
+                android:hint="@string/prompt_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/loginDescription">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/loginEmailTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="30"
+                    android:textSize="16sp" />
+
+            </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+
+            <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+                android:id="@+id/loginPasswordInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/prompt_password"
+                app:startIconDrawable="@drawable/baseline_password_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/loginEmailInputLayout"
+                app:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/loginPasswordTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPassword"
+                    android:maxLength="30"
+                    android:textSize="16sp" />
+
+            </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/materialHorizontalPadding"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/recoverPasswordButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="12dp"
+            android:text="@string/action_recover_password"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/loginButton"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="12dp"
+            android:text="@string/action_login_short"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/loginProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:indeterminate="true"
+        android:indeterminateTint="?attr/colorPrimary"
+        app:showAnimationBehavior="outward"
+        app:hideAnimationBehavior="inward" />
+</androidx.appcompat.widget.LinearLayoutCompat>

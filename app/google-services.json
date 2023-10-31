@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "689580499725",
+    "firebase_url": "https://intouch-c7b87-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "intouch-c7b87",
+    "storage_bucket": "intouch-c7b87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689580499725:android:5f0bfa221228d0a3584644",
+        "android_client_info": {
+          "package_name": "com.diegusmich.intouch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689580499725-lb4obhhd4vm503tsu5aum24jv8j9oh84.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diegusmich.intouch",
+            "certificate_hash": "d2349c775bc3766ad726ab83957d296550dfa235"
+          }
+        },
+        {
+          "client_id": "689580499725-k46gaoei0pkf8v4kb35qefuiifp5hgtk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANTo1Io8xw06Ii1StpJjR-o1ki2VScI1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689580499725-3tg6sl3fo2vai196ll4buoorvpuf9ef4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "689580499725-0p2sk3g36r1keudbe1lrnsrp23au04am.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.intouch"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689580499725:android:2cdeac845f8005d4584644",
+        "android_client_info": {
+          "package_name": "com.example.intouch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689580499725-k46gaoei0pkf8v4kb35qefuiifp5hgtk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANTo1Io8xw06Ii1StpJjR-o1ki2VScI1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689580499725-3tg6sl3fo2vai196ll4buoorvpuf9ef4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "689580499725-0p2sk3g36r1keudbe1lrnsrp23au04am.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.intouch"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,62 @@
+<resources>
+    <!-- App, frag and activities names -->
+    <string name="app_name">Intouch</string>
+    <string name="login_fragment_title">Accedi</string>
+    <string name="create_account_fragment_title">Crea account</string>
+
+    <string name="action_login_short">Accedi</string>
+    <string name="action_create_account_short">Registrati</string>
+    <string name="action_recover_password">Password dimenticata?</string>
+    <string name="intro_text">Regalati momenti indimenticabili con i tuoi amici.</string>
+    <string name="or">oppure</string>
+    <string name="login_description">Inserisci le credenziali per recuperare l\'accesso al tuo account.</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_name">Nome</string>
+    <string name="prompt_username">Nome utente</string>
+    <string name="prompt_repeat_password">Ripeti password</string>
+    <string name="prompt_birthdate">Data di nascita</string>
+    <string name="text_gdpr_consent">Effettuando l\'iscrizione accetti il <br></br> <![CDATA[<a href="https://www.iubenda.com/privacy-policy/8207462/full-legal">Trattamento dei dati personali</a>]]> secondo le norme del GDPR.</string>
+    <string name="recover_email_sent">Email di reset inviata!</string>
+    <string name="date_picker_title">Seleziona una data</string>
+
+    <!-- Dialog strings -->
+    <string name="alert_title_error">Errore</string>
+    <string name="dialog_neutral_action">Ok</string>
+
+    <!-- Network service strings-->
+    <string name="internet_connection_lost">Connessione internet persa</string>
+    <string name="internet_offline">Al momento non sei online</string>
+    <string name="internet_online">Connesso a internet</string>
+
+    <!--Exception message -->
+    <string name="firebaseAuthCollision">Email è già in uso.</string>
+    <string name="firebaseAuthInvalidCredentials">Credenziali non valide</string>
+    <string name="firebaseAuthInvalidUserException">L\'account richiesto non esiste.</string>
+    <string name="firebaseAuthEmailException">L\'email inserita non è associata a nessun account Intouch</string>
+    <string name="firebaseNetworkException">Errore di rete</string>
+    <string name="firebaseTooManyRequestsException">Blocco temporaneo per attività insolite</string>
+    <string name="firebaseDefaultExceptionMessage">Errore interno! Contatta l\'assistenza</string>
+
+    <!-- Error messages -->
+    <string name="form_blank_fields">Compila tutti i campi</string>
+    <string name="form_invalid_values">Dati inseriti non validi</string>
+    <string name="invalid_argument">I valori inseriti non sono validi</string>
+    <string name="permission_denied">Non hai i permessi per effettuare questa operazione</string>
+    <string name="user_not_exists"> Utente non valido o non più esistente</string>
+    <string name="invalid_username">Il nome utente deve contenere almeno 3 caratteri e sono ammessi solo lettere minuscole, numeri e . _</string>
+    <string name="username_already_exists">Nome utente non disponibile</string>
+    <string name="empty_username">Il nome utente non può essere vuoto</string>
+    <string name="invalid_name">La lunghezza del nome deve essere compresa fra i 3 e i 40 caratteri</string>
+    <string name="invalid_special_chars_name">Il nome non può contenere caratteri speciali</string>
+    <string name="empty_name">Il nome non può esser vuoto</string>
+    <string name="invalid_email_length">L\'indirizzo email può contenere massimo 90 caratteri</string>
+    <string name="invalid_email">Indirizzo email non valido</string>
+    <string name="email_already_exists">Indirizzo email non disponibile</string>
+    <string name="empty_email">L\'email non può essere vuota</string>
+    <string name="invalid_password">La password deve contenere almeno 8 caratteri, un numero e un carattere speciale.</string>
+    <string name="empty_password">La password non può essere vuota</string>
+    <string name="invalid_date">Data non valida</string>
+    <string name="date_after_now">La data è successiva a quella corrente</string>
+    <string name="empty_birthdate">La data di nascita non può essere vuota</string>
+</resources>
