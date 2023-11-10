@@ -12,7 +12,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.navigation_base_activity)
 
-       if(Firebase.auth.currentUser == null){
+        if(Firebase.auth.currentUser == null){
            startActivity(Intent(this, AuthActivity::class.java).apply {
                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
            })

@@ -3,6 +3,7 @@ package com.diegusmich.intouch.ui.activities.start
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.Lifecycle
@@ -26,13 +27,16 @@ class StartActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityStartBinding.inflate(layoutInflater)
 
-        binding.startActivityAppBar.navigationIcon = AppCompatResources.getDrawable(this, R.drawable.baseline_close_24)
-        binding.startActivityAppBar.setNavigationOnClickListener {
-            startMainActivity()
+        onBackPressedDispatcher.addCallback(this){
+            return@addCallback
         }
 
         binding.filtersCategoryGroup.onCheckedChange {
             viewModel.onUpdateCheckedCategories(it.checkedFilters())
+        }
+
+        binding.skipCategoriesButton.setOnClickListener {
+            startMainActivity()
         }
 
         binding.saveCategoriesButton.setOnClickListener{
@@ -88,10 +92,10 @@ class StartActivity : BaseActivity() {
     private fun startMainActivity(){
         startActivity(Intent(this@StartActivity, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra(getString(R.string.intent_show_start_activity), true)
         })
         finish()
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

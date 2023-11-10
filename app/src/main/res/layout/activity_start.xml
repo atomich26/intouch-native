@@ -8,19 +8,6 @@
     android:orientation="vertical"
     tools:context=".ui.activities.start.StartActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/startActivityAppBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_weight="0">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/startActivityAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-    </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,6 +20,7 @@
             android:layout_height="wrap_content"
             android:text="@string/start_fragment_title"
             android:textSize="27sp"
+            android:layout_marginTop="40dp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,16 +48,37 @@
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/saveCategoriesButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_gravity="end"
-        style="@style/Widget.Material3.Button"
-        android:paddingVertical="12dp"
-        android:text="@string/continue_text"
-        android:textSize="16sp" />
+        android:paddingHorizontal="@dimen/materialHorizontalPadding"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/skipCategoriesButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:paddingVertical="12dp"
+            android:text="@string/skip_text"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/saveCategoriesButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            style="@style/Widget.Material3.Button"
+            android:paddingVertical="12dp"
+            android:text="@string/continue_text"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/startActivityProgressBar"
