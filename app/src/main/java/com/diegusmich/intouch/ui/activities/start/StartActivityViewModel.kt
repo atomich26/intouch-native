@@ -71,6 +71,11 @@ class StartActivityViewModel : StateViewModel() {
         viewModelScope.launch {
             updateState(UiState.LOADING)
 
+            if(checkedCategories.value.size == categories.value?.size){
+                updateState(UiState.PREFERENCES_SAVED)
+                return@launch
+            }
+
             Firebase.functions.getHttpsCallable("users-preferences")
                 .call(mapOf("preferences" to checkedCategories.value))
                 .addOnSuccessListener {
