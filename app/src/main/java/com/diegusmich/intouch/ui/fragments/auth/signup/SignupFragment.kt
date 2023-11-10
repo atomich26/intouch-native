@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentSignupBinding
-import com.diegusmich.intouch.ui.activities.AuthActivity
 import com.diegusmich.intouch.ui.activities.start.StartActivity
 import com.diegusmich.intouch.ui.fragments.BaseFragment
 import com.diegusmich.intouch.ui.state.UiState
@@ -74,7 +73,7 @@ class SignupFragment : BaseFragment() {
             .build()
 
         datePicker.addOnPositiveButtonClickListener {
-            viewModel.updateBirthdate(it)
+            viewModel.onUpdateBirthdate(it)
         }
 
         datePicker.addOnDismissListener {
@@ -89,19 +88,19 @@ class SignupFragment : BaseFragment() {
         }
 
         binding.signupEmailTextField.doAfterTextChanged {
-            viewModel.updateEmail(it.toString())
+            viewModel.onUpdateEmail(it.toString())
         }
 
         binding.signupPasswordTextField.doAfterTextChanged {
-            viewModel.updatePassword(it.toString())
+            viewModel.onUpdatePassword(it.toString())
         }
 
         binding.signupNameTextField.doAfterTextChanged {
-            viewModel.updateName(it.toString())
+            viewModel.onUpdateName(it.toString())
         }
 
         binding.signupUsernameTextField.doAfterTextChanged {
-            viewModel.updateUsername(it.toString())
+            viewModel.onUpdateUsername(it.toString())
         }
 
         binding.createUserNextButton.setOnClickListener {

@@ -37,31 +37,31 @@ class SignupViewModel : StateViewModel() {
     val birthdate get() = _birthdate.asStateFlow()
 
 
-    fun updateEmail(emailText: String) {
+    fun onUpdateEmail(emailText: String) {
         _email.update {
             FormInputState(inputValue = emailText, isValid = emailText.isNotBlank())
         }
     }
 
-    fun updatePassword(passwordText: String) {
+    fun onUpdatePassword(passwordText: String) {
         _password.update {
             FormInputState(inputValue = passwordText, isValid = passwordText.isNotBlank())
         }
     }
 
-    fun updateName(nameText: String) {
+    fun onUpdateName(nameText: String) {
         _name.update {
             FormInputState(inputValue = nameText, isValid = nameText.isNotBlank())
         }
     }
 
-    fun updateUsername(usernameText: String) {
+    fun onUpdateUsername(usernameText: String) {
         _username.update {
             FormInputState(inputValue = usernameText, isValid = usernameText.isNotBlank())
         }
     }
 
-    fun updateBirthdate(timestamp: Long) {
+    fun onUpdateBirthdate(timestamp: Long) {
         _birthdate.update {
             FormInputState(inputValue = Date(timestamp), isValid = true)
         }

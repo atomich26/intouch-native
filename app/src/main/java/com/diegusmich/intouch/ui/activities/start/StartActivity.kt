@@ -1,6 +1,5 @@
 package com.diegusmich.intouch.ui.activities.start
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
