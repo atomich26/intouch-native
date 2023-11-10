@@ -2,9 +2,9 @@ package com.diegusmich.intouch.ui.fragments.auth.signup
 
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.parser.FormErrorsParser
-import com.diegusmich.intouch.ui.viewmodel.StateViewModel
-import com.diegusmich.intouch.ui.viewmodel.UiEvent
+import com.diegusmich.intouch.data.response.FormErrorsResponse
+import com.diegusmich.intouch.ui.state.StateViewModel
+import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.ErrorUtil
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil
@@ -12,9 +12,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.functions.FirebaseFunctionsException
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -23,22 +22,20 @@ import java.util.Date
 class SignupViewModel : StateViewModel() {
 
     private val _email = MutableStateFlow(FormInputState<String>())
-    val email get() = _email
+    val email get() = _email.asStateFlow()
 
     private val _name = MutableStateFlow(FormInputState<String>())
-    val name get() = _name
+    val name get() = _name.asStateFlow()
 
     private val _username = MutableStateFlow(FormInputState<String>())
-    val username get() = _username
+    val username get() = _username.asStateFlow()
 
     private val _password = MutableStateFlow(FormInputState<String>())
-    val password = _password
+    val password = _password.asStateFlow()
 
-    private var _birthdate = MutableStateFlow(FormInputState<Date>())
-    val birthdate get() = _birthdate
+    private val _birthdate = MutableStateFlow(FormInputState<Date>())
+    val birthdate get() = _birthdate.asStateFlow()
 
-    private var _errorMessage: Int? = null
-    val errorMessage get() = _errorMessage
 
     fun updateEmail(emailText: String) {
         _email.update {
@@ -70,7 +67,6 @@ class SignupViewModel : StateViewModel() {
         }
     }
 
-
     fun createAccount() = viewModelScope.launch {
         /*
          * DISCLAIMER: Questo non è il modo migliore per effettuare il login,
@@ -78,13 +74,11 @@ class SignupViewModel : StateViewModel() {
          * su Google Cloud era un po' intricata quindi a scopo dimostrativo abbiamo scelto la via più semplice.
          */
         if (!name.value.isValid || !username.value.isValid || !email.value.isValid || !password.value.isValid || !birthdate.value.isValid) {
-
             _errorMessage = R.string.form_blank_fields
-            _uiEvent.update { UiEvent.ERROR }
+            updateState(UiState.ERROR)
             return@launch
         }
-
-        _uiEvent.update { UiEvent.LOADING }
+        updateState(UiState.LOADING)
 
         val requestData = mapOf(
             "name" to name.value.inputValue,
@@ -93,54 +87,50 @@ class SignupViewModel : StateViewModel() {
             "password" to password.value.inputValue,
             "birthdate" to birthdate.value.inputValue?.time
         )
-
         try {
             Firebase.functions.getHttpsCallable("users-upsert").call(requestData).await()
 
             Firebase.auth.signInWithEmailAndPassword(requestData["email"].toString(), requestData["password"].toString())
                 .addOnSuccessListener {
-                    _uiEvent.update { UiEvent.LOGGED }
+                    updateState(UiState.LOGGED)
                 }
                 .addOnFailureListener {
                     _errorMessage = FirebaseExceptionUtil.localize(it)
-                    _uiEvent.update { UiEvent.ERROR }
+                    updateState(UiState.ERROR)
                 }
 
         } catch (e: FirebaseFunctionsException) {
             when (e.code) {
                 FirebaseFunctionsException.Code.INTERNAL -> {
-                    _errorMessage =
-                        R.string.firebaseNetworkException
-                    _uiEvent.update { UiEvent.ERROR }
+                    _errorMessage = R.string.firebaseNetworkException
+                    updateState(UiState.ERROR)
                 }
 
                 FirebaseFunctionsException.Code.INVALID_ARGUMENT -> {
-
                     if (e.details != null) {
-                        val tempErrors = FormErrorsParser.parse(e.details!!)
+                        val errors = FormErrorsResponse.parse(e.details!!)
 
-                        if (tempErrors.containsKey("name"))
-                            _name.update { it.copy(error = ErrorUtil.getMessage(tempErrors["name"].toString())) }
+                        if (errors.containsKey("name"))
+                            _name.update { it.copy(error = ErrorUtil.getMessage(errors["name"].toString())) }
 
-                        if (tempErrors.containsKey("username"))
-                            _username.update { it.copy(error = ErrorUtil.getMessage(tempErrors["username"].toString())) }
+                        if (errors.containsKey("username"))
+                            _username.update { it.copy(error = ErrorUtil.getMessage(errors["username"].toString())) }
 
-                        if (tempErrors.containsKey("email"))
-                            _email.update { it.copy(error = ErrorUtil.getMessage(tempErrors["email"].toString())) }
+                        if (errors.containsKey("email"))
+                            _email.update { it.copy(error = ErrorUtil.getMessage(errors["email"].toString())) }
 
-                        if (tempErrors.containsKey("password"))
-                            _password.update { it.copy(error = ErrorUtil.getMessage(tempErrors["password"].toString())) }
+                        if (errors.containsKey("password"))
+                            _password.update { it.copy(error = ErrorUtil.getMessage(errors["password"].toString())) }
 
-                        if (tempErrors.containsKey("birthdate"))
-                            _birthdate.update { it.copy(error = ErrorUtil.getMessage(tempErrors["birthdate"].toString())) }
+                        if (errors.containsKey("birthdate"))
+                            _birthdate.update { it.copy(error = ErrorUtil.getMessage(errors["birthdate"].toString())) }
 
-                        _uiEvent.update { UiEvent.FORM_VALIDATION_ERROR }
+                        updateState(UiState.FORM_VALIDATION_ERROR)
                     }
                 }
-
                 else -> {
                     _errorMessage = R.string.firebaseDefaultExceptionMessage
-                    _uiEvent.update { UiEvent.ERROR }
+                    updateState(UiState.ERROR)
                 }
             }
         }

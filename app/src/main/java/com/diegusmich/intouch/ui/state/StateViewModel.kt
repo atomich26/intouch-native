@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.viewmodel
+package com.diegusmich.intouch.ui.state
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -7,11 +7,26 @@ import kotlinx.coroutines.flow.update
 
 open class StateViewModel : ViewModel() {
 
-    protected val _uiEvent = MutableStateFlow<UiEvent>(UiEvent.READY)
-    val uiEvent = _uiEvent.asStateFlow()
+    protected val _uiState = MutableStateFlow<UiState>(UiState.READY)
+    val uiState = _uiState.asStateFlow()
+
+    protected var _errorMessage : Int? = null
+    val errorMessage get() = _errorMessage
+
+    protected fun updateState(state : UiState){
+
+        val prevState = uiState.value
+
+        if(state !is UiState.LOADING && state !is UiState.READY){
+            if(prevState is UiState.LOADING)
+                _uiState.update { UiState.LOADING_COMPLETED }
+        }
+
+        _uiState.update { state }
+    }
 
     fun consumeEvent(){
-        if(uiEvent.value !is UiEvent.LOADING)
-            _uiEvent.update { UiEvent.CONSUMED }
+        if(uiState.value !is UiState.LOADING)
+            _uiState.update { UiState.CONSUMED }
     }
 }

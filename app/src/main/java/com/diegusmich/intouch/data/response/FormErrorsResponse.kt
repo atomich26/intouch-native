@@ -1,6 +1,6 @@
-package com.diegusmich.intouch.data.parser
+package com.diegusmich.intouch.data.response
 
-object FormErrorsParser : HttpsCallableResponseParser<Map<String, String>> {
+object FormErrorsResponse : HttpsCallableResponseParser<Map<String, String>> {
 
     override fun parse(data: Any): Map<String, String> {
         val typed = data as List<HashMap<String, String>>

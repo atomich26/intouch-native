@@ -11,15 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentSignupBinding
-import com.diegusmich.intouch.ui.activities.MainActivity
-import com.diegusmich.intouch.ui.viewmodel.UiEvent
+import com.diegusmich.intouch.ui.activities.AuthActivity
+import com.diegusmich.intouch.ui.activities.start.StartActivity
+import com.diegusmich.intouch.ui.fragments.BaseFragment
+import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -27,7 +28,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.launch
 import java.util.Date
 
-class SignupFragment : Fragment() {
+class SignupFragment : BaseFragment() {
 
     private var _binding : FragmentSignupBinding? = null
     private val binding get() = _binding!!
@@ -45,6 +46,8 @@ class SignupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        postponeEnterTransition()
 
         binding.createAccountAppBar.title = getString(R.string.create_account_fragment_title)
         binding.createAccountAppBar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
@@ -105,6 +108,10 @@ class SignupFragment : Fragment() {
             viewModel.createAccount()
         }
 
+        startPostponedEnterTransition()
+    }
+
+    override fun lifecycleStateObserve() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
 
@@ -114,7 +121,7 @@ class SignupFragment : Fragment() {
                     }
                 }
 
-                launch{
+                launch {
                     viewModel.username.collect{
                         binding.signupUsernameInputLayout.updateState(it)
                     }
@@ -138,21 +145,26 @@ class SignupFragment : Fragment() {
                     }
                 }
 
-                viewModel.uiEvent.collect{
-                    binding.signupProgressBar.visible(it is UiEvent.LOADING)
-                    binding.signupPasswordTextField.isEnabled = it !is UiEvent.LOADING
-                    binding.signupNameTextField.isEnabled = it !is UiEvent.LOADING
-                    binding.signupUsernameTextField.isEnabled = it !is UiEvent.LOADING
-                    binding.signupEmailTextField.isEnabled = it !is UiEvent.LOADING
-                    binding.createUserNextButton.isEnabled = it !is UiEvent.LOADING
-                    binding.signupBirthdateTextField.isEnabled = it !is UiEvent.LOADING
-
+                viewModel.uiState.collect{
                     when(it){
-                        is UiEvent.LOGGED -> {
-                            requireActivity().finishAndRemoveTask()
-                            requireActivity().startActivity(Intent(requireContext(), MainActivity::class.java))
+                        is UiState.LOADING -> {
+                            binding.signupProgressBar.visible(true)
+                            enableViews(false)
                         }
-                        is UiEvent.ERROR -> {
+
+                        is UiState.LOADING_COMPLETED -> {
+                            binding.signupProgressBar.visible(false)
+                            enableViews(true)
+                        }
+
+                        is UiState.LOGGED -> {
+                            requireActivity().startActivity(Intent(requireContext(), StartActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            })
+                            requireActivity().finish()
+                        }
+
+                        is UiState.ERROR -> {
                             Toast.makeText(requireContext(), getString(viewModel.errorMessage!!), Toast.LENGTH_SHORT).show()
                         }
                         else -> Unit
@@ -161,5 +173,14 @@ class SignupFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun enableViews(enabled : Boolean) {
+        binding.signupPasswordTextField.isEnabled = enabled
+        binding.signupNameTextField.isEnabled = enabled
+        binding.signupUsernameTextField.isEnabled = enabled
+        binding.signupEmailTextField.isEnabled = enabled
+        binding.createUserNextButton.isEnabled = enabled
+        binding.signupBirthdateTextField.isEnabled = enabled
     }
 }

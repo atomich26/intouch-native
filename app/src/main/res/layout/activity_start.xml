@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".ui.activities.start.StartActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/startActivityAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_weight="0">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/startActivityAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingHorizontal="@dimen/materialHorizontalPadding">
+
+        <TextView
+            android:id="@+id/titleAddCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_fragment_title"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/descriptionAddCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/add_categories_pref"
+            app:layout_constraintTop_toBottomOf="@id/titleAddCategories"
+            android:textSize="16sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintTop_toBottomOf="@id/descriptionAddCategories">
+
+            <com.diegusmich.intouch.ui.views.CategoriesFilter
+                android:id="@+id/filtersCategoryGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.diegusmich.intouch.ui.views.CategoriesFilter>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/saveCategoriesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_gravity="end"
+        style="@style/Widget.Material3.Button"
+        android:paddingVertical="12dp"
+        android:text="@string/continue_text"
+        android:textSize="16sp" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/startActivityProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        android:indeterminateTint="?attr/colorPrimary"
+        app:showAnimationBehavior="outward"
+        app:hideAnimationBehavior="inward" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

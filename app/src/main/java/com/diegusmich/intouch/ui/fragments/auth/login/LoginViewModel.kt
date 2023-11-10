@@ -2,8 +2,8 @@ package com.diegusmich.intouch.ui.fragments.auth.login
 
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.ui.viewmodel.StateViewModel
-import com.diegusmich.intouch.ui.viewmodel.UiEvent
+import com.diegusmich.intouch.ui.state.StateViewModel
+import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil
 import com.google.firebase.auth.ktx.auth
@@ -20,11 +20,9 @@ class LoginViewModel : StateViewModel() {
     private var _password = MutableStateFlow(FormInputState<String>())
     val password get() = _password.value
 
-    private var _errorMessage: Int? = null
-    val errorMessage get() = _errorMessage
+    fun onPerformLogin() = viewModelScope.launch {
 
-    fun performLogin() = viewModelScope.launch {
-        _uiEvent.update { UiEvent.LOADING }
+       updateState(UiState.LOADING)
 
         try {
             Firebase.auth.signInWithEmailAndPassword(
@@ -32,40 +30,40 @@ class LoginViewModel : StateViewModel() {
                 password.inputValue.toString()
             )
                 .addOnSuccessListener {
-                    _uiEvent.update { UiEvent.LOGGED }
+                    updateState(UiState.LOGGED)
                 }
                 .addOnFailureListener {
                     _errorMessage = FirebaseExceptionUtil.localize(it)
-                    _uiEvent.update { UiEvent.ERROR }
+                    updateState(UiState.ERROR)
                 }
         } catch (e: IllegalArgumentException) {
             _errorMessage = R.string.form_blank_fields
-            _uiEvent.update { UiEvent.ERROR }
+            updateState(UiState.ERROR)
         }
     }
 
-    fun updateEmail(emailText: String) {
+    fun onUpdateEmail(emailText: String) {
         _email.update {
             it.copy(inputValue = emailText, isValid = emailText.isNotBlank())
         }
     }
 
-    fun updatePassword(passwordText: String) {
+    fun onUpdatePassword(passwordText: String) {
         _password.update {
             it.copy(inputValue = passwordText, isValid = passwordText.isNotBlank())
         }
     }
 
-    fun sendResetPasswordEmail() = viewModelScope.launch {
-        _uiEvent.update { UiEvent.LOADING }
+    fun onSendResetPasswordEmail() = viewModelScope.launch {
+        updateState(UiState.LOADING)
 
         Firebase.auth.sendPasswordResetEmail(email.inputValue.toString())
             .addOnSuccessListener {
-                _uiEvent.update { UiEvent.RECOVERY_EMAIL_SENT }
+                updateState(UiState.RECOVERY_EMAIL_SENT)
             }
             .addOnFailureListener {
                 _errorMessage = R.string.invalid_email
-                _uiEvent.update { UiEvent.ERROR }
+                updateState(UiState.ERROR)
             }
     }
 }
