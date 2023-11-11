@@ -4,6 +4,11 @@
     <string name="login_fragment_title">Accedi</string>
     <string name="create_account_fragment_title">Crea account</string>
     <string name="start_fragment_title">Scegli i tuoi gusti</string>
+    <string name="feed_title">Feed</string>
+    <string name="search_title">Cerca</string>
+    <string name="profile_title">Profilo</string>
+    <string name="add_event_title">Crea evento</string>
+    <string name="notifications_title">Notifiche</string>
 
     <string name="action_login_short">Accedi</string>
     <string name="action_create_account_short">Registrati</string>
@@ -23,6 +28,9 @@
     <string name="add_categories_pref">Per avere un feed più coerente con i tuoi gusti ti consigliamo di scegliere le categorie di eventi che più t\'interessano. Potrai cambiarle in seguito nelle impostazioni profilo. </string>
     <string name="continue_text">Continua</string>
     <string name="skip_text">Salta</string>
+    <string name="edit_profile_action">Modifica profilo</string>
+    <string name="logout_action">Disconetti</string>
+    <string name="search_action">Cerca eventi o utenti</string>
 
     <!-- Dialog strings -->
     <string name="alert_title_error">Errore</string>
@@ -52,7 +60,7 @@
     <string name="username_already_exists">Nome utente non disponibile</string>
     <string name="empty_username">Il nome utente non può essere vuoto</string>
     <string name="invalid_name">La lunghezza del nome deve essere compresa fra i 3 e i 40 caratteri</string>
-    <string name="invalid_special_chars_name">Il nome non può contenere caratteri speciali</string>
+    <string name="invalid_special_chars_name">Il nome non può contenere caratteri speciali o numeri</string>
     <string name="empty_name">Il nome non può esser vuoto</string>
     <string name="invalid_email_length">L\'indirizzo email può contenere massimo 90 caratteri</string>
     <string name="invalid_email">Indirizzo email non valido</string>

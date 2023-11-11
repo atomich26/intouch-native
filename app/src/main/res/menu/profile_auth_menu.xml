@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/editUser"
+        android:icon="@drawable/baseline_edit_24"
+        android:title="@string/edit_profile_action"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/logoutUser"
+        android:icon="@drawable/baseline_logout_24"
+        android:title="@string/logout_action"
+        app:showAsAction="always"/>
+</menu>

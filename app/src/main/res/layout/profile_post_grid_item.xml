@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/postProfileGridCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="1dp"
+    android:layout_marginHorizontal="1dp"
+    android:clickable="true"
+    app:cardCornerRadius="0dp"
+    style="?attr/materialCardViewFilledStyle">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+       <com.diegusmich.intouch.ui.views.GlideImageView
+            android:id="@+id/postPreviewProfileGridItem"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/profile_post_grid_item_bg"/>
+
+        <TextView
+            android:id="@+id/datePostProfileGridItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:gravity="bottom|center_horizontal"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>
