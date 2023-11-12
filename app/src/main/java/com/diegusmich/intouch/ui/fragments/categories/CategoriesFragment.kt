@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.fragments.search
+package com.diegusmich.intouch.ui.fragments.categories
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -14,33 +15,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.databinding.FragmentSearchBinding
+import com.diegusmich.intouch.databinding.FragmentCategoriesBinding
 import com.diegusmich.intouch.ui.adapters.CategoriesGridAdapter
 import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
 import com.diegusmich.intouch.ui.state.UiState
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
-class SearchFragment : SwipeRefreshFragment() {
+class CategoriesFragment : SwipeRefreshFragment() {
 
-    private var _binding : FragmentSearchBinding? = null
+    private var _binding : FragmentCategoriesBinding? = null
     val binding get() = _binding!!
 
-    private val viewModel : SearchViewModel by activityViewModels()
+    private val viewModel : CategoriesViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        postponeEnterTransition(200, TimeUnit.MILLISECONDS)
-        swipeRefreshLayout.isEnabled = false
         binding.categoriesGridView.layoutManager = GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
-
-        if(viewModel.categories.value != null)
-            binding.categoriesGridView.adapter = CategoriesGridAdapter(viewModel.categories.value!!)
-
-        startPostponedEnterTransition()
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.loadCategories()
+        }
         requireActivity().addMenuProvider(object : MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.search_menu, menu)
@@ -54,7 +49,7 @@ class SearchFragment : SwipeRefreshFragment() {
     }
 
     override fun inflateRootView(inflater: LayoutInflater, container: ViewGroup?): ViewGroup {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -62,18 +57,30 @@ class SearchFragment : SwipeRefreshFragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
 
+                launch {
+                    viewModel.categories.collect {
+                        if (it != null) {
+                            binding.categoriesGridView.adapter = CategoriesGridAdapter(it)
+                        }
+                    }
+                }
+
                 viewModel.uiState.collect{
                     when(it){
                         is UiState.LOADING -> {
                             swipeRefreshLayout.isRefreshing = true
                         }
-
                         is UiState.LOADING_COMPLETED -> {
                             swipeRefreshLayout.isRefreshing = false
+                        }
+                        is UiState.ERROR -> {
+                            Toast.makeText(requireContext(), getString(viewModel.errorMessage!!), Toast.LENGTH_SHORT).show()
                         }
 
                         else -> Unit
                     }
+
+                    viewModel.consumeEvent()
                 }
             }
         }

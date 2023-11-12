@@ -8,28 +8,12 @@
     android:orientation="vertical"
     tools:context=".ui.activities.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/mainActivityAppBarLayout"
+    <androidx.viewpager2.widget.ViewPager2
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mainViewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_weight="0">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/mainActivityAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/main_nav_host"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/main_navigation"
-        tools:layout="@layout/fragment_feed" />
+        android:layout_weight="1"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/mainBottomNavigation"

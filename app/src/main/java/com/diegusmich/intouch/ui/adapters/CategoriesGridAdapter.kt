@@ -9,9 +9,6 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.Category
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.views.GlideImageView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class CategoriesGridAdapter(private val data: List<Category>) :
     RecyclerView.Adapter<CategoriesGridAdapter.CategoryGridViewHolder>() {
@@ -32,11 +29,9 @@ class CategoriesGridAdapter(private val data: List<Category>) :
 
     class CategoryGridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(category: Category) {
-            CoroutineScope(Dispatchers.Main).launch {
-                val imgRef = CloudImageService.CATEGORIES.imageRef(category.cover!!)
-                itemView.findViewById<TextView>(R.id.categoryNameGridItem).text = category.name
-                itemView.findViewById<GlideImageView>(R.id.categoryImageGridItem).load(imgRef)
-            }
+            val imgRef = CloudImageService.CATEGORIES.imageRef(category.cover!!)
+            itemView.findViewById<TextView>(R.id.categoryNameGridItem).text = category.name
+            itemView.findViewById<GlideImageView>(R.id.categoryImageGridItem).load(imgRef)
         }
     }
 }

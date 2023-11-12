@@ -2,44 +2,70 @@ package com.diegusmich.intouch.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityMainBinding
+import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
+import com.diegusmich.intouch.ui.fragments.categories.CategoriesFragment
+import com.diegusmich.intouch.ui.fragments.feed.FeedFragment
+import com.diegusmich.intouch.ui.fragments.notifications.NotificationFragment
+import com.diegusmich.intouch.ui.fragments.profile.ProfileFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : BaseActivity() {
 
-    private var _binding : ActivityMainBinding? = null
+    private var _binding: ActivityMainBinding? = null
     val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(Firebase.auth.currentUser == null){
-           startActivity(Intent(this, AuthActivity::class.java).apply {
-               flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-           })
-           finish()
+        if (Firebase.auth.currentUser == null) {
+            startActivity(Intent(this, AuthActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+            })
+            finish()
         }
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_nav_host ) as NavHostFragment
-        val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.feedFragment, R.id.searchFragment, R.id.notificationsFragment, R.id.profileFragment))
+        val mainViewPagerAdapter = MainViewPagerAdapter(
+            arrayOf(
+                FeedFragment(),
+                CategoriesFragment(),
+                NotificationFragment(),
+                ProfileFragment()
+            ), supportFragmentManager, lifecycle
+        )
 
-        binding.mainBottomNavigation.setupWithNavController(navController)
-        binding.mainActivityAppBar.setupWithNavController(navController, appBarConfiguration)
+        binding.mainViewPager.adapter = mainViewPagerAdapter
+        binding.mainViewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val fixedPosition = if (position > 1) position + 1 else position
+                binding.mainBottomNavigation.menu.getItem(fixedPosition).isChecked = true
+            }
+        })
 
-        setSupportActionBar(binding.mainActivityAppBar)
+        binding.mainBottomNavigation.setOnItemSelectedListener {
+            val pageId = when (it.itemId) {
+                R.id.feedFragment -> 0
+                R.id.categoriesFragment -> 1
+                R.id.notificationsFragment -> 2
+                R.id.profileFragment -> 3
+                else -> 0
+            }
+
+            binding.mainViewPager.setCurrentItem(pageId, true)
+            true
+        }
     }
 
     override fun lifecycleStateObserve() {
-        return
+
     }
 
     override fun onDestroy() {

@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_feed" />
 
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.diegusmich.intouch.ui.fragments.search.SearchFragment"
+        android:id="@+id/categoriesFragment"
+        android:name="com.diegusmich.intouch.ui.fragments.categories.CategoriesFragment"
         android:label="@string/search_title"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_categories" />
 
     <fragment
         android:id="@+id/notificationsFragment"

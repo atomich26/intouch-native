@@ -10,6 +10,9 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.module.GlideApp
 import com.diegusmich.intouch.module.GlideRequest
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @SuppressLint("CheckResult")
 class GlideImageView(private val ctx: Context, attrs: AttributeSet) : AppCompatImageView(ctx, attrs) {
@@ -43,7 +46,7 @@ class GlideImageView(private val ctx: Context, attrs: AttributeSet) : AppCompatI
     }
 
     fun load(imgReference: StorageReference) {
-        _glideRequest.load(imgReference).into(this)
+        _glideRequest.load(imgReference).into(this@GlideImageView)
     }
 
     fun clear(){

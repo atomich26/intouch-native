@@ -6,6 +6,7 @@
     <string name="start_fragment_title">Scegli i tuoi gusti</string>
     <string name="feed_title">Feed</string>
     <string name="search_title">Cerca</string>
+    <string name="categories_title">Categorie</string>
     <string name="profile_title">Profilo</string>
     <string name="add_event_title">Crea evento</string>
     <string name="notifications_title">Notifiche</string>

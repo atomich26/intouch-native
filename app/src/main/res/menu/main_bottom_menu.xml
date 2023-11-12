@@ -7,7 +7,7 @@
         android:title="@string/feed_title" />
 
     <item
-        android:id="@+id/searchFragment"
+        android:id="@+id/categoriesFragment"
         android:icon="@drawable/baseline_search_24"
         android:title="@string/search_title" />
 
