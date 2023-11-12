@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.viewModels
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityStartBinding
 import com.diegusmich.intouch.ui.activities.BaseActivity
-import com.diegusmich.intouch.ui.activities.MainActivity
+import com.diegusmich.intouch.ui.activities.main.MainActivity
 import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
 import kotlinx.coroutines.launch

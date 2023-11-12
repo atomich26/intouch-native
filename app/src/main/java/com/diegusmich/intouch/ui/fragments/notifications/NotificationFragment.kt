@@ -1,32 +1,36 @@
 package com.diegusmich.intouch.ui.fragments.notifications
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
+import com.diegusmich.intouch.databinding.FragmentNotificationBinding
+import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
 
-class NotificationFragment : Fragment() {
+class NotificationFragment :SwipeRefreshFragment() {
 
-    companion object {
-        fun newInstance() = NotificationFragment()
+    private var _binding : FragmentNotificationBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel : NotificationViewModel by viewModels()
+
+    override fun inflateRootView(inflater: LayoutInflater, container: ViewGroup?): ViewGroup {
+       _binding = FragmentNotificationBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private lateinit var viewModel: NotificationViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_notification, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        toolbar.title = getString(R.string.notifications_title)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(NotificationViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun lifecycleStateObserve() {
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

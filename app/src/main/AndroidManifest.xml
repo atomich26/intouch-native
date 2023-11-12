@@ -20,19 +20,22 @@
         android:theme="@style/Intouch.Theme.Material3"
         tools:targetApi="33">
         <activity
-            android:name=".ui.activities.start.StartActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:name=".ui.activities.search.SearchActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.activities.start.StartActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.activities.AuthActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.activities.MainActivity"
-            android:hardwareAccelerated="true"
+            android:name=".ui.activities.main.MainActivity"
             android:exported="true"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,10 +1,12 @@
-package com.diegusmich.intouch.ui.activities
+package com.diegusmich.intouch.ui.activities.main
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityMainBinding
+import com.diegusmich.intouch.ui.activities.AuthActivity
+import com.diegusmich.intouch.ui.activities.BaseActivity
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.categories.CategoriesFragment
 import com.diegusmich.intouch.ui.fragments.feed.FeedFragment

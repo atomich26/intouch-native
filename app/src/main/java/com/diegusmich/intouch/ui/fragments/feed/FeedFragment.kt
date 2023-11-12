@@ -1,23 +1,37 @@
 package com.diegusmich.intouch.ui.fragments.feed
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.ui.activities.MainActivity
-import com.diegusmich.intouch.ui.fragments.event.EventFragment
+import com.diegusmich.intouch.databinding.FragmentFeedBinding
+import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
 
-class FeedFragment : Fragment() {
+class FeedFragment : SwipeRefreshFragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_feed, container, false)
+    private var _binding : FragmentFeedBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel : FeedViewModel by viewModels()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        toolbar.title = getString(R.string.feed_title)
+    }
+
+    override fun inflateRootView(inflater: LayoutInflater, container: ViewGroup?): ViewGroup {
+        _binding = FragmentFeedBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun lifecycleStateObserve() {
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

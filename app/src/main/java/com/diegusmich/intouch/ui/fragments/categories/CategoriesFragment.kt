@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,7 +19,6 @@ import com.diegusmich.intouch.databinding.FragmentCategoriesBinding
 import com.diegusmich.intouch.ui.adapters.CategoriesGridAdapter
 import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
 import com.diegusmich.intouch.ui.state.UiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CategoriesFragment : SwipeRefreshFragment() {
@@ -27,16 +26,19 @@ class CategoriesFragment : SwipeRefreshFragment() {
     private var _binding : FragmentCategoriesBinding? = null
     val binding get() = _binding!!
 
-    private val viewModel : CategoriesViewModel by activityViewModels()
+    private val viewModel : CategoriesViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        toolbar.title = getString(R.string.search_title)
         binding.categoriesGridView.layoutManager = GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
+
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.loadCategories()
         }
-        requireActivity().addMenuProvider(object : MenuProvider{
+
+        toolbar.addMenuProvider(object : MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.search_menu, menu)
             }
@@ -84,5 +86,10 @@ class CategoriesFragment : SwipeRefreshFragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

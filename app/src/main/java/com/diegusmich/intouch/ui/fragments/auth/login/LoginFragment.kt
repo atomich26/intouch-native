@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentLoginBinding
-import com.diegusmich.intouch.ui.activities.MainActivity
+import com.diegusmich.intouch.ui.activities.main.MainActivity
 import com.diegusmich.intouch.ui.fragments.BaseFragment
 import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
