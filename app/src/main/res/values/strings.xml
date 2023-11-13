@@ -4,7 +4,7 @@
     <string name="login_fragment_title">Accedi</string>
     <string name="create_account_fragment_title">Crea account</string>
     <string name="start_fragment_title">Scegli i tuoi gusti</string>
-    <string name="feed_title">Feed</string>
+    <string name="feed_title">Il tuo feed</string>
     <string name="search_title">Cerca</string>
     <string name="categories_title">Categorie</string>
     <string name="profile_title">Profilo</string>
@@ -13,6 +13,7 @@
 
     <string name="action_login_short">Accedi</string>
     <string name="action_create_account_short">Registrati</string>
+    <string name="search_query_hint_text">Cerca @utenti o eventi</string>
     <string name="action_recover_password">Password dimenticata?</string>
     <string name="intro_text">Regalati momenti indimenticabili con i tuoi amici.</string>
     <string name="or">oppure</string>

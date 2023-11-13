@@ -2,6 +2,7 @@ package com.diegusmich.intouch.ui.activities.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityMainBinding
@@ -14,6 +15,7 @@ import com.diegusmich.intouch.ui.fragments.notifications.NotificationFragment
 import com.diegusmich.intouch.ui.fragments.profile.ProfileFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
@@ -33,24 +35,26 @@ class MainActivity : BaseActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val mainViewPagerAdapter = MainViewPagerAdapter(
-            arrayOf(
-                FeedFragment(),
-                CategoriesFragment(),
-                NotificationFragment(),
-                ProfileFragment()
-            ), supportFragmentManager, lifecycle
-        )
+        lifecycleScope.launch {
+            val mainViewPagerAdapter = MainViewPagerAdapter(
+                arrayOf(
+                    FeedFragment(),
+                    CategoriesFragment(),
+                    NotificationFragment(),
+                    ProfileFragment()
+                ), supportFragmentManager, lifecycle
+            )
 
-        binding.mainViewPager.adapter = mainViewPagerAdapter
-        binding.mainViewPager.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                val fixedPosition = if (position > 1) position + 1 else position
-                binding.mainBottomNavigation.menu.getItem(fixedPosition).isChecked = true
-            }
-        })
+            binding.mainViewPager.adapter = mainViewPagerAdapter
+            binding.mainViewPager.registerOnPageChangeCallback(object :
+                ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    val fixedPosition = if (position > 1) position + 1 else position
+                    binding.mainBottomNavigation.menu.getItem(fixedPosition).isChecked = true
+                }
+            })
+        }
 
         binding.mainBottomNavigation.setOnItemSelectedListener {
             val pageId = when (it.itemId) {

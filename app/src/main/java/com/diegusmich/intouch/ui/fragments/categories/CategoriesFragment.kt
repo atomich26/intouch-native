@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.ui.fragments.categories
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentCategoriesBinding
+import com.diegusmich.intouch.ui.activities.search.SearchActivity
 import com.diegusmich.intouch.ui.adapters.CategoriesGridAdapter
 import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
 import com.diegusmich.intouch.ui.state.UiState
@@ -40,11 +43,15 @@ class CategoriesFragment : SwipeRefreshFragment() {
 
         toolbar.addMenuProvider(object : MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.search_menu, menu)
+                menuInflater.inflate(R.menu.categories_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-              return true
+                if(menuItem.itemId == R.id.startActivitySearch){
+                    requireActivity().startActivity(Intent(requireContext(), SearchActivity::class.java))
+                }
+
+                return true
             }
 
         }, viewLifecycleOwner)
@@ -57,7 +64,7 @@ class CategoriesFragment : SwipeRefreshFragment() {
 
     override fun lifecycleStateObserve() {
         lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
 
                 launch {
                     viewModel.categories.collect {
@@ -86,6 +93,10 @@ class CategoriesFragment : SwipeRefreshFragment() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     override fun onDestroy() {
