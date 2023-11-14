@@ -25,9 +25,12 @@ class GlideImageView(private val ctx: Context, attrs: AttributeSet) : AppCompatI
         ctx.theme.obtainStyledAttributes(attrs, R.styleable.GlideImageView, 0, 0).apply {
             try {
                 val isCircleCropped = getBoolean(R.styleable.GlideImageView_circleCrop, false)
-
+                val placeholderDrawable = (getResourceId(
+                    R.styleable.GlideImageView_placeholder,
+                    R.drawable.glide_image_placeholder
+                ))
                 _glideRequest = GlideApp.with(ctx).load(this@GlideImageView.drawable).apply {
-                    placeholder(R.drawable.glide_image_placeholder)
+                    placeholder(placeholderDrawable)
 
                     if (isCircleCropped)
                         circleCrop()
