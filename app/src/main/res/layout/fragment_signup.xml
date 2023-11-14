@@ -6,21 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/createAccountAppBarLayout"
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/appBarLayout"
         android:layout_height="wrap_content"
-        android:layout_gravity="top">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/createAccountAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_width="match_parent"
+        layout="@layout/material_toolbar"/>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -168,15 +162,6 @@
         android:text="@string/action_create_account_short"
         android:textSize="16sp" />
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/signupProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:indeterminate="true"
-        android:visibility="invisible"
-        android:indeterminateTint="?attr/colorPrimary"
-        app:showAnimationBehavior="outward"
-        app:hideAnimationBehavior="inward" />
+    <include android:id="@+id/pgLayout" layout="@layout/linear_progress_bar"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

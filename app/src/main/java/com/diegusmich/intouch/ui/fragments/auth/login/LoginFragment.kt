@@ -17,12 +17,17 @@ import com.diegusmich.intouch.ui.activities.main.MainActivity
 import com.diegusmich.intouch.ui.fragments.BaseFragment
 import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.launch
 
 class LoginFragment : BaseFragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var progressBar : LinearProgressIndicator
+    private lateinit var toolbar : MaterialToolbar
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -31,6 +36,10 @@ class LoginFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
+
+        progressBar = binding.pgLayout.progressBar
+        toolbar = binding.appBarLayout.materialToolbar
+
         return binding.root
     }
 
@@ -39,10 +48,10 @@ class LoginFragment : BaseFragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        binding.loginAppBar.title = getString(R.string.login_fragment_title)
-        binding.loginAppBar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
+        toolbar.title = getString(R.string.login_fragment_title)
+        toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
 
-        binding.loginAppBar.setNavigationOnClickListener {
+        toolbar.setNavigationOnClickListener {
             activity?.onBackPressedDispatcher?.onBackPressed()
         }
 
@@ -74,12 +83,12 @@ class LoginFragment : BaseFragment() {
                 viewModel.uiState.collect {
                     when (it) {
                         is UiState.LOADING ->{
-                            binding.loginProgressBar.visible(true)
+                            progressBar.visible(true)
                             enableViews(false)
                         }
 
                         is UiState.LOADING_COMPLETED -> {
-                            binding.loginProgressBar.visible(false)
+                            progressBar.visible(false)
                             enableViews(true)
                         }
 

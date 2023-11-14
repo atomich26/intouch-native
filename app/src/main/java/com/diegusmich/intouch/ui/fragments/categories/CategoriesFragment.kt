@@ -16,28 +16,44 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentCategoriesBinding
 import com.diegusmich.intouch.ui.activities.search.SearchActivity
 import com.diegusmich.intouch.ui.adapters.CategoriesGridAdapter
+import com.diegusmich.intouch.ui.fragments.BaseFragment
 import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
 import com.diegusmich.intouch.ui.state.UiState
+import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.launch
 
-class CategoriesFragment : SwipeRefreshFragment() {
+class CategoriesFragment : BaseFragment() {
 
     private var _binding : FragmentCategoriesBinding? = null
     val binding get() = _binding!!
 
+    private lateinit var toolbar : MaterialToolbar
+
     private val viewModel : CategoriesViewModel by viewModels()
 
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+         super.onCreateView(inflater, container, savedInstanceState)
+        _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
+        toolbar = binding.appBarLayout.materialToolbar
+        return binding.root
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         toolbar.title = getString(R.string.search_title)
         binding.categoriesGridView.layoutManager = GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
 
-        swipeRefreshLayout.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.loadCategories()
         }
 
@@ -57,11 +73,6 @@ class CategoriesFragment : SwipeRefreshFragment() {
         }, viewLifecycleOwner)
     }
 
-    override fun inflateRootView(inflater: LayoutInflater, container: ViewGroup?): ViewGroup {
-        _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun lifecycleStateObserve() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
@@ -77,10 +88,10 @@ class CategoriesFragment : SwipeRefreshFragment() {
                 viewModel.uiState.collect{
                     when(it){
                         is UiState.LOADING -> {
-                            swipeRefreshLayout.isRefreshing = true
+                           // swipeRefreshLayout.isRefreshing = true
                         }
                         is UiState.LOADING_COMPLETED -> {
-                            swipeRefreshLayout.isRefreshing = false
+                            //swipeRefreshLayout.isRefreshing = false
                         }
                         is UiState.ERROR -> {
                             Toast.makeText(requireContext(), getString(viewModel.errorMessage!!), Toast.LENGTH_SHORT).show()
@@ -93,10 +104,6 @@ class CategoriesFragment : SwipeRefreshFragment() {
                 }
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onDestroy() {

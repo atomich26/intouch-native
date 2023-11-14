@@ -9,21 +9,28 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.diegusmich.intouch.databinding.ActivityStartBinding
+import com.diegusmich.intouch.databinding.LinearProgressBarBinding
 import com.diegusmich.intouch.ui.activities.BaseActivity
 import com.diegusmich.intouch.ui.activities.main.MainActivity
 import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.launch
 
 class StartActivity : BaseActivity() {
 
     private val viewModel : StartActivityViewModel by viewModels()
+
     private var _binding : ActivityStartBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var progressBar : LinearProgressIndicator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityStartBinding.inflate(layoutInflater)
+
+        progressBar = binding.pgLayout.progressBar
 
         onBackPressedDispatcher.addCallback(this){
             return@addCallback
@@ -66,11 +73,11 @@ class StartActivity : BaseActivity() {
                 viewModel.uiState.collect{
                     when(it){
                         is UiState.LOADING -> {
-                            binding.startActivityProgressBar.visible(true)
+                            progressBar.visible(true)
                             binding.saveCategoriesButton.isEnabled = false
                         }
                         is UiState.LOADING_COMPLETED -> {
-                            binding.startActivityProgressBar.visible(false)
+                            progressBar.visible(false)
                             binding.saveCategoriesButton.isEnabled = viewModel.checkedCategories.value.isNotEmpty()
                         }
                         is UiState.ERROR -> {

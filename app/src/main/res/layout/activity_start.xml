@@ -80,15 +80,5 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/startActivityProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:indeterminate="true"
-        android:visibility="invisible"
-        android:indeterminateTint="?attr/colorPrimary"
-        app:showAnimationBehavior="outward"
-        app:hideAnimationBehavior="inward" />
-
+    <include android:id="@+id/pgLayout" layout="@layout/linear_progress_bar"/>
 </androidx.appcompat.widget.LinearLayoutCompat>

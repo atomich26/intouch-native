@@ -21,9 +21,11 @@ import com.diegusmich.intouch.ui.activities.start.StartActivity
 import com.diegusmich.intouch.ui.fragments.BaseFragment
 import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -31,6 +33,9 @@ class SignupFragment : BaseFragment() {
 
     private var _binding : FragmentSignupBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var progressBar : LinearProgressIndicator
+    private lateinit var toolbar : MaterialToolbar
 
     private val viewModel : SignupViewModel by viewModels()
 
@@ -40,6 +45,9 @@ class SignupFragment : BaseFragment() {
     ): View {
         _binding = FragmentSignupBinding.inflate(layoutInflater)
 
+        progressBar = binding.pgLayout.progressBar
+        toolbar = binding.appBarLayout.materialToolbar
+
         return binding.root
     }
 
@@ -48,10 +56,10 @@ class SignupFragment : BaseFragment() {
 
         postponeEnterTransition()
 
-        binding.createAccountAppBar.title = getString(R.string.create_account_fragment_title)
-        binding.createAccountAppBar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
+        toolbar.title = getString(R.string.create_account_fragment_title)
+        toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
 
-        binding.createAccountAppBar.setNavigationOnClickListener {
+        toolbar.setNavigationOnClickListener {
             activity?.onBackPressedDispatcher?.onBackPressed()
         }
 
@@ -147,12 +155,12 @@ class SignupFragment : BaseFragment() {
                 viewModel.uiState.collect{
                     when(it){
                         is UiState.LOADING -> {
-                            binding.signupProgressBar.visible(true)
+                            progressBar.visible(true)
                             enableViews(false)
                         }
 
                         is UiState.LOADING_COMPLETED -> {
-                            binding.signupProgressBar.visible(false)
+                            progressBar.visible(false)
                             enableViews(true)
                         }
 

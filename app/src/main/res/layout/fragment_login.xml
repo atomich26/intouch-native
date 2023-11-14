@@ -7,22 +7,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/loginAppBarLayout"
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/appBarLayout"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_weight="0">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/loginAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_width="match_parent"
+        layout="@layout/material_toolbar"/>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,14 +112,5 @@
             android:text="@string/action_login_short"
             android:textSize="16sp" />
     </LinearLayout>
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/loginProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:indeterminate="true"
-        android:visibility="invisible"
-        android:indeterminateTint="?attr/colorPrimary"
-        app:showAnimationBehavior="outward"
-        app:hideAnimationBehavior="inward" />
+   <include android:id="@+id/pgLayout" layout="@layout/linear_progress_bar"/>
 </androidx.appcompat.widget.LinearLayoutCompat>
