@@ -7,10 +7,9 @@ import com.diegusmich.intouch.data.model.Category
 import com.diegusmich.intouch.data.response.CategoryListResponse
 import com.diegusmich.intouch.network.NetworkStateObserver
 import com.diegusmich.intouch.ui.state.StateViewModel
-import com.diegusmich.intouch.utils.NetworkUtil
+import com.diegusmich.intouch.service.NetworkService
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.update
 import java.net.ConnectException
 import java.net.UnknownHostException
 
@@ -45,7 +44,7 @@ class StartActivityViewModel : StateViewModel() {
 
                 updateState(_CONTENT_LOADED, true)
 
-                NetworkUtil.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
+                NetworkService.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
             }
             .addOnFailureListener {
                 if (it.cause is UnknownHostException || it.cause is ConnectException) {
@@ -55,7 +54,7 @@ class StartActivityViewModel : StateViewModel() {
                         loadCategories()
                     }
 
-                    NetworkUtil.addOnNetworkAvailableObserver(this@StartActivityViewModel.retryOnNetworkAvailable)
+                    NetworkService.addOnNetworkAvailableObserver(this@StartActivityViewModel.retryOnNetworkAvailable)
                 } else
                     updateState(_ERROR, R.string.firebaseDefaultExceptionMessage)
             }
@@ -90,6 +89,6 @@ class StartActivityViewModel : StateViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        NetworkUtil.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
+        NetworkService.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
     }
 }

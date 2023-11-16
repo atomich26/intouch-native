@@ -84,12 +84,12 @@ class CategoriesFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.swipeRefreshLayout.isRefreshing = viewModel.LOADING.value!!
+        binding.swipeRefreshLayout.onResumeView(viewModel.LOADING.value!!)
     }
 
     override fun onPause() {
         super.onPause()
-        binding.swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.onPauseView()
     }
 
     override fun onDestroy() {

@@ -11,4 +11,13 @@ class IntouchSwipeRefreshLayout(ctx : Context, attrs : AttributeSet) : SwipeRefr
         setColorSchemeResources(R.color.seed)
         setProgressViewOffset(true, 0, 120)
     }
+
+    fun onPauseView(){
+        isRefreshing = false
+        clearAnimation()
+    }
+
+    fun onResumeView(loadingState : Boolean){
+        isRefreshing = loadingState
+    }
 }
