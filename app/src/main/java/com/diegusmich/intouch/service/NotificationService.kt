@@ -9,6 +9,7 @@ object NotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
+        this.token = token
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
