@@ -12,21 +12,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentSignupBinding
 import com.diegusmich.intouch.ui.activities.start.StartActivity
 import com.diegusmich.intouch.ui.fragments.BaseFragment
-import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import kotlinx.coroutines.launch
 import java.util.Date
 
 class SignupFragment : BaseFragment() {
@@ -112,82 +107,56 @@ class SignupFragment : BaseFragment() {
         }
 
         binding.createUserNextButton.setOnClickListener {
-            viewModel.createAccount()
+            viewModel.onCreateAccount()
         }
 
         startPostponedEnterTransition()
     }
 
     override fun lifecycleStateObserve() {
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
 
-                launch {
-                    viewModel.name.collect{
-                        binding.signupNameInputLayout.updateState(it)
-                    }
-                }
+        viewModel.name.observe(viewLifecycleOwner){
+            binding.signupNameInputLayout.updateState(it)
+        }
 
-                launch {
-                    viewModel.username.collect{
-                        binding.signupUsernameInputLayout.updateState(it)
-                    }
-                }
+        viewModel.username.observe(viewLifecycleOwner){
+            binding.signupUsernameInputLayout.updateState(it)
+        }
 
-                launch {
-                    viewModel.email.collect{
-                        binding.signupEmailInputLayout.updateState(it)
-                    }
-                }
+        viewModel.email.observe(viewLifecycleOwner){
+            binding.signupEmailInputLayout.updateState(it)
+        }
 
-                launch {
-                    viewModel.password.collect{
-                        binding.signupPasswordInputLayout.updateState(it)
-                    }
-                }
+        viewModel.password.observe(viewLifecycleOwner){
+            binding.signupPasswordInputLayout.updateState(it)
+        }
 
-                launch {
-                    viewModel.birthdate.collect{
-                        binding.signupBirthdateInputLayout.updateState(it)
-                    }
-                }
+        viewModel.birthdate.observe(viewLifecycleOwner){
+            binding.signupBirthdateInputLayout.updateState(it)
+        }
 
-                viewModel.uiState.collect{
-                    when(it){
-                        is UiState.LOADING -> {
-                            progressBar.visible(true)
-                            enableViews(false)
-                        }
+        viewModel.ERROR.observe(viewLifecycleOwner){
+            if(it != null)
+                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
+        }
 
-                        is UiState.LOADING_COMPLETED -> {
-                            progressBar.visible(false)
-                            enableViews(true)
-                        }
+        viewModel.LOADING.observe(viewLifecycleOwner){
+            progressBar.visible(it)
+            binding.signupPasswordTextField.isEnabled =!it
+            binding.signupNameTextField.isEnabled =!it
+            binding.signupUsernameTextField.isEnabled =!it
+            binding.signupEmailTextField.isEnabled =!it
+            binding.createUserNextButton.isEnabled =!it
+            binding.signupBirthdateTextField.isEnabled =!it
+        }
 
-                        is UiState.LOGGED -> {
-                            requireActivity().startActivity(Intent(requireContext(), StartActivity::class.java).apply {
-                                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            })
-                            requireActivity().finish()
-                        }
-
-                        is UiState.ERROR -> {
-                            Toast.makeText(requireContext(), getString(viewModel.errorMessage!!), Toast.LENGTH_SHORT).show()
-                        }
-                        else -> Unit
-                    }
-                    viewModel.consumeEvent()
-                }
+        viewModel.LOGGED.observe(viewLifecycleOwner){
+            if(it){
+                requireActivity().startActivity(Intent(requireContext(), StartActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                })
+                requireActivity().finish()
             }
         }
-    }
-
-    private fun enableViews(enabled : Boolean) {
-        binding.signupPasswordTextField.isEnabled = enabled
-        binding.signupNameTextField.isEnabled = enabled
-        binding.signupUsernameTextField.isEnabled = enabled
-        binding.signupEmailTextField.isEnabled = enabled
-        binding.createUserNextButton.isEnabled = enabled
-        binding.signupBirthdateTextField.isEnabled = enabled
     }
 }

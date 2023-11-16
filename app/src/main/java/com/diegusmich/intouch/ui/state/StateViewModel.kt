@@ -1,34 +1,26 @@
 package com.diegusmich.intouch.ui.state
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+
 
 open class StateViewModel : ViewModel() {
 
-    protected val _uiState = MutableStateFlow<UiState>(UiState.READY)
-    val uiState = _uiState.asStateFlow()
+    protected val _LOADING = MutableLiveData(false)
+    val LOADING : LiveData<Boolean> = _LOADING
 
-    protected var _errorMessage : Int? = null
-    val errorMessage get() = _errorMessage
+    protected val _CONTENT_LOADED = MutableLiveData(false)
+    val CONTENT_LOADED : LiveData<Boolean> = _CONTENT_LOADED
 
-    protected fun updateState(state : UiState){
+    protected val _ERROR = MutableLiveData<Int?>(null)
+    val ERROR : LiveData<Int?> = _ERROR
 
-        val prevState = uiState.value
 
-        if(state !is UiState.LOADING && state !is UiState.READY){
-            if(prevState is UiState.LOADING)
-                _uiState.update { UiState.LOADING_COMPLETED }
+    protected fun <T> updateState(stateHandler : MutableLiveData<T>, newValue: T){
+        if(stateHandler != _LOADING){
+            _LOADING.value = false
         }
-
-        _uiState.update { state }
-    }
-
-    fun consumeEvent(){
-        if(uiState.value !is UiState.LOADING)
-            _uiState.update { UiState.CONSUMED }
+        stateHandler.value = newValue
     }
 }

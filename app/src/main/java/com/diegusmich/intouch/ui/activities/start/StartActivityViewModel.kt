@@ -1,27 +1,29 @@
 package com.diegusmich.intouch.ui.activities.start
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.Category
 import com.diegusmich.intouch.data.response.CategoryListResponse
 import com.diegusmich.intouch.network.NetworkStateObserver
 import com.diegusmich.intouch.ui.state.StateViewModel
-import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.utils.NetworkUtil
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.net.ConnectException
 import java.net.UnknownHostException
 
 class StartActivityViewModel : StateViewModel() {
 
-    private val _categories = MutableStateFlow<List<Category>?>(null)
-    val categories get() = _categories.asStateFlow()
+    private val _PREFERENCES_SAVED = MutableLiveData(false)
+    val PREFERENCES_SAVED : LiveData<Boolean> = _PREFERENCES_SAVED
 
-    private val _checkedCategories = MutableStateFlow<List<String>>(listOf())
-    val checkedCategories get() = _checkedCategories.asStateFlow()
+    private val _categories = MutableLiveData<List<Category>?>(null)
+    val categories : LiveData<List<Category>?> = _categories
+
+    private val _checkedCategories = MutableLiveData<List<String>>(listOf())
+    val checkedCategories : LiveData<List<String>> = _checkedCategories
 
     private var retryOnNetworkAvailable = NetworkStateObserver {
         loadCategories()
@@ -35,54 +37,54 @@ class StartActivityViewModel : StateViewModel() {
         if (categories.value != null)
             return
 
-        updateState(UiState.LOADING)
+       updateState(_LOADING, true)
 
         Firebase.functions.getHttpsCallable("categories-list").call()
             .addOnSuccessListener { result ->
                 _categories.value = CategoryListResponse.parse(result.data!!)
-                updateState(UiState.CONTENT_LOADED)
+
+                updateState(_CONTENT_LOADED, true)
 
                 NetworkUtil.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
             }
             .addOnFailureListener {
                 if (it.cause is UnknownHostException || it.cause is ConnectException) {
-                    _errorMessage = R.string.firebaseNetworkException
+                    updateState(_ERROR, R.string.firebaseNetworkException)
+
                     retryOnNetworkAvailable = NetworkStateObserver {
                         loadCategories()
                     }
+
                     NetworkUtil.addOnNetworkAvailableObserver(this@StartActivityViewModel.retryOnNetworkAvailable)
                 } else
-                    _errorMessage = R.string.firebaseDefaultExceptionMessage
-
-                updateState(UiState.ERROR)
+                    updateState(_ERROR, R.string.firebaseDefaultExceptionMessage)
             }
     }
 
     fun onUpdateCheckedCategories(checkedIds: List<String>) {
-        _checkedCategories.update { checkedIds }
+        _checkedCategories.value = checkedIds
     }
 
     fun saveCategories() {
-        updateState(UiState.LOADING)
+       updateState(_LOADING, true)
 
-        if (checkedCategories.value.size == categories.value?.size) {
-            updateState(UiState.PREFERENCES_SAVED)
-            return
+        if (checkedCategories.value?.size == categories.value?.size) {
+            return updateState(_PREFERENCES_SAVED, true)
         }
 
         Firebase.functions.getHttpsCallable("users-preferences")
             .call(mapOf("preferences" to checkedCategories.value))
             .addOnSuccessListener {
-                updateState(UiState.PREFERENCES_SAVED)
+                updateState(_PREFERENCES_SAVED, true)
             }
             .addOnFailureListener {
-                _errorMessage =
+                val messageId =
                     if (it.cause is UnknownHostException || it.cause is ConnectException)
                         R.string.firebaseNetworkException
                     else
                         R.string.firebaseDefaultExceptionMessage
 
-                updateState(UiState.ERROR)
+                updateState(_ERROR, messageId)
             }
     }
 

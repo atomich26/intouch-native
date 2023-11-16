@@ -8,18 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentLoginBinding
 import com.diegusmich.intouch.ui.activities.main.MainActivity
 import com.diegusmich.intouch.ui.fragments.BaseFragment
-import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import kotlinx.coroutines.launch
 
 class LoginFragment : BaseFragment() {
 
@@ -55,12 +50,10 @@ class LoginFragment : BaseFragment() {
             activity?.onBackPressedDispatcher?.onBackPressed()
         }
 
-        binding.loginEmailInputLayout.updateState(viewModel.email)
         binding.loginEmailTextField.doAfterTextChanged {
             viewModel.onUpdateEmail(it.toString())
         }
 
-        binding.loginPasswordInputLayout.updateState(viewModel.password)
         binding.loginPasswordTextField.doAfterTextChanged {
             viewModel.onUpdatePassword(it.toString())
         }
@@ -78,53 +71,45 @@ class LoginFragment : BaseFragment() {
 
     override fun lifecycleStateObserve() {
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    when (it) {
-                        is UiState.LOADING ->{
-                            progressBar.visible(true)
-                            enableViews(false)
-                        }
+        viewModel.email.observe(viewLifecycleOwner){
+             binding.loginEmailInputLayout.updateState(it)
+        }
 
-                        is UiState.LOADING_COMPLETED -> {
-                            progressBar.visible(false)
-                            enableViews(true)
-                        }
+        viewModel.password.observe(viewLifecycleOwner){
+            binding.loginPasswordInputLayout.updateState(it)
+        }
 
-                        is UiState.LOGGED -> {
-                            activity?.finishAndRemoveTask()
-                            startActivity(Intent(requireContext(), MainActivity::class.java))
-                        }
-
-                        is UiState.RECOVERY_EMAIL_SENT -> {
-                            Toast.makeText(
-                                requireContext(),
-                                R.string.recover_email_sent,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        is UiState.ERROR -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(viewModel.errorMessage!!),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        else -> Unit
-                    }
-                    viewModel.consumeEvent()
-                }
+        viewModel.RECOVERY_EMAIL_SENT.observe(viewLifecycleOwner){
+            if(it){
+                Toast.makeText(
+                    requireContext(),
+                    R.string.recover_email_sent,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
-    }
 
-    private fun enableViews(enabled : Boolean){
-        binding.loginEmailTextField.isEnabled = enabled
-        binding.loginPasswordInputLayout.isEnabled = enabled
-        binding.loginButton.isEnabled = enabled
-        binding.recoverPasswordButton.isEnabled = enabled
+        viewModel.LOADING.observe(viewLifecycleOwner){
+            progressBar.visible(it)
+            binding.loginEmailTextField.isEnabled = !it
+            binding.loginPasswordInputLayout.isEnabled = !it
+            binding.loginButton.isEnabled = !it
+            binding.recoverPasswordButton.isEnabled = !it
+        }
+
+        viewModel.LOGGED.observe(viewLifecycleOwner){
+            if(it){
+                startActivity(Intent(requireContext(), MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                })
+                requireActivity().finish()
+            }
+        }
+
+        viewModel.ERROR.observe(viewLifecycleOwner){
+            if(it != null){
+                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

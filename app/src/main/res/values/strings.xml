@@ -68,7 +68,7 @@
     <string name="invalid_email">Indirizzo email non valido</string>
     <string name="email_already_exists">Indirizzo email non disponibile</string>
     <string name="empty_email">L\'email non può essere vuota</string>
-    <string name="invalid_password">La password deve contenere almeno 8 caratteri, un numero e un carattere speciale tra questi: @ $ ! % * # ? /&amp;.</string>
+    <string name="invalid_password">La password deve contenere almeno 8 caratteri, un numero e un carattere speciale tra questi: @ $ ! % * # ? &amp;.</string>
     <string name="empty_password">La password non può essere vuota</string>
     <string name="invalid_date">Data non valida</string>
     <string name="date_after_now">La data è successiva a quella corrente</string>

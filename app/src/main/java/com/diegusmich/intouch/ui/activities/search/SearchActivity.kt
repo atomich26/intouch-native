@@ -2,22 +2,16 @@ package com.diegusmich.intouch.ui.activities.search
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.model.UserPreview
 import com.diegusmich.intouch.databinding.ActivitySearchBinding
 import com.diegusmich.intouch.ui.activities.BaseActivity
 import com.diegusmich.intouch.ui.adapters.SearchResultsAdapter
-import com.diegusmich.intouch.ui.state.UiState
-import com.diegusmich.intouch.ui.views.decorators.visible
-import kotlinx.coroutines.launch
 
 
 class SearchActivity : BaseActivity() {
@@ -83,25 +77,11 @@ class SearchActivity : BaseActivity() {
     }
 
     override fun lifecycleStateObserve() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
 
-                launch {
-                    viewModel.searchUserResult.collect{
-                        if(it != null)
-                            binding.searchResultsRecyclerView.adapter?.notifyDataSetChanged()
-                    }
-                }
-
-                viewModel.uiState.collect{ it ->
-                    binding.pgLayout.progressBar.visible(it is UiState.LOADING)
-                    when(it){
-
-                        else -> Unit
-                    }
-                    viewModel.consumeEvent()
-                }
-            }
+        viewModel.ERROR.observe(this){
+            if (it != null)
+                Toast.makeText(this@SearchActivity, getString(it), Toast.LENGTH_SHORT)
+                    .show()
         }
     }
 

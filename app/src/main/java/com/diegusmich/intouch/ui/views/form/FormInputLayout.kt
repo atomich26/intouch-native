@@ -11,10 +11,7 @@ abstract class FormInputLayout<T>(private val ctx : Context, attrs: AttributeSet
 
     open fun updateState(state : FormInputState<T>){
 
-        if(editText?.text == null || editText?.text.toString() == "")
-            editText?.setText(toText(state.inputValue), TextView.BufferType.EDITABLE)
-
-        if(state.error != null )
+        if(state.error != null)
             this@FormInputLayout.error = ctx.getString(state.error)
         else
             this@FormInputLayout.error = null

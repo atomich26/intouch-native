@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.ui.fragments.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -11,6 +12,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentProfileBinding
+import com.diegusmich.intouch.ui.activities.AuthActivity
 import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
 
 class ProfileFragment : SwipeRefreshFragment() {
@@ -31,7 +33,20 @@ class ProfileFragment : SwipeRefreshFragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                TODO("Not yet implemented")
+                return when(menuItem.itemId){
+                    R.id.editUserMenuOption -> {
+                        false
+                    }
+                    R.id.logoutUserMenuOption -> {
+                        viewModel.onLogout()
+                        requireActivity().startActivity(Intent(requireContext(), AuthActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        })
+                        requireActivity().finish()
+                        false
+                    }
+                    else -> false
+                }
             }
 
         }, viewLifecycleOwner)

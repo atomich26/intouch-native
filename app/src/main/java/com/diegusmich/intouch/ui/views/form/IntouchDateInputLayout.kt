@@ -2,13 +2,15 @@ package com.diegusmich.intouch.ui.views.form
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.TextView
 import com.diegusmich.intouch.utils.TimeUtil
 import java.util.Date
 
 class IntouchDateInputLayout(ctx : Context, attrs: AttributeSet) : FormInputLayout<Date>(ctx, attrs) {
 
     override fun updateState(state: FormInputState<Date>) {
-        editText?.text = null
+        if(state.inputValue != null)
+            editText?.setText(toText(state.inputValue), TextView.BufferType.EDITABLE)
         super.updateState(state)
     }
 

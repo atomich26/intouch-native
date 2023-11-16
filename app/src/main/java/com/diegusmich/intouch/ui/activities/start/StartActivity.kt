@@ -9,10 +9,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.diegusmich.intouch.databinding.ActivityStartBinding
-import com.diegusmich.intouch.databinding.LinearProgressBarBinding
 import com.diegusmich.intouch.ui.activities.BaseActivity
 import com.diegusmich.intouch.ui.activities.main.MainActivity
-import com.diegusmich.intouch.ui.state.UiState
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.launch
@@ -52,45 +50,32 @@ class StartActivity : BaseActivity() {
     }
 
     override fun lifecycleStateObserve() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
 
-                launch {
-                    viewModel.checkedCategories.collect{
-                        binding.saveCategoriesButton.isEnabled = it.isNotEmpty()
-                    }
-                }
+        viewModel.PREFERENCES_SAVED.observe(this){
+            if(it)
+                startMainActivity()
+        }
 
-                launch {
-                    viewModel.categories.collect{
-                        if(it != null)
-                            binding.filtersCategoryGroup.bindData(it){cat ->
-                                viewModel.checkedCategories.value.contains(cat.id)
-                            }
-                    }
-                }
 
-                viewModel.uiState.collect{
-                    when(it){
-                        is UiState.LOADING -> {
-                            progressBar.visible(true)
-                            binding.saveCategoriesButton.isEnabled = false
-                        }
-                        is UiState.LOADING_COMPLETED -> {
-                            progressBar.visible(false)
-                            binding.saveCategoriesButton.isEnabled = viewModel.checkedCategories.value.isNotEmpty()
-                        }
-                        is UiState.ERROR -> {
-                            Toast.makeText(this@StartActivity, getString(viewModel.errorMessage!!), Toast.LENGTH_SHORT).show()
-                        }
-                        is UiState.PREFERENCES_SAVED -> {
-                            startMainActivity()
-                        }
-                        else -> Unit
-                    }
-                    viewModel.consumeEvent()
+        viewModel.LOADING.observe(this){
+            progressBar.visible(it)
+            binding.saveCategoriesButton.isEnabled = !it && viewModel.checkedCategories.value!!.isNotEmpty()
+        }
+
+        viewModel.ERROR.observe(this){
+            if(it != null)
+                Toast.makeText(this@StartActivity, getString(it), Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.checkedCategories.observe(this){
+            binding.saveCategoriesButton.isEnabled = it.isNotEmpty()
+        }
+
+        viewModel.categories.observe(this){
+            if(it != null)
+                binding.filtersCategoryGroup.bindData(it){ cat ->
+                    viewModel.checkedCategories.value!!.contains(cat.id)
                 }
-            }
         }
     }
 

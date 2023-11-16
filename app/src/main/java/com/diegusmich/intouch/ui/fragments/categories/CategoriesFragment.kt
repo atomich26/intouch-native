@@ -10,22 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentCategoriesBinding
 import com.diegusmich.intouch.ui.activities.search.SearchActivity
 import com.diegusmich.intouch.ui.adapters.CategoriesGridAdapter
 import com.diegusmich.intouch.ui.fragments.BaseFragment
-import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
-import com.diegusmich.intouch.ui.state.UiState
 import com.google.android.material.appbar.MaterialToolbar
-import kotlinx.coroutines.launch
 
 class CategoriesFragment : BaseFragment() {
 
@@ -36,12 +28,11 @@ class CategoriesFragment : BaseFragment() {
 
     private val viewModel : CategoriesViewModel by viewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
          super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         toolbar = binding.appBarLayout.materialToolbar
@@ -74,36 +65,31 @@ class CategoriesFragment : BaseFragment() {
     }
 
     override fun lifecycleStateObserve() {
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
-
-                launch {
-                    viewModel.categories.collect {
-                        if (it != null) {
-                            binding.categoriesGridView.adapter = CategoriesGridAdapter(it)
-                        }
-                    }
-                }
-
-                viewModel.uiState.collect{
-                    when(it){
-                        is UiState.LOADING -> {
-                           // swipeRefreshLayout.isRefreshing = true
-                        }
-                        is UiState.LOADING_COMPLETED -> {
-                            //swipeRefreshLayout.isRefreshing = false
-                        }
-                        is UiState.ERROR -> {
-                            Toast.makeText(requireContext(), getString(viewModel.errorMessage!!), Toast.LENGTH_SHORT).show()
-                        }
-
-                        else -> Unit
-                    }
-
-                    viewModel.consumeEvent()
-                }
+        viewModel.categories.observe(viewLifecycleOwner){
+            if (it != null) {
+                binding.categoriesGridView.adapter = CategoriesGridAdapter(it)
             }
         }
+
+        viewModel.LOADING.observe(this){
+            binding.swipeRefreshLayout.isRefreshing = it
+        }
+
+        viewModel.ERROR.observe(this){
+            if (it != null)
+                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT)
+                    .show()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.swipeRefreshLayout.isRefreshing = viewModel.LOADING.value!!
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onDestroy() {

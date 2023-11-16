@@ -1,7 +1,11 @@
 package com.diegusmich.intouch.ui.fragments.profile
 
-import androidx.lifecycle.ViewModel
+import com.diegusmich.intouch.ui.state.StateViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
-class ProfileViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class ProfileViewModel : StateViewModel() {
+
+    fun onLogout() = Firebase.auth.signOut()
+
 }
