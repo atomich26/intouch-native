@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.utils
+package com.diegusmich.intouch.service
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -11,14 +11,14 @@ import com.diegusmich.intouch.IntouchApplication
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.network.NetworkStateObserver
 
-object NetworkUtil {
+object NetworkService {
 
     private var connectivityManager: ConnectivityManager? = null
     private lateinit var networkRequest: NetworkRequest
     private lateinit var networkCallback: NetworkCallback
     private val onNetworkAvailableObservers = mutableListOf<NetworkStateObserver>()
 
-    fun buildService(context: Context): NetworkUtil {
+    fun buildService(context: Context): NetworkService {
 
         //Get a connectivity manager API to observe network state
         connectivityManager =
