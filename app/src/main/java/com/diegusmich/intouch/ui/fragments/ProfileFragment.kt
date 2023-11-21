@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.fragments.profile
+package com.diegusmich.intouch.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,14 +13,28 @@ import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentProfileBinding
 import com.diegusmich.intouch.ui.activities.AuthActivity
-import com.diegusmich.intouch.ui.fragments.SwipeRefreshFragment
+import com.diegusmich.intouch.ui.state.ProfileViewModel
+import com.google.android.material.appbar.MaterialToolbar
 
-class ProfileFragment : SwipeRefreshFragment() {
+class ProfileFragment : BaseFragment() {
 
     private var _binding : FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var toolbar : MaterialToolbar
+
     private val viewModel : ProfileViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View{
+        super.onCreateView(inflater, container, savedInstanceState)
+        _binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
+        toolbar = binding.appBarLayout.materialToolbar
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,13 +66,18 @@ class ProfileFragment : SwipeRefreshFragment() {
         }, viewLifecycleOwner)
     }
 
-    override fun inflateRootView(inflater: LayoutInflater, container: ViewGroup?): ViewGroup {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun lifecycleStateObserve() {
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.swipeRefreshLayout.onResumeView(viewModel.LOADING.value!!)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.swipeRefreshLayout.onPauseView()
     }
 
     override fun onDestroy() {

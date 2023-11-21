@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.activities.search
+package com.diegusmich.intouch.ui.activities
 
 import android.os.Bundle
 import android.view.Menu
@@ -10,8 +10,8 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivitySearchBinding
-import com.diegusmich.intouch.ui.activities.BaseActivity
 import com.diegusmich.intouch.ui.adapters.SearchResultsAdapter
+import com.diegusmich.intouch.ui.viewmodels.SearchActivityViewModel
 
 
 class SearchActivity : BaseActivity() {

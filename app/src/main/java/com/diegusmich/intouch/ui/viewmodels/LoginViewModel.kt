@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.fragments.auth.login
+package com.diegusmich.intouch.ui.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

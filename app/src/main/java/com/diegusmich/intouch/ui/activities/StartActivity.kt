@@ -1,19 +1,14 @@
-package com.diegusmich.intouch.ui.activities.start
+package com.diegusmich.intouch.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.diegusmich.intouch.databinding.ActivityStartBinding
-import com.diegusmich.intouch.ui.activities.BaseActivity
-import com.diegusmich.intouch.ui.activities.main.MainActivity
+import com.diegusmich.intouch.ui.viewmodels.StartActivityViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import kotlinx.coroutines.launch
 
 class StartActivity : BaseActivity() {
 
@@ -56,7 +51,6 @@ class StartActivity : BaseActivity() {
                 startMainActivity()
         }
 
-
         viewModel.LOADING.observe(this){
             progressBar.visible(it)
             binding.saveCategoriesButton.isEnabled = !it && viewModel.checkedCategories.value!!.isNotEmpty()
@@ -85,7 +79,6 @@ class StartActivity : BaseActivity() {
         })
         finish()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

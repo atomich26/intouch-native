@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.activities.main
+package com.diegusmich.intouch.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,13 +6,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityMainBinding
-import com.diegusmich.intouch.ui.activities.AuthActivity
-import com.diegusmich.intouch.ui.activities.BaseActivity
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
-import com.diegusmich.intouch.ui.fragments.categories.CategoriesFragment
-import com.diegusmich.intouch.ui.fragments.feed.FeedFragment
-import com.diegusmich.intouch.ui.fragments.notifications.NotificationFragment
-import com.diegusmich.intouch.ui.fragments.profile.ProfileFragment
+import com.diegusmich.intouch.ui.fragments.CategoriesFragment
+import com.diegusmich.intouch.ui.fragments.FeedFragment
+import com.diegusmich.intouch.ui.fragments.NotificationFragment
+import com.diegusmich.intouch.ui.fragments.ProfileFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch

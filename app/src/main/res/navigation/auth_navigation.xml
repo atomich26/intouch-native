@@ -27,12 +27,12 @@
     </fragment>
     <fragment
         android:id="@+id/createAccountFragment"
-        android:name="com.diegusmich.intouch.ui.fragments.auth.signup.SignupFragment"
+        android:name="com.diegusmich.intouch.ui.fragments.SignupFragment"
         android:label="fragment_create_account"
         tools:layout="@layout/fragment_signup" />
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.diegusmich.intouch.ui.fragments.auth.login.LoginFragment"
+        android:name="com.diegusmich.intouch.ui.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
 </navigation>

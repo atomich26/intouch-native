@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.activities.user
+package com.diegusmich.intouch.ui.activities
 
 import com.diegusmich.intouch.ui.activities.BaseActivity
 

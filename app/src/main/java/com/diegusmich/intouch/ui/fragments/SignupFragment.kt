@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.fragments.auth.signup
+package com.diegusmich.intouch.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,8 +14,8 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentSignupBinding
-import com.diegusmich.intouch.ui.activities.start.StartActivity
-import com.diegusmich.intouch.ui.fragments.BaseFragment
+import com.diegusmich.intouch.ui.activities.StartActivity
+import com.diegusmich.intouch.ui.viewmodels.SignupViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.CalendarConstraints

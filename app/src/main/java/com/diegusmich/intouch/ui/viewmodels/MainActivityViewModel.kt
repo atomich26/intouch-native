@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.activities.main
+package com.diegusmich.intouch.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 

@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.fragments.categories
+package com.diegusmich.intouch.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,9 +14,9 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentCategoriesBinding
-import com.diegusmich.intouch.ui.activities.search.SearchActivity
+import com.diegusmich.intouch.ui.activities.SearchActivity
 import com.diegusmich.intouch.ui.adapters.CategoriesGridAdapter
-import com.diegusmich.intouch.ui.fragments.BaseFragment
+import com.diegusmich.intouch.ui.viewmodels.CategoriesViewModel
 import com.google.android.material.appbar.MaterialToolbar
 
 class CategoriesFragment : BaseFragment() {

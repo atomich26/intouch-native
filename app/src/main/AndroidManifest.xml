@@ -20,12 +20,12 @@
         android:theme="@style/Intouch.Theme.Material3"
         tools:targetApi="33">
         <activity
-            android:name=".ui.activities.search.SearchActivity"
+            android:name=".ui.activities.SearchActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".ui.activities.start.StartActivity"
+            android:name=".ui.activities.StartActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
@@ -35,7 +35,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.activities.main.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait">

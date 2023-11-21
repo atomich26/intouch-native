@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.activities.search
+package com.diegusmich.intouch.ui.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,8 +10,6 @@ import com.diegusmich.intouch.data.response.SearchUserResponse
 import com.diegusmich.intouch.ui.state.StateViewModel
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException

@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.fragments.auth.login
+package com.diegusmich.intouch.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentLoginBinding
-import com.diegusmich.intouch.ui.activities.main.MainActivity
-import com.diegusmich.intouch.ui.fragments.BaseFragment
+import com.diegusmich.intouch.ui.activities.MainActivity
+import com.diegusmich.intouch.ui.viewmodels.LoginViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.progressindicator.LinearProgressIndicator

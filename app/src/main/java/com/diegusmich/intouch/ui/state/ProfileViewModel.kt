@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.ui.fragments.profile
+package com.diegusmich.intouch.ui.state
 
 import com.diegusmich.intouch.ui.state.StateViewModel
 import com.google.firebase.auth.ktx.auth
