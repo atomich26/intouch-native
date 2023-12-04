@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.diegusmich.intouch.service.NetworkService
 import com.google.firebase.FirebaseApp
+import java.util.TimeZone
 
 class IntouchApplication : Application(), LifecycleEventObserver {
 

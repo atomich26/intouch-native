@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:background="@drawable/user_preview_post_feed_bg">
+            <com.diegusmich.intouch.ui.views.GlideImageView
+                android:id="@+id/userImagePreview"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/user_placeholder"
+                app:circleCrop="true" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="username"
+            android:maxLines="1"
+            android:maxLength="15"
+            android:ellipsize="end"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

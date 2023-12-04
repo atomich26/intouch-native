@@ -13,13 +13,10 @@ import com.diegusmich.intouch.databinding.ActivitySearchBinding
 import com.diegusmich.intouch.ui.adapters.SearchResultsAdapter
 import com.diegusmich.intouch.ui.viewmodels.SearchActivityViewModel
 
-
 class SearchActivity : BaseActivity() {
 
     private var _binding : ActivitySearchBinding? = null
     private val binding get() = _binding!!
-
-    private val searchByUsernameRegex = Regex("^@.+")
 
     private val viewModel : SearchActivityViewModel by viewModels()
 
@@ -54,10 +51,12 @@ class SearchActivity : BaseActivity() {
 
             setOnQueryTextListener(object: OnQueryTextListener{
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if(query.isNullOrBlank())
+                    if(query.isNullOrBlank()){
+                        Toast.makeText(this@SearchActivity, getString(R.string.search_empty_text), Toast.LENGTH_SHORT).show()
                         return false
+                    }
 
-                    if(searchByUsernameRegex.matches(query))
+                    if(query.startsWith("@"))
                         viewModel.onSearchByUsername(query)
                     else
                         viewModel.onSearchByEvent(query)
@@ -82,6 +81,16 @@ class SearchActivity : BaseActivity() {
             if (it != null)
                 Toast.makeText(this@SearchActivity, getString(it), Toast.LENGTH_SHORT)
                     .show()
+        }
+
+        viewModel.searchUserResult.observe(this){
+            if(viewModel.CONTENT_LOADED.value == true){
+               if(!it.isNullOrEmpty()){
+
+               }
+               else
+                   Toast.makeText(this@SearchActivity, getString(R.string.search_users_not_found), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

@@ -33,6 +33,11 @@
     <string name="edit_profile_action">Modifica profilo</string>
     <string name="logout_action">Disconetti</string>
     <string name="search_action">Cerca eventi o utenti</string>
+    <string name="search_empty_text">Il termine di ricerca non può essere vuoto.</string>
+    <string name="search_users_not_found">Nessun utente trovato</string>
+    <string name="user_info_friends">amicizie</string>
+    <string name="user_info_created">creati</string>
+    <string name="user_info_joined">partecipati</string>
 
     <!-- Dialog strings -->
     <string name="alert_title_error">Errore</string>
@@ -52,7 +57,7 @@
     <string name="firebaseTooManyRequestsException">Blocco temporaneo per attività insolite</string>
     <string name="firebaseDefaultExceptionMessage">Errore interno! Contatta l\'assistenza</string>
 
-    <!-- Error messages -->
+    <!-- Error messages API -->
     <string name="form_blank_fields">Compila tutti i campi</string>
     <string name="form_invalid_values">Dati inseriti non validi</string>
     <string name="invalid_argument">I valori inseriti non sono validi</string>

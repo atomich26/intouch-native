@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.response.FormErrorsResponse
-import com.diegusmich.intouch.ui.state.StateViewModel
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.ErrorUtil
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil

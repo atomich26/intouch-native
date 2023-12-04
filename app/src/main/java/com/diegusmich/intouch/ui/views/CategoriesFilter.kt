@@ -23,7 +23,7 @@ class CategoriesFilter(ctx: Context, attrs: AttributeSet) : ChipGroup(ctx, attrs
     }
 
     fun checkedFilters(): List<String> {
-        return checkedChipIds.map { _categories[it].id.toString()}
+        return checkedChipIds.map { _categories[it].id.toString() }
     }
 
     fun applyCheckedAll(checked: Boolean) {

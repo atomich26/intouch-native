@@ -58,6 +58,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
     implementation ("com.firebaseui:firebase-ui-storage:7.2.0")
     implementation("com.google.firebase:firebase-functions-ktx")
     implementation("com.airbnb.android:lottie:5.0.3")

@@ -7,7 +7,6 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.EventPreview
 import com.diegusmich.intouch.data.model.UserPreview
 import com.diegusmich.intouch.data.response.SearchUserResponse
-import com.diegusmich.intouch.ui.state.StateViewModel
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
@@ -30,7 +29,7 @@ class SearchActivityViewModel : StateViewModel() {
         Firebase.functions.getHttpsCallable("users-search").call(mapOf("query" to sanitized))
             .addOnSuccessListener {
                 updateState(_CONTENT_LOADED, true)
-                _searchUserResults.value = SearchUserResponse().parse(it.data!!)
+                //_searchUserResults.value = SearchUserResponse().parse(it.data!!)
         }
             .addOnFailureListener{
                 val messageId = if (it.cause is UnknownHostException || it.cause is ConnectException)
@@ -42,7 +41,7 @@ class SearchActivityViewModel : StateViewModel() {
             }
     }
 
-    fun onSearchByEvent(queryText : String){
+    fun onSearchByEvent(queryText : String) = viewModelScope.launch {
 
     }
 }

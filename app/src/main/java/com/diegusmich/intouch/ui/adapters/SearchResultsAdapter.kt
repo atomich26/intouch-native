@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.diegusmich.intouch.R
+import com.diegusmich.intouch.data.model.UserPreview
 
 class SearchResultsAdapter(collection: List<Any>) :
     RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
@@ -13,7 +14,6 @@ class SearchResultsAdapter(collection: List<Any>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultsViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.user_list_item, parent, false)
-
         return SearchResultsViewHolder(itemView)
     }
 
@@ -55,4 +55,5 @@ class SearchResultsAdapter(collection: List<Any>) :
         data.clear()
         notifyItemRangeRemoved(0, size);
     }
+
 }

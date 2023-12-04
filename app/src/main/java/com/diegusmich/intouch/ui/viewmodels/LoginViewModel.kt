@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.ui.state.StateViewModel
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil
 import com.google.firebase.auth.ktx.auth

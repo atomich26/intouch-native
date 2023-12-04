@@ -14,7 +14,8 @@ class CategoriesGridAdapter(private val data: List<Category>) :
     RecyclerView.Adapter<CategoriesGridAdapter.CategoryGridViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryGridViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.category_grid_item, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.category_grid_item, parent, false)
 
         return CategoryGridViewHolder(itemView)
     }
@@ -29,7 +30,7 @@ class CategoriesGridAdapter(private val data: List<Category>) :
 
     class CategoryGridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(category: Category) {
-            val imgRef = CloudImageService.CATEGORIES.imageRef(category.cover!!)
+            val imgRef = CloudImageService.CATEGORIES.imageRef(category.cover)
             itemView.findViewById<TextView>(R.id.categoryNameGridItem).text = category.name
             itemView.findViewById<GlideImageView>(R.id.categoryImageGridItem).load(imgRef)
         }

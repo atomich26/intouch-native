@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/introFragment"
-        android:name="com.diegusmich.intouch.ui.fragments.intro.IntroFragment"
+        android:name="com.diegusmich.intouch.ui.fragments.IntroFragment"
         android:label="IntroFragment"
         tools:layout="@layout/fragment_intro">
         <action

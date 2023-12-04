@@ -4,4 +4,9 @@
         <attr name="circleCrop" format="boolean"/>
         <attr name="placeholder" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="UserInfoNumber">
+        <attr name="displayText" format="string"/>
+    </declare-styleable>
+
 </resources>

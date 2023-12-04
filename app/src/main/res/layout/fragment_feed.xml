@@ -20,10 +20,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/categoriesGridView"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/postsFeedListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/eventsFeedListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.core.widget.NestedScrollView>
     </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
