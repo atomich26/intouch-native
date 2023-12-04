@@ -4,6 +4,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="7dp"
         android:orientation="vertical">
         <FrameLayout
             android:layout_width="match_parent"
@@ -12,8 +13,8 @@
             android:background="@drawable/user_preview_post_feed_bg">
             <com.diegusmich.intouch.ui.views.GlideImageView
                 android:id="@+id/userImagePreview"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:src="@drawable/user_placeholder"
                 app:circleCrop="true" />
         </FrameLayout>
