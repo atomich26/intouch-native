@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
@@ -26,7 +27,7 @@ class CategoriesFragment : BaseFragment() {
 
     private lateinit var toolbar : MaterialToolbar
 
-    private val viewModel : CategoriesViewModel by viewModels()
+    private val viewModel : CategoriesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +63,8 @@ class CategoriesFragment : BaseFragment() {
             }
 
         }, viewLifecycleOwner)
+
+        viewModel.loadCategories()
     }
 
     override fun lifecycleStateObserve() {

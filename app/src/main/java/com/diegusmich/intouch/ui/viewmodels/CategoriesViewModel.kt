@@ -15,10 +15,6 @@ class CategoriesViewModel : StateViewModel() {
     private val _categories = MutableLiveData<List<Category>?>(null)
     val categories: LiveData<List<Category>?> = _categories
 
-    init {
-        loadCategories()
-    }
-
     fun loadCategories() = viewModelScope.launch {
         if (categories.value != null) {
             updateState(_LOADING, false)

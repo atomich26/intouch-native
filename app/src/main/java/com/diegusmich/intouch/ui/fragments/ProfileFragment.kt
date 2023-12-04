@@ -10,9 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
+import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.activities.AuthActivity
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
@@ -24,7 +26,7 @@ class ProfileFragment : BaseFragment() {
 
     private lateinit var toolbar: MaterialToolbar
 
-    private val viewModel: ProfileViewModel by viewModels()
+    private val viewModel: ProfileViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +36,7 @@ class ProfileFragment : BaseFragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = ProfileLayoutBinding.inflate(layoutInflater, container, false)
         toolbar = binding.appBarLayout.materialToolbar
+
         return binding.root
     }
 
@@ -42,8 +45,11 @@ class ProfileFragment : BaseFragment() {
 
         viewModel.loadAuthProfile()
 
-        toolbar.title = getString(R.string.profile_title)
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.loadAuthProfile()
+        }
 
+        toolbar.title = getString(R.string.profile_title)
         toolbar.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.profile_auth_menu, menu)
@@ -81,7 +87,7 @@ class ProfileFragment : BaseFragment() {
                 return@observe
 
             toolbar.title = it.username
-            binding.userImageProfile.load(it.img)
+            binding.userImageProfile.load(CloudImageService.USERS.imageRef(it.img))
             binding.nameProfileLayout.text = it.name
             binding.biographyProfileLayout.text = it.biography
             binding.userInfoFriendship.setInfoValue(it.friends)

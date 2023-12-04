@@ -24,7 +24,7 @@ data class UserDTO(
                 username = documentSnapshot.getString("username") ?: "",
                 birthdate = documentSnapshot.getTimestamp("birthdate")!!.toDate(),
                 biography = documentSnapshot.getString("biography") ?: "",
-                img = documentSnapshot.getString("username") ?: "",
+                img = documentSnapshot.getString("img") ?: "",
                 preferences = documentSnapshot.get("preferences") as List<String>,
                 friends = documentSnapshot.get("friends") as List<String>,
                 joined = documentSnapshot.get("joined") as List<String>,
