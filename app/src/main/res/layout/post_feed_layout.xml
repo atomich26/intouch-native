@@ -9,7 +9,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
+            android:padding="3dp"
             android:background="@drawable/user_preview_post_feed_bg">
             <com.diegusmich.intouch.ui.views.GlideImageView
                 android:id="@+id/userImagePreview"

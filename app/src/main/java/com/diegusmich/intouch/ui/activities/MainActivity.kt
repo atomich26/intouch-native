@@ -9,6 +9,7 @@ import com.diegusmich.intouch.databinding.ActivityMainBinding
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.CategoriesFragment
 import com.diegusmich.intouch.ui.fragments.FeedFragment
+import com.diegusmich.intouch.ui.fragments.ModalPreferencesBottomSheet
 import com.diegusmich.intouch.ui.fragments.NotificationFragment
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
 import com.google.firebase.auth.ktx.auth

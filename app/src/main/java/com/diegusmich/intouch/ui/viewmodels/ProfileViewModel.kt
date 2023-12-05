@@ -19,7 +19,13 @@ class ProfileViewModel : StateViewModel() {
 
     fun onLogout() = Firebase.auth.signOut()
 
-    fun loadProfile(userId: String) = viewModelScope.launch {
+    fun loadProfile(userId: String?) = viewModelScope.launch {
+
+        if(userId == null){
+            updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
+            return@launch
+        }
+
         updateState(_LOADING, true)
 
         try{

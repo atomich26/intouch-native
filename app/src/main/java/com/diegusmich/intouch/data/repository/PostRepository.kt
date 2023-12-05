@@ -9,6 +9,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
@@ -24,9 +25,15 @@ object PostRepository : FirestoreCollection<PostDTO,PostDTO.Factory>(PostDTO.Fac
             ArchivedPostPreview(
                 id = it.id,
                 thumbnail = it.album[0],
-                createdAt = it.createdAt
+                  createdAt = it.createdAt
             )
         }
+    }
+
+    suspend fun getPost(id: String) = withContext(Dispatchers.IO){
+        val postData = getDoc(id)
+
+
     }
 
     suspend fun feed() = withContext(Dispatchers.IO){

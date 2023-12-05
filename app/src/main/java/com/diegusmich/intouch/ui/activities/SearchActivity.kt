@@ -12,6 +12,7 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivitySearchBinding
 import com.diegusmich.intouch.ui.adapters.SearchResultsAdapter
 import com.diegusmich.intouch.ui.viewmodels.SearchActivityViewModel
+import com.diegusmich.intouch.ui.views.decorators.visible
 
 class SearchActivity : BaseActivity() {
 
@@ -36,6 +37,7 @@ class SearchActivity : BaseActivity() {
         binding.searchResultsRecyclerView.layoutManager = LinearLayoutManager(this).apply {
             orientation = LinearLayoutManager.VERTICAL
         }
+        binding.searchResultsRecyclerView.adapter = SearchResultsAdapter(mutableListOf())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,15 +53,17 @@ class SearchActivity : BaseActivity() {
 
             setOnQueryTextListener(object: OnQueryTextListener{
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if(query.isNullOrBlank()){
+                    val queryText = query ?: ""
+
+                    if(queryText.replace("@", "").isNullOrBlank()){
                         Toast.makeText(this@SearchActivity, getString(R.string.search_empty_text), Toast.LENGTH_SHORT).show()
                         return false
                     }
 
-                    if(query.startsWith("@"))
-                        viewModel.onSearchByUsername(query)
+                    if(query?.startsWith("@") == true)
+                        viewModel.onSearchByUsername(queryText.replace("@", ""))
                     else
-                        viewModel.onSearchByEvent(query)
+                        viewModel.onSearchByEvent(queryText)
 
                     return true
                 }
@@ -86,11 +90,15 @@ class SearchActivity : BaseActivity() {
         viewModel.searchUserResult.observe(this){
             if(viewModel.CONTENT_LOADED.value == true){
                if(!it.isNullOrEmpty()){
-
+                   (binding.searchResultsRecyclerView.adapter as SearchResultsAdapter).replace(it)
                }
                else
                    Toast.makeText(this@SearchActivity, getString(R.string.search_users_not_found), Toast.LENGTH_SHORT).show()
             }
+        }
+
+        viewModel.LOADING.observe(this){
+            binding.pgLayout.progressBar.visible(it)
         }
     }
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.EventPreview
 import com.diegusmich.intouch.data.model.UserPreview
+import com.diegusmich.intouch.data.repository.UserRepository
 import com.diegusmich.intouch.data.response.SearchUserResponse
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
@@ -24,21 +25,17 @@ class SearchActivityViewModel : StateViewModel() {
     fun onSearchByUsername(queryText : String) = viewModelScope.launch {
         updateState(_LOADING, true)
 
-        val sanitized = queryText.replace("@", "")
+        try{
+            _searchUserResults.value = UserRepository.searchUser(queryText)
+            updateState(_CONTENT_LOADED, true)
+        }catch (e : Exception){
+            val messageId = if (e.cause is UnknownHostException || e.cause is ConnectException)
+                R.string.firebaseNetworkException
+            else
+                R.string.firebaseDefaultExceptionMessage
 
-        Firebase.functions.getHttpsCallable("users-search").call(mapOf("query" to sanitized))
-            .addOnSuccessListener {
-                updateState(_CONTENT_LOADED, true)
-                //_searchUserResults.value = SearchUserResponse().parse(it.data!!)
+            updateState(_ERROR, messageId)
         }
-            .addOnFailureListener{
-                val messageId = if (it.cause is UnknownHostException || it.cause is ConnectException)
-                    R.string.firebaseNetworkException
-                else
-                    R.string.firebaseDefaultExceptionMessage
-
-                updateState(_ERROR, messageId)
-            }
     }
 
     fun onSearchByEvent(queryText : String) = viewModelScope.launch {

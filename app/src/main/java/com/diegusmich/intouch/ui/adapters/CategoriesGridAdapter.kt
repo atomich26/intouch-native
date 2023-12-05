@@ -20,9 +20,7 @@ class CategoriesGridAdapter(private val data: List<Category>) :
         return CategoryGridViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
+    override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: CategoryGridViewHolder, position: Int) {
         holder.bind(data[position])

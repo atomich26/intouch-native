@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
     <include
         android:id="@+id/appBarLayout"
-        android:layout_height="wrap_content"
+        layout="@layout/material_toolbar"
         android:layout_width="match_parent"
-        layout="@layout/material_toolbar"/>
+        android:layout_height="wrap_content" />
 
     <com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -17,86 +17,156 @@
         android:layout_height="match_parent"
         android:hapticFeedbackEnabled="true">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedScroll"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/friendshipRequestBanner"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                style="@style/Widget.Material3.CardView.Filled">
 
-                <LinearLayout
-                    android:id="@+id/mainInfoProfileLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/materialHorizontalPadding"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/nameProfileLayout"
-                    android:layout_marginTop="10dp">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                    <com.diegusmich.intouch.ui.views.GlideImageView
-                        android:id="@+id/userImageProfile"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        app:circleCrop="true"
-                        app:placeholder="@drawable/user_placeholder" />
+            <TextView
+                android:id="@+id/friendshipRequestText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/materialHorizontalPadding"
+                android:text="@string/user_confirm_friendship_text"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-                    <com.diegusmich.intouch.ui.views.UserInfoNumber
-                        android:id="@+id/user_info_friendship"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:displayText="@string/user_info_friends"/>
+            <Button
+                android:id="@+id/acceptFriendshipButton"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:iconTint="#04BF3B"
+                app:icon="@drawable/baseline_check_24" />
 
-                    <com.diegusmich.intouch.ui.views.UserInfoNumber
-                        android:id="@+id/user_info_created"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:displayText="@string/user_info_created"/>
+            <Button
+                android:id="@+id/denyFriendshipButton"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:iconTint="#BC0404"
+                app:icon="@drawable/baseline_close_24"/>
 
-                    <com.diegusmich.intouch.ui.views.UserInfoNumber
-                        android:id="@+id/user_info_joined"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:displayText="@string/user_info_joined"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
 
-                </LinearLayout>
+    <LinearLayout
+        android:id="@+id/mainInfoProfileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="@dimen/materialHorizontalPadding"
+        app:layout_constraintBottom_toTopOf="@id/nameProfileLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/nameProfileLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/materialHorizontalPadding"
-                    app:layout_constraintTop_toBottomOf="@id/mainInfoProfileLayout"
-                    app:layout_constraintBottom_toTopOf="@id/biographyProfileLayout"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    android:textSize="17sp"
-                    android:text=""/>
+        <com.diegusmich.intouch.ui.views.GlideImageView
+            android:id="@+id/userImageProfile"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="16dp"
+            app:circleCrop="true"
+            app:placeholder="@drawable/user_placeholder" />
 
-                <TextView
-                    android:id="@+id/biographyProfileLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/nameProfileLayout"
-                    android:paddingHorizontal="@dimen/materialHorizontalPadding"
-                    android:layout_marginTop="5dp"
-                    android:textSize="15sp"
-                    android:text=""/>
+        <com.diegusmich.intouch.ui.views.UserInfoNumber
+            android:id="@+id/user_info_friendship"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:displayText="@string/user_info_friends" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/userPostsGridView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/biographyProfileLayout"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
-    </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <com.diegusmich.intouch.ui.views.UserInfoNumber
+            android:id="@+id/user_info_created"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:displayText="@string/user_info_created" />
+
+        <com.diegusmich.intouch.ui.views.UserInfoNumber
+            android:id="@+id/user_info_joined"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:displayText="@string/user_info_joined" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/nameProfileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="@dimen/materialHorizontalPadding"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/biographyProfileLayout"
+        app:layout_constraintTop_toBottomOf="@id/mainInfoProfileLayout" />
+
+    <TextView
+        android:id="@+id/biographyProfileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:paddingHorizontal="@dimen/materialHorizontalPadding"
+        android:text=""
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/nameProfileLayout" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/userProfileButtonGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/showUserPrefButton"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:paddingHorizontal="20dp"
+            android:text="@string/user_pref_button"
+            android:textStyle="bold"
+            app:icon="@drawable/outline_style_24" />
+
+        <Button
+            android:id="@+id/friendButton"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:text="@string/user_add_friendship"
+            android:textStyle="bold"
+            app:icon="@drawable/baseline_person_add_alt_24" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userPostsGridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.appcompat.widget.LinearLayoutCompat></androidx.core.widget.NestedScrollView></com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout></androidx.appcompat.widget.LinearLayoutCompat>

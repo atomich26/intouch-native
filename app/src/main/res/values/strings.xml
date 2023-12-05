@@ -38,6 +38,13 @@
     <string name="user_info_friends">amicizie</string>
     <string name="user_info_created">creati</string>
     <string name="user_info_joined">partecipati</string>
+    <string name="user_pref_button">I miei gusti</string>
+    <string name="user_add_friendship">Aggiungi amico</string>
+    <string name="user_remove_friendship">Rimuovi amico</string>
+    <string name="user_cancel_pending_request">Annulla</string>
+    <string name="user_confirm_frinedship">Accetta</string>
+    <string name="user_deny_friendship">Rifiuta</string>
+    <string name="user_confirm_friendship_text">Accetti la richiesta d\'amicizia?</string>
 
     <!-- Dialog strings -->
     <string name="alert_title_error">Errore</string>

@@ -1,16 +1,21 @@
 package com.diegusmich.intouch.data.repository
 
 import com.diegusmich.intouch.data.dto.UserDTO
+import com.diegusmich.intouch.data.model.UserPreview
 import com.diegusmich.intouch.data.model.UserProfile
+import com.diegusmich.intouch.data.response.SearchUserResponse
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 object UserRepository : FirestoreCollection<UserDTO, UserDTO.Factory>(UserDTO.Factory::class.java) {
     override val collectionRef = Firebase.firestore.collection("users")
+    private val server = Firebase.functions
 
     suspend fun getUserProfile(userId: String) = withContext(Dispatchers.IO) {
         val userDoc = getDoc(userId)!!
@@ -30,5 +35,19 @@ object UserRepository : FirestoreCollection<UserDTO, UserDTO.Factory>(UserDTO.Fa
             friendship = friendship.await(),
             archivedPosts = archivedPosts.await()
         )
+    }
+
+    suspend fun searchUser(query: String) = withContext(Dispatchers.IO) {
+        val response = server.getHttpsCallable("users-search").call(mapOf("query" to query)).await()
+
+        return@withContext SearchUserResponse.parse(response.data!!).map{
+            val userDoc = UserRepository.getDoc(it)!!
+            UserPreview(
+                id = userDoc.id,
+                name = userDoc.name,
+                username = userDoc.username,
+                img = userDoc.img
+            )
+        }
     }
 }

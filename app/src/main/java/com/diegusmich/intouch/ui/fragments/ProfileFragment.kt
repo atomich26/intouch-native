@@ -11,11 +11,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.diegusmich.intouch.R
+import com.diegusmich.intouch.data.model.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.activities.AuthActivity
+import com.diegusmich.intouch.ui.activities.MainActivity
+import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -43,6 +48,7 @@ class ProfileFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //binding.userProfileButtonGroup.visibility = View.GONE
         viewModel.loadAuthProfile()
 
         binding.swipeRefreshLayout.setOnRefreshListener {
@@ -82,8 +88,8 @@ class ProfileFragment : BaseFragment() {
     }
 
     override fun lifecycleStateObserve() {
-        viewModel.profile.observe(viewLifecycleOwner){
-            if(it == null)
+        viewModel.profile.observe(viewLifecycleOwner) {
+            if (it == null)
                 return@observe
 
             toolbar.title = it.username
@@ -93,13 +99,28 @@ class ProfileFragment : BaseFragment() {
             binding.userInfoFriendship.setInfoValue(it.friends)
             binding.userInfoCreated.setInfoValue(it.created)
             binding.userInfoJoined.setInfoValue(it.joined)
+
+            when (it.friendship.status) {
+                is Friendship.Status.PENDING -> {
+                    val isVisible = if (it.friendship.status.isActor) View.GONE else View.VISIBLE
+                    binding.friendshipRequestBanner.visibility = isVisible
+                }
+
+                else ->{
+
+                }
+            }
+
+            binding.userPostsGridView.layoutManager = GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
+            binding.userPostsGridView.adapter = ArchivedPostsAdapter(it.archivedPosts)
+            binding.userProfileButtonGroup.visibility = View.VISIBLE
         }
 
-        viewModel.LOADING.observe(this){
+        viewModel.LOADING.observe(this) {
             binding.swipeRefreshLayout.isRefreshing = it
         }
 
-        viewModel.ERROR.observe(this){
+        viewModel.ERROR.observe(this) {
             if (it != null)
                 Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT)
                     .show()

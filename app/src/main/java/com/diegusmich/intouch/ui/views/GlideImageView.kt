@@ -4,22 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatImageView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.module.GlideApp
 import com.diegusmich.intouch.module.GlideRequest
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @SuppressLint("CheckResult")
-class GlideImageView(private val ctx: Context, attrs: AttributeSet) : AppCompatImageView(ctx, attrs) {
+open class GlideImageView(private val ctx: Context, attrs: AttributeSet) : ShapeableImageView(ctx, attrs) {
 
     private val _glideRequest: GlideRequest<Drawable>
-    private var _imgRef : String? = null
-    val imgRef get() = _imgRef
 
     init {
         ctx.theme.obtainStyledAttributes(attrs, R.styleable.GlideImageView, 0, 0).apply {
@@ -27,7 +22,7 @@ class GlideImageView(private val ctx: Context, attrs: AttributeSet) : AppCompatI
                 val isCircleCropped = getBoolean(R.styleable.GlideImageView_circleCrop, false)
                 val placeholderDrawable = (getResourceId(
                     R.styleable.GlideImageView_placeholder,
-                    R.drawable.glide_image_placeholder
+                    R.drawable.glide_image_placeholder_blank
                 ))
                 _glideRequest = GlideApp.with(ctx).load(this@GlideImageView.drawable).apply {
                     placeholder(placeholderDrawable)
@@ -52,7 +47,7 @@ class GlideImageView(private val ctx: Context, attrs: AttributeSet) : AppCompatI
         _glideRequest.load(imgReference).into(this@GlideImageView)
     }
 
-    fun clear(){
+    fun clear() {
         GlideApp.with(ctx).clear(this)
     }
 }
