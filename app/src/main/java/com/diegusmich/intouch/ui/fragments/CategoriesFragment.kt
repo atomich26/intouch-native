@@ -58,10 +58,8 @@ class CategoriesFragment : BaseFragment() {
                 if(menuItem.itemId == R.id.startActivitySearch){
                     requireActivity().startActivity(Intent(requireContext(), SearchActivity::class.java))
                 }
-
                 return true
             }
-
         }, viewLifecycleOwner)
 
         viewModel.loadCategories()

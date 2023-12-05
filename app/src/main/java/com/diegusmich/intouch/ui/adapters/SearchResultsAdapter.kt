@@ -37,8 +37,8 @@ class SearchResultsAdapter(collection: List<Any>) :
         holder.bind(data[position])
     }
 
-    class SearchResultsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item : Any) {
+    class SearchResultsViewHolder(itemView: View) : ViewHolder<Any>(itemView) {
+        override fun bind(item : Any) {
             if(item is UserPreview){
                 val imgRef = CloudImageService.USERS.imageRef(item.img)
                 itemView.findViewById<GlideImageView>(R.id.userListItemAvatar).load(imgRef)

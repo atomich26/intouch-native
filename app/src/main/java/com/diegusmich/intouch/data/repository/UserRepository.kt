@@ -50,4 +50,17 @@ object UserRepository : FirestoreCollection<UserDTO, UserDTO.Factory>(UserDTO.Fa
             )
         }
     }
+
+    suspend fun getUserFriends(id: String) = withContext(Dispatchers.IO) {
+        val userDoc = getDoc(id) ?: return@withContext null
+        userDoc.friends.map {
+            val friendDoc = getDoc(it)!!
+            UserPreview(
+                id = friendDoc.id,
+                name = friendDoc.name,
+                username = friendDoc.username,
+                img = friendDoc.img
+            )
+        }
+    }
 }

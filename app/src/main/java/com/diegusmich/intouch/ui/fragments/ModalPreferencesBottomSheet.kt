@@ -5,21 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.diegusmich.intouch.R
+import com.diegusmich.intouch.databinding.PreferencesBottomSheetContentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ModalPreferencesBottomSheet : BottomSheetDialogFragment() {
+
+    private var _binding : PreferencesBottomSheetContentBinding? = null
+    val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.preferences_bottom_sheet_content, container, false)
+    ): View {
+        _binding = PreferencesBottomSheetContentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
     }
 }

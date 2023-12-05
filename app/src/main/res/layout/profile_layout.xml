@@ -148,6 +148,7 @@
             android:paddingHorizontal="20dp"
             android:text="@string/user_pref_button"
             android:textStyle="bold"
+            android:drawablePadding="5dp"
             app:icon="@drawable/outline_style_24" />
 
         <Button

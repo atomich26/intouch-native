@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,8 +14,10 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.ui.fragments.ModalPreferencesBottomSheet
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import kotlin.math.sign
 
 class UserActivity : BaseActivity() {
 
@@ -28,32 +31,40 @@ class UserActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         userId = intent.extras?.getString(USER_ARG)
+
         super.onCreate(savedInstanceState)
 
         _binding = ProfileLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         toolbar = binding.appBarLayout.materialToolbar
+        toolbar.title = getString(R.string.profile_title)
+        setSupportActionBar(toolbar)
+
+        toolbar.setNavigationOnClickListener {
+            this.finish()
+        }
+        toolbar.navigationIcon =  AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.loadProfile(userId)
         }
 
-        setSupportActionBar(toolbar)
-        toolbar.title = getString(R.string.profile_title)
-        toolbar.setNavigationOnClickListener {
-            this.finish()
+        val prefsModalBottomSheet = ModalPreferencesBottomSheet()
+
+        binding.showUserPrefButton.setOnClickListener {
+            prefsModalBottomSheet.show(supportFragmentManager, "PREF_MODAL_BOTTOM_SHEET")
         }
-        toolbar.navigationIcon =  AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
-        toolbar.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.profile_auth_menu, menu)
-            }
 
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-               return false
+        binding.userInfoFriendship.setOnClickListener{
+            with(viewModel.profile){
+                if(value?.friends!! > 0){
+                    startActivity(Intent(this@UserActivity, UserFriendsActivity::class.java).apply {
+                        putExtra(UserFriendsActivity.USER_ARG, value?.id)
+                    })
+                }
             }
-
-        },this)
+        }
     }
 
 
@@ -76,6 +87,14 @@ class UserActivity : BaseActivity() {
                 is Friendship.Status.PENDING -> {
                     val isVisible = if (it.friendship.status.isActor) View.GONE else View.VISIBLE
                     binding.friendshipRequestBanner.visibility = isVisible
+                }
+
+                is Friendship.Status.FRIEND -> {
+                    binding.userProfileButtonGroup.visibility = View.VISIBLE
+                }
+                is Friendship.Status.NONE -> {
+                    binding.friendshipRequestBanner.visibility = View.GONE
+                    binding.userProfileButtonGroup.visibility = View.VISIBLE
                 }
 
                 else ->{

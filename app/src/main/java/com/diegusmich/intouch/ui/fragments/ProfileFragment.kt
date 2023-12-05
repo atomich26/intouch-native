@@ -20,6 +20,7 @@ import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.activities.AuthActivity
 import com.diegusmich.intouch.ui.activities.MainActivity
+import com.diegusmich.intouch.ui.activities.UserFriendsActivity
 import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
@@ -85,6 +86,16 @@ class ProfileFragment : BaseFragment() {
             }
 
         }, viewLifecycleOwner)
+
+        binding.userInfoFriendship.setOnClickListener{
+            with(viewModel.profile){
+                if(value?.friends!! > 0){
+                    startActivity(Intent(requireContext(), UserFriendsActivity::class.java).apply {
+                        putExtra(UserFriendsActivity.USER_ARG, value?.id)
+                    })
+                }
+            }
+        }
     }
 
     override fun lifecycleStateObserve() {

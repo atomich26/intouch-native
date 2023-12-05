@@ -22,17 +22,17 @@ class ArchivedPostsAdapter(collection: List<ArchivedPostPreview>) : DynamicDataA
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ArchivedPostViewHolder, position: Int) {
-        holder.bindData(data[position])
+        holder.bind(data[position])
     }
 
-    class ArchivedPostViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        fun bindData(data : ArchivedPostPreview){
-            val imgRef = CloudImageService.POSTS.imageRef(data.thumbnail)
+    class ArchivedPostViewHolder(itemView : View) : ViewHolder<ArchivedPostPreview>(itemView){
+        override fun bind(item : ArchivedPostPreview){
+            val imgRef = CloudImageService.POSTS.imageRef(item.thumbnail)
             itemView.findViewById<GlideImageView>(R.id.postPreviewProfileGridItem).load(imgRef)
-            itemView.findViewById<TextView>(R.id.datePostProfileGridItem).text = TimeUtil.toLocaleString(data.createdAt)
+            itemView.findViewById<TextView>(R.id.datePostProfileGridItem).text = TimeUtil.toLocaleString(item.createdAt)
 
             itemView.setOnClickListener{
-                Toast.makeText(itemView.context, "Post ${data.id}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(itemView.context, "Post ${item.id}", Toast.LENGTH_SHORT).show()
             }
         }
     }

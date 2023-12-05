@@ -2,14 +2,32 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="I miei gusti"
-        android:textSize="20sp">
-
+        android:layout_height="wrap_content"
+        android:text="@string/user_pref_button"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:drawableLeft="@drawable/outline_style_24"
+        android:drawablePadding="10dp">
     </TextView>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/preferencesChipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sport"
+            style="@style/Widget.Material3.Chip.Suggestion"
+            android:checkable="false"
+            android:checked="false"/>
+    </com.google.android.material.chip.ChipGroup>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

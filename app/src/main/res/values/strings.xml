@@ -10,6 +10,7 @@
     <string name="profile_title">Profilo</string>
     <string name="add_event_title">Crea evento</string>
     <string name="notifications_title">Notifiche</string>
+    <string name="user_friends_activity">Amici</string>
 
     <string name="action_login_short">Accedi</string>
     <string name="action_create_account_short">Registrati</string>

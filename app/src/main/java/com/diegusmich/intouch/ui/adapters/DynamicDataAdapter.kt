@@ -3,7 +3,7 @@ package com.diegusmich.intouch.ui.adapters
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class DynamicDataAdapter<E, T : RecyclerView.ViewHolder>(collection: List<E>) : RecyclerView.Adapter<T>() {
+abstract class DynamicDataAdapter<E, T : DynamicDataAdapter.ViewHolder<E>>(collection: List<E>) : RecyclerView.Adapter<T>() {
 
     protected val data = collection.toMutableList()
 
@@ -15,6 +15,7 @@ abstract class DynamicDataAdapter<E, T : RecyclerView.ViewHolder>(collection: Li
     fun replace(items : List<E>){
         this.clear()
         data.addAll(items)
+        notifyItemRangeInserted(0, data.size)
     }
 
     fun clear(){
