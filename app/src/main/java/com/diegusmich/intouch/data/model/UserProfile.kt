@@ -1,5 +1,7 @@
 package com.diegusmich.intouch.data.model
 
+import com.diegusmich.intouch.data.dto.UserDTO
+
 data class UserProfile(
     val id: String,
     val isAuth: Boolean,
@@ -7,6 +9,7 @@ data class UserProfile(
     val username: String,
     val biography: String,
     val img: String,
+    val preferences: List<Category>,
     val friends: Int,
     val joined: Int,
     val created: Int,

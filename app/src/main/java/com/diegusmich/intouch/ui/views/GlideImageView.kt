@@ -40,7 +40,8 @@ open class GlideImageView(private val ctx: Context, attrs: AttributeSet) : Shape
     }
 
     fun load(url: String) {
-        _glideRequest.load(url).into(this)
+        if(url.isNotBlank())
+            _glideRequest.load(url).into(this)
     }
 
     fun load(imgReference: StorageReference) {

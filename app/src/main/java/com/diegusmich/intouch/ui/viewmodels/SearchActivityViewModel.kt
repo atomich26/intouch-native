@@ -7,9 +7,7 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.EventPreview
 import com.diegusmich.intouch.data.model.UserPreview
 import com.diegusmich.intouch.data.repository.UserRepository
-import com.diegusmich.intouch.data.response.SearchUserResponse
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.FirebaseNetworkException
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -29,7 +27,7 @@ class SearchActivityViewModel : StateViewModel() {
             _searchUserResults.value = UserRepository.searchUser(queryText)
             updateState(_CONTENT_LOADED, true)
         }catch (e : Exception){
-            val messageId = if (e.cause is UnknownHostException || e.cause is ConnectException)
+            val messageId = if (e.cause is UnknownHostException || e.cause is ConnectException || e is FirebaseNetworkException)
                 R.string.firebaseNetworkException
             else
                 R.string.firebaseDefaultExceptionMessage

@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.diegusmich.intouch.R
 import com.google.android.material.card.MaterialCardView
 
-class UserInfoNumber(ctx : Context, attrs: AttributeSet) : MaterialCardView(ctx, attrs) {
+class  UserInfoNumber(ctx : Context, attrs: AttributeSet) : MaterialCardView(ctx, attrs) {
 
     private val displayText: String
 

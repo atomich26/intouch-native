@@ -18,19 +18,19 @@ object PostRepository : FirestoreCollection<PostDTO,PostDTO.Factory>(PostDTO.Fac
     private val server = Firebase.functions
     override val collectionRef = Firebase.firestore.collection("posts")
 
-    suspend fun archivedPosts(userId: String) = withContext(Dispatchers.IO){
+    suspend fun archived(userId: String) = withContext(Dispatchers.IO){
         withQuery{
             it.whereEqualTo("userId", userId).orderBy("createdAt", Query.Direction.ASCENDING)
         }.map {
             ArchivedPostPreview(
                 id = it.id,
                 thumbnail = it.album[0],
-                  createdAt = it.createdAt
+                createdAt = it.createdAt
             )
         }
     }
 
-    suspend fun getPost(id: String) = withContext(Dispatchers.IO){
+    suspend fun postByAuthor(id: String) = withContext(Dispatchers.IO){
         val postData = getDoc(id)
 
 

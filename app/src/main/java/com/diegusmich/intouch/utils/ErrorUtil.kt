@@ -25,5 +25,5 @@ object ErrorUtil {
         "EMPTY_BIRTHDATE" to R.string.empty_birthdate
     )
 
-    fun getMessage(key : String) = messages[key]
+    fun getMessage(key : String) = messages[key] ?: R.string.default_invalid_error
 }

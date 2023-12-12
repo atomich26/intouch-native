@@ -46,6 +46,7 @@
     <string name="user_confirm_frinedship">Accetta</string>
     <string name="user_deny_friendship">Rifiuta</string>
     <string name="user_confirm_friendship_text">Accetti la richiesta d\'amicizia?</string>
+    <string name="profile_updated">Profilo aggiornato</string>
 
     <!-- Dialog strings -->
     <string name="alert_title_error">Errore</string>
@@ -86,4 +87,5 @@
     <string name="invalid_date">Data non valida</string>
     <string name="date_after_now">La data è successiva a quella corrente</string>
     <string name="empty_birthdate">La data di nascita non può essere vuota</string>
+    <string name="default_invalid_error">Campo non valido</string>
 </resources>

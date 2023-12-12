@@ -15,11 +15,7 @@ object CategoryRepository :
 
     suspend fun getAll() = withContext(Dispatchers.IO) {
         withQuery { it.orderBy("name", Query.Direction.ASCENDING) }.map {
-            Category(
-                id = it.id,
-                name = it.name,
-                cover = it.cover
-            )
+            Category.fromDTO(it)
         }
     }
 }

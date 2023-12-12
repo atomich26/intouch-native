@@ -9,7 +9,7 @@ abstract class DynamicDataAdapter<E, T : DynamicDataAdapter.ViewHolder<E>>(colle
 
     fun add(items : List<E>){
         data.addAll(items)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(data.size, items.size)
     }
 
     fun replace(items : List<E>){

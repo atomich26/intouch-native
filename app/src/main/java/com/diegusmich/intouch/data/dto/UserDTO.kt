@@ -20,8 +20,8 @@ data class UserDTO(
         override fun fromSnapshot(documentSnapshot: DocumentSnapshot): UserDTO {
             return UserDTO(
                 id = documentSnapshot.id,
-                name = documentSnapshot.getString("name") ?: "",
-                username = documentSnapshot.getString("username") ?: "",
+                name = documentSnapshot.getString("name")!!,
+                username = documentSnapshot.getString("username")!!,
                 birthdate = documentSnapshot.getTimestamp("birthdate")!!.toDate(),
                 biography = documentSnapshot.getString("biography") ?: "",
                 img = documentSnapshot.getString("img") ?: "",

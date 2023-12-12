@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentSignupBinding
@@ -19,7 +20,9 @@ import com.diegusmich.intouch.ui.viewmodels.SignupViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import java.util.Date
@@ -64,8 +67,9 @@ class SignupFragment : BaseFragment() {
         binding.textviewGdpr.movementMethod = LinkMovementMethod.getInstance()
 
         //Birthdate input
-        val datePickerValidator = CalendarConstraints.Builder()
-            .setValidator(DateValidatorPointBackward.before(Date().time))
+        val datePickerValidator = CalendarConstraints.Builder().setValidator(CompositeDateValidator.allOf(
+            listOf(DateValidatorPointBackward.now(), DateValidatorPointForward.from(-2208988800000))
+        ))
 
         val datePicker = MaterialDatePicker.Builder
             .datePicker()
@@ -94,8 +98,9 @@ class SignupFragment : BaseFragment() {
             viewModel.onUpdateEmail(it.toString())
         }
 
-        binding.signupPasswordTextField.doAfterTextChanged {
-            viewModel.onUpdatePassword(it.toString())
+        binding.signupPasswordTextField.doOnTextChanged { text, start, before, count ->
+            if(count != before)
+                viewModel.onUpdatePassword(text.toString())
         }
 
         binding.signupNameTextField.doAfterTextChanged {

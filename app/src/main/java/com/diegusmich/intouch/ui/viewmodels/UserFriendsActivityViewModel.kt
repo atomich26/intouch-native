@@ -23,7 +23,7 @@ class UserFriendsActivityViewModel : StateViewModel() {
         updateState(_LOADING, true)
 
         try{
-            _userFriends.value = UserRepository.getUserFriends(userId)
+            _userFriends.value = UserRepository.userFriends(userId)
             updateState(_CONTENT_LOADED, true)
 
         }catch(e : Exception){

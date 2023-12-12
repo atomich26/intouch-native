@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.UserListLayoutBinding
 import com.diegusmich.intouch.ui.adapters.UsersListAdapter
 import com.diegusmich.intouch.ui.viewmodels.UserFriendsActivityViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class UserFriendsActivity : BaseActivity() {
 
@@ -55,7 +58,7 @@ class UserFriendsActivity : BaseActivity() {
         }
 
         viewModel.LOADING.observe(this){
-            binding.userListSwipeRefreshLayout.isRefreshing = it
+            binding.userListSwipeRefreshLayout.isRefreshingDelayed(this, it)
         }
 
         viewModel.ERROR.observe(this){

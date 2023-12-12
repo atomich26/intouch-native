@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.response.FormErrorsResponse
+import com.diegusmich.intouch.data.response.FormErrorsCallableResponse
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.ErrorUtil
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil
@@ -78,7 +78,6 @@ class SignupViewModel : StateViewModel() {
         )
         try {
             Firebase.functions.getHttpsCallable("users-upsert").call(requestData).await()
-
             Firebase.auth.signInWithEmailAndPassword(requestData["email"].toString(), requestData["password"].toString())
                 .addOnSuccessListener {
                     updateState(_LOGGED, true)
@@ -95,7 +94,7 @@ class SignupViewModel : StateViewModel() {
 
                 FirebaseFunctionsException.Code.INVALID_ARGUMENT -> {
                     if (e.details != null) {
-                        val errors = FormErrorsResponse.parse(e.details!!)
+                        val errors = FormErrorsCallableResponse(e.details).errors
 
                         if (errors.containsKey("name"))
                             _name.apply {

@@ -16,7 +16,7 @@ data class PostDTO(
             val data = documentSnapshot.data!!
             return PostDTO(
                 id = documentSnapshot.id,
-                eventId = documentSnapshot.getString("eventId") ?: "",
+                eventId = documentSnapshot.getString("eventId")!!,
                 description = documentSnapshot.getString("description") ?: "",
                 album = documentSnapshot.get("album") as List<String>,
                 createdAt = documentSnapshot.getTimestamp("createdAt")!!.toDate(),

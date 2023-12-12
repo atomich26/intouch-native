@@ -24,6 +24,9 @@ class ModalPreferencesBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+    }
 
+    companion object{
+        const val TAG = "PREF_MODAL_BOTTOM_SHEET"
     }
 }

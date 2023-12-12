@@ -67,7 +67,7 @@ class CategoriesFragment : BaseFragment() {
 
     override fun lifecycleStateObserve() {
         viewModel.categories.observe(viewLifecycleOwner){
-            if (it != null) {
+            if (!it.isNullOrEmpty()) {
                 binding.categoriesGridView.adapter = CategoriesGridAdapter(it)
             }
         }

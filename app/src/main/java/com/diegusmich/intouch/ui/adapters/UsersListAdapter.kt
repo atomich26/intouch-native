@@ -33,9 +33,11 @@ class UsersListAdapter(collection: List<UserPreview>) : DynamicDataAdapter<UserP
             itemView.findViewById<GlideImageView>(R.id.userListItemAvatar).load(imgRef)
 
             itemView.setOnClickListener{
-                itemView.context.startActivity(Intent(itemView.context, UserActivity::class.java).apply {
-                    putExtra(UserActivity.USER_ARG, item.id)
-                })
+                if(!item.isAuth){
+                    itemView.context.startActivity(Intent(itemView.context, UserActivity::class.java).apply {
+                        putExtra(UserActivity.USER_ARG, item.id)
+                    })
+                }
             }
         }
     }

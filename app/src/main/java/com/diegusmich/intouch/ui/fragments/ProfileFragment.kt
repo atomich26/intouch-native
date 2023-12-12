@@ -11,19 +11,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.model.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.activities.AuthActivity
-import com.diegusmich.intouch.ui.activities.MainActivity
 import com.diegusmich.intouch.ui.activities.UserFriendsActivity
 import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ProfileFragment : BaseFragment() {
 
@@ -33,6 +33,7 @@ class ProfileFragment : BaseFragment() {
     private lateinit var toolbar: MaterialToolbar
 
     private val viewModel: ProfileViewModel by activityViewModels()
+    private var loadingTask : Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +50,7 @@ class ProfileFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //binding.userProfileButtonGroup.visibility = View.GONE
+        binding.userProfileButtonGroup.visibility = View.GONE
         viewModel.loadAuthProfile()
 
         binding.swipeRefreshLayout.setOnRefreshListener {
@@ -84,18 +85,20 @@ class ProfileFragment : BaseFragment() {
                     else -> false
                 }
             }
-
         }, viewLifecycleOwner)
 
-        binding.userInfoFriendship.setOnClickListener{
-            with(viewModel.profile){
-                if(value?.friends!! > 0){
+        binding.userInfoFriendship.setOnClickListener {
+            with(viewModel.profile) {
+                if (value?.friends?.compareTo(0) == 1) {
                     startActivity(Intent(requireContext(), UserFriendsActivity::class.java).apply {
                         putExtra(UserFriendsActivity.USER_ARG, value?.id)
                     })
                 }
             }
         }
+
+        binding.userPostsGridView.layoutManager =
+            GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
     }
 
     override fun lifecycleStateObserve() {
@@ -104,31 +107,20 @@ class ProfileFragment : BaseFragment() {
                 return@observe
 
             toolbar.title = it.username
-            binding.userImageProfile.load(CloudImageService.USERS.imageRef(it.img))
+
+            if (it.img.isNotBlank())
+                binding.userImageProfile.load(CloudImageService.USERS.imageRef(it.img))
+
             binding.nameProfileLayout.text = it.name
             binding.biographyProfileLayout.text = it.biography
             binding.userInfoFriendship.setInfoValue(it.friends)
             binding.userInfoCreated.setInfoValue(it.created)
             binding.userInfoJoined.setInfoValue(it.joined)
-
-            when (it.friendship.status) {
-                is Friendship.Status.PENDING -> {
-                    val isVisible = if (it.friendship.status.isActor) View.GONE else View.VISIBLE
-                    binding.friendshipRequestBanner.visibility = isVisible
-                }
-
-                else ->{
-
-                }
-            }
-
-            binding.userPostsGridView.layoutManager = GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
             binding.userPostsGridView.adapter = ArchivedPostsAdapter(it.archivedPosts)
-            binding.userProfileButtonGroup.visibility = View.VISIBLE
         }
-
+        
         viewModel.LOADING.observe(this) {
-            binding.swipeRefreshLayout.isRefreshing = it
+            binding.swipeRefreshLayout.isRefreshingDelayed(viewLifecycleOwner, it)
         }
 
         viewModel.ERROR.observe(this) {

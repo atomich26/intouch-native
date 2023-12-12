@@ -6,8 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.UserProfile
 import com.diegusmich.intouch.data.repository.UserRepository
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -29,11 +32,12 @@ class ProfileViewModel : StateViewModel() {
         updateState(_LOADING, true)
 
         try{
-            _profile.value = UserRepository.getUserProfile(userId)
+            _profile.value = UserRepository.userProfile(userId)
             updateState(_CONTENT_LOADED, true)
+
         }catch (e : Exception){
             val messageId =
-                if (e.cause is UnknownHostException || e.cause is ConnectException)
+                if (e is FirebaseNetworkException)
                     R.string.firebaseNetworkException
                 else
                     R.string.firebaseDefaultExceptionMessage

@@ -2,14 +2,11 @@ package com.diegusmich.intouch.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.MenuProvider
+import androidx.lifecycle.lifecycleScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
@@ -17,17 +14,21 @@ import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.fragments.ModalPreferencesBottomSheet
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
-import kotlin.math.sign
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class UserActivity : BaseActivity() {
 
-    private var _binding : ProfileLayoutBinding? = null
+    private var _binding: ProfileLayoutBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var toolbar : MaterialToolbar
+    private lateinit var toolbar: MaterialToolbar
 
     private val viewModel: ProfileViewModel by viewModels()
     private var userId: String? = null
+
+    private var loadingTask: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         userId = intent.extras?.getString(USER_ARG)
@@ -44,35 +45,36 @@ class UserActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener {
             this.finish()
         }
-        toolbar.navigationIcon =  AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
+        toolbar.navigationIcon =
+            AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadProfile(userId)
+            viewModel.loadProfile(this.userId)
         }
 
         val prefsModalBottomSheet = ModalPreferencesBottomSheet()
-
         binding.showUserPrefButton.setOnClickListener {
-            prefsModalBottomSheet.show(supportFragmentManager, "PREF_MODAL_BOTTOM_SHEET")
+            if (supportFragmentManager.findFragmentByTag(ModalPreferencesBottomSheet.TAG) == null)
+                prefsModalBottomSheet.show(supportFragmentManager, ModalPreferencesBottomSheet.TAG)
         }
 
-        binding.userInfoFriendship.setOnClickListener{
-            with(viewModel.profile){
-                if(value?.friends!! > 0){
+        binding.userInfoFriendship.setOnClickListener {
+            with(viewModel.profile) {
+                if (value?.friends?.compareTo(0) == 1) {
                     startActivity(Intent(this@UserActivity, UserFriendsActivity::class.java).apply {
                         putExtra(UserFriendsActivity.USER_ARG, value?.id)
                     })
                 }
             }
         }
+
+        viewModel.loadProfile(this.userId)
     }
 
 
     override fun lifecycleStateObserve() {
-        viewModel.loadProfile(userId)
-
-        viewModel.profile.observe(this){
-            if(it == null)
+        viewModel.profile.observe(this) {
+            if (it == null)
                 return@observe
 
             toolbar.title = it.username
@@ -92,22 +94,23 @@ class UserActivity : BaseActivity() {
                 is Friendship.Status.FRIEND -> {
                     binding.userProfileButtonGroup.visibility = View.VISIBLE
                 }
+
                 is Friendship.Status.NONE -> {
                     binding.friendshipRequestBanner.visibility = View.GONE
                     binding.userProfileButtonGroup.visibility = View.VISIBLE
                 }
 
-                else ->{
+                else -> {
 
                 }
             }
         }
 
-        viewModel.LOADING.observe(this){
-            binding.swipeRefreshLayout.isRefreshing = it
+        viewModel.LOADING.observe(this) {
+            binding.swipeRefreshLayout.isRefreshingDelayed(this, it)
         }
 
-        viewModel.ERROR.observe(this){
+        viewModel.ERROR.observe(this) {
             if (it != null)
                 Toast.makeText(this, getString(it), Toast.LENGTH_SHORT)
                     .show()
@@ -119,7 +122,7 @@ class UserActivity : BaseActivity() {
         _binding = null
     }
 
-    companion object{
+    companion object {
         const val USER_ARG = "userId"
     }
 }

@@ -43,9 +43,11 @@ class FeedFragment : BaseFragment() {
         val fakeData = mutableListOf<FeedPostPreview>()
 
         for (i in 0..10){
-            fakeData.add(FeedPostPreview("sada", false,UserPreview("sadas", "sda", "sdasda", "adasdasd")))
+            fakeData.add(FeedPostPreview("sada", false,UserPreview("sadas", false,  "sdasda", "adasdasd", "sadasd")))
         }
         binding.postsFeedListView.adapter = PostFeedAdapter(fakeData)
+
+        viewModel.load()
     }
 
     override fun lifecycleStateObserve() {

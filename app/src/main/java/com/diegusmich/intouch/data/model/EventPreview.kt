@@ -7,6 +7,6 @@ data class EventPreview(
     val name: String,
     val date: Date,
     val city: String,
-    val createdBy: String,
+    val user: UserPreview,
     val img: String
 )
