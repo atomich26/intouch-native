@@ -3,6 +3,7 @@ package com.diegusmich.intouch.data.dto
 import com.google.firebase.firestore.DocumentSnapshot
 import java.util.Date
 
+@Suppress("UNCHECKED_CAST")
 data class PostDTO(
     val id: String,
     val eventId: String,
@@ -13,7 +14,6 @@ data class PostDTO(
 ) {
     companion object Factory : SnapshotDeserializator<PostDTO> {
         override fun fromSnapshot(documentSnapshot: DocumentSnapshot): PostDTO {
-            val data = documentSnapshot.data!!
             return PostDTO(
                 id = documentSnapshot.id,
                 eventId = documentSnapshot.getString("eventId")!!,

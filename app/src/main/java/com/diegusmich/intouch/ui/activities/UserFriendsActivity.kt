@@ -4,24 +4,21 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.UserListLayoutBinding
 import com.diegusmich.intouch.ui.adapters.UsersListAdapter
 import com.diegusmich.intouch.ui.viewmodels.UserFriendsActivityViewModel
 import com.google.android.material.appbar.MaterialToolbar
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class UserFriendsActivity : BaseActivity() {
 
-    private var _binding : UserListLayoutBinding? = null
+    private var _binding: UserListLayoutBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var toolbar: MaterialToolbar
 
-    private val viewModel : UserFriendsActivityViewModel by viewModels()
+    private val viewModel: UserFriendsActivityViewModel by viewModels()
     private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +32,8 @@ class UserFriendsActivity : BaseActivity() {
         toolbar.title = getString(R.string.user_friends_activity)
         setSupportActionBar(toolbar)
 
-        toolbar.navigationIcon = AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
+        toolbar.navigationIcon =
+            AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
         toolbar.setNavigationOnClickListener {
             finish()
         }
@@ -44,7 +42,8 @@ class UserFriendsActivity : BaseActivity() {
             viewModel.onLoadFriends(userId)
         }
 
-        binding.userListRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.userListRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.userListRecyclerView.adapter = UsersListAdapter(mutableListOf())
 
         viewModel.onLoadFriends(userId)
@@ -52,16 +51,16 @@ class UserFriendsActivity : BaseActivity() {
 
     override fun lifecycleStateObserve() {
 
-        viewModel.userFriends.observe(this){
-            if(!it.isNullOrEmpty())
+        viewModel.userFriends.observe(this) {
+            if (!it.isNullOrEmpty())
                 (binding.userListRecyclerView.adapter as UsersListAdapter).replace(it)
         }
 
-        viewModel.LOADING.observe(this){
+        viewModel.LOADING.observe(this) {
             binding.userListSwipeRefreshLayout.isRefreshingDelayed(this, it)
         }
 
-        viewModel.ERROR.observe(this){
+        viewModel.ERROR.observe(this) {
             if (it != null)
                 Toast.makeText(this, getString(it), Toast.LENGTH_SHORT)
                     .show()
@@ -72,6 +71,7 @@ class UserFriendsActivity : BaseActivity() {
         super.onDestroy()
         _binding = null
     }
+
     companion object {
         const val USER_ARG = "userId"
     }

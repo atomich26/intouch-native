@@ -3,6 +3,7 @@ package com.diegusmich.intouch.data.dto
 import com.google.firebase.firestore.DocumentSnapshot
 import java.util.Date
 
+@Suppress("UNCHECKED_CAST")
 data class UserDTO(
     val id: String,
     val name: String,

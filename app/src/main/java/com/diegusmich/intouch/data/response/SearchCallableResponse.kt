@@ -2,6 +2,7 @@ package com.diegusmich.intouch.data.response
 
 import com.google.firebase.functions.HttpsCallableResult
 
+@Suppress("UNCHECKED_CAST")
 class SearchCallableResponse(result: HttpsCallableResult) : HttpsCallableResponseParser<List<String>>() {
 
     val matches : List<String>
