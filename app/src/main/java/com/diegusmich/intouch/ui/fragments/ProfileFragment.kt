@@ -11,19 +11,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.activities.AuthActivity
 import com.diegusmich.intouch.ui.activities.UserFriendsActivity
-import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class ProfileFragment : BaseFragment() {
 
@@ -33,7 +29,7 @@ class ProfileFragment : BaseFragment() {
     private lateinit var toolbar: MaterialToolbar
 
     private val viewModel: ProfileViewModel by activityViewModels()
-    private var loadingTask : Job? = null
+    private var loadingTask: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -116,9 +112,9 @@ class ProfileFragment : BaseFragment() {
             binding.userInfoFriendship.setInfoValue(it.friends)
             binding.userInfoCreated.setInfoValue(it.created)
             binding.userInfoJoined.setInfoValue(it.joined)
-            binding.userPostsGridView.adapter = ArchivedPostsAdapter(it.archivedPosts)
+            //binding.userPostsGridView.adapter = ArchivedPostsAdapter(it.archivedPosts)
         }
-        
+
         viewModel.LOADING.observe(this) {
             binding.swipeRefreshLayout.isRefreshingDelayed(viewLifecycleOwner, it)
         }

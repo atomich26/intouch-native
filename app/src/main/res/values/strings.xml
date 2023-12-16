@@ -47,10 +47,10 @@
     <string name="user_deny_friendship">Rifiuta</string>
     <string name="user_confirm_friendship_text">Accetti la richiesta d\'amicizia?</string>
     <string name="profile_updated">Profilo aggiornato</string>
-
+    <string name="unable_to_update_error">Impossibile aggiornare</string>
     <!-- Dialog strings -->
     <string name="alert_title_error">Errore</string>
-    <string name="dialog_neutral_action">Ok</string>
+    <string name="dialog_neutral_action">OK</string>
 
     <!-- Network service strings-->
     <string name="internet_connection_lost">Connessione internet persa</string>

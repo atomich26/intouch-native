@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.lifecycle.lifecycleScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
@@ -15,8 +14,6 @@ import com.diegusmich.intouch.ui.fragments.ModalPreferencesBottomSheet
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class UserActivity : BaseActivity() {
 
@@ -27,8 +24,6 @@ class UserActivity : BaseActivity() {
 
     private val viewModel: ProfileViewModel by viewModels()
     private var userId: String? = null
-
-    private var loadingTask: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         userId = intent.extras?.getString(USER_ARG)
@@ -49,7 +44,7 @@ class UserActivity : BaseActivity() {
             AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadProfile(this.userId)
+            viewModel.onLoadProfile(this.userId)
         }
 
         val prefsModalBottomSheet = ModalPreferencesBottomSheet()
@@ -68,7 +63,7 @@ class UserActivity : BaseActivity() {
             }
         }
 
-        viewModel.loadProfile(this.userId)
+        viewModel.onLoadProfile(this.userId)
     }
 
 

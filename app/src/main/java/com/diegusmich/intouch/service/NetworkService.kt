@@ -13,26 +13,27 @@ import com.diegusmich.intouch.network.NetworkStateObserver
 
 object NetworkService {
 
-    private var connectivityManager: ConnectivityManager? = null
-    private lateinit var networkRequest: NetworkRequest
-    private lateinit var networkCallback: NetworkCallback
+    private var _isNetworkAvailable = false
+    val isNetworkAvailable get() = _isNetworkAvailable
+
     private val onNetworkAvailableObservers = mutableListOf<NetworkStateObserver>()
 
-    fun buildService(context: Context): NetworkService {
+    fun build(context: Context){
 
         //Get a connectivity manager API to observe network state
-        connectivityManager =
+        val connectivityManager =
             context.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
 
         //Create a network request with custom capabilities
-        networkRequest = NetworkRequest.Builder()
+        val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
 
-        networkCallback = object : NetworkCallback() {
+        val networkCallback = object : NetworkCallback() {
 
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
+                _isNetworkAvailable = true
 
                 for (observer in onNetworkAvailableObservers){
                     observer.run()
@@ -40,12 +41,14 @@ object NetworkService {
 
                 showNetworkStatus(context, R.string.internet_online)
             }
-        }
-        return this
-    }
 
-    fun observe() {
-        connectivityManager!!.requestNetwork(networkRequest, networkCallback)
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                _isNetworkAvailable = false
+            }
+        }
+
+        connectivityManager.requestNetwork(networkRequest, networkCallback)
     }
 
     fun addOnNetworkAvailableObserver(observer : NetworkStateObserver){

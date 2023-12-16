@@ -38,7 +38,7 @@ class StartActivity : BaseActivity() {
         }
 
         binding.saveCategoriesButton.setOnClickListener{
-            viewModel.saveCategories()
+            viewModel.onSaveCategories()
         }
 
         setContentView(binding.root)
@@ -66,7 +66,7 @@ class StartActivity : BaseActivity() {
         }
 
         viewModel.categories.observe(this){
-            if(it != null)
+            if(!it.isNullOrEmpty())
                 binding.filtersCategoryGroup.bindData(it){ cat ->
                     viewModel.checkedCategories.value!!.contains(cat.id)
                 }

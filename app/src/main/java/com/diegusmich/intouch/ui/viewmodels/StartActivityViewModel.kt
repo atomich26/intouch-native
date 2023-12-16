@@ -20,48 +20,44 @@ class StartActivityViewModel : StateViewModel() {
     private val _PREFERENCES_SAVED = MutableLiveData(false)
     val PREFERENCES_SAVED: LiveData<Boolean> = _PREFERENCES_SAVED
 
-    private val _categories = MutableLiveData<List<Category>?>(null)
-    val categories: LiveData<List<Category>?> = _categories
+    private val _categories = MutableLiveData<List<Category>>(mutableListOf())
+    val categories: LiveData<List<Category>> = _categories
 
     private val _checkedCategories = MutableLiveData<List<String>>(listOf())
     val checkedCategories: LiveData<List<String>> = _checkedCategories
 
     private var retryOnNetworkAvailable = NetworkStateObserver {
-        loadCategories()
+        onLoadCategories()
     }
 
     init {
-        loadCategories()
+        onLoadCategories()
     }
 
-    private fun loadCategories(): Job = viewModelScope.launch {
-        if (categories.value != null)
+    private fun onLoadCategories(): Job = viewModelScope.launch {
+        if (categories.value?.isEmpty() == false)
             return@launch
 
         updateState(_LOADING, true)
 
-        try {
-            _categories.value = CategoryRepository.getAll()
-            updateState(_CONTENT_LOADED, true)
-        } catch (e: Exception) {
-            if (e.cause is UnknownHostException || e.cause is ConnectException) {
-                updateState(_ERROR, R.string.firebaseNetworkException)
-
-                retryOnNetworkAvailable = NetworkStateObserver {
-                    loadCategories()
+            with(CategoryRepository.getAll()) {
+                if (this.isEmpty()){
+                    updateState(_ERROR, R.string.unable_to_update_error)
+                    NetworkService.addOnNetworkAvailableObserver(this@StartActivityViewModel.retryOnNetworkAvailable)
                 }
-
-                NetworkService.addOnNetworkAvailableObserver(this@StartActivityViewModel.retryOnNetworkAvailable)
-            } else
-                updateState(_ERROR, R.string.firebaseDefaultExceptionMessage)
-        }
+                else {
+                    _categories.value = this
+                    NetworkService.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
+                    updateState(_CONTENT_LOADED, true)
+                }
+            }
     }
 
     fun onUpdateCheckedCategories(checkedIds: List<String>) {
         _checkedCategories.value = checkedIds
     }
 
-    fun saveCategories() {
+    fun onSaveCategories() {
         updateState(_LOADING, true)
 
         if (checkedCategories.value?.size == categories.value?.size) {

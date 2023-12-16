@@ -6,47 +6,34 @@ import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.model.UserProfile
 import com.diegusmich.intouch.data.repository.UserRepository
-import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.net.ConnectException
-import java.net.UnknownHostException
 
 class ProfileViewModel : StateViewModel() {
 
     private val _profile: MutableLiveData<UserProfile?> = MutableLiveData(null)
-    val profile : LiveData<UserProfile?> = _profile
+    val profile: LiveData<UserProfile?> = _profile
 
     fun onLogout() = Firebase.auth.signOut()
 
-    fun loadProfile(userId: String?) = viewModelScope.launch {
+    fun onLoadProfile(userId: String?) = viewModelScope.launch {
 
-        if(userId == null){
-            updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
-            return@launch
-        }
+        if (userId == null)
+            return@launch updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
 
         updateState(_LOADING, true)
 
-        try{
+        try {
             _profile.value = UserRepository.userProfile(userId)
             updateState(_CONTENT_LOADED, true)
-
-        }catch (e : Exception){
-            val messageId =
-                if (e is FirebaseNetworkException)
-                    R.string.firebaseNetworkException
-                else
-                    R.string.firebaseDefaultExceptionMessage
-
-            updateState(_ERROR, messageId)
+        } catch (e: FirebaseFirestoreException) {
+            updateState(_ERROR, R.string.unable_to_update_error)
         }
     }
 
-    fun loadAuthProfile() = viewModelScope.launch {
-        loadProfile(Firebase.auth.currentUser?.uid!!)
+    fun onLoadAuthProfile() = viewModelScope.launch {
+        onLoadProfile(Firebase.auth.currentUser?.uid!!)
     }
 }

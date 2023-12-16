@@ -7,7 +7,6 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 object FriendshipRepository :
@@ -15,10 +14,10 @@ object FriendshipRepository :
     override val collectionRef: CollectionReference =
         Firebase.firestore.collection("friendship_requests")
 
-    suspend fun getFriendship(userId: String) = withContext(Dispatchers.IO) {
+    suspend fun getFriendshipWith(userId: String) = withContext(Dispatchers.IO) {
         val authId = Firebase.auth.currentUser?.uid!!
 
-        if(authId == userId)
+        if (authId == userId)
             return@withContext Friendship(Friendship.Status.AUTH)
 
         val authUser = UserRepository.getDoc(authId)!!
@@ -27,19 +26,20 @@ object FriendshipRepository :
             return@withContext Friendship(Friendship.Status.FRIEND)
 
         val related = listOf(authId, userId)
-        val queryResults =
-            collectionRef.whereIn("actor", related).whereIn("notifier", related).get().await()
+        val queryResults = withQuery {
+            collectionRef.whereIn("actor", related).whereIn("notifier", related)
+        }
 
-        if (queryResults.documents.isEmpty())
+        if (queryResults.isEmpty())
             return@withContext Friendship(Friendship.Status.NONE)
 
-        val request = FriendshipDTO.fromSnapshot(queryResults.documents[0])
-
-        return@withContext Friendship(
-            Friendship.Status.PENDING(
-                requestId = request.id,
-                isActor = authId == request.actor
+        return@withContext with(queryResults[0]) {
+            Friendship(
+                Friendship.Status.PENDING(
+                    requestId = this.id,
+                    isActor = authId == this.actor
+                )
             )
-        )
+        }
     }
 }

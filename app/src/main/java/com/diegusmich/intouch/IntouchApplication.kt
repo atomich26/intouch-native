@@ -7,7 +7,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.diegusmich.intouch.service.NetworkService
 import com.google.firebase.FirebaseApp
-import java.util.TimeZone
 
 class IntouchApplication : Application(), LifecycleEventObserver {
 
@@ -19,7 +18,7 @@ class IntouchApplication : Application(), LifecycleEventObserver {
     override fun onCreate() {
         super.onCreate()
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
-        NetworkService.buildService(this).observe()
+        NetworkService.build(this)
         FirebaseApp.initializeApp(this)
     }
 

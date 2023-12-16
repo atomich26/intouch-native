@@ -11,7 +11,14 @@ import kotlinx.coroutines.withContext
 
 object CategoryRepository :
     FirestoreCollection<CategoryDTO, CategoryDTO.Factory>(CategoryDTO.Factory::class.java) {
+
     override val collectionRef: CollectionReference = Firebase.firestore.collection("categories")
+
+    suspend fun get(id: String) = withContext(Dispatchers.IO) {
+        getDoc(id)?.let {
+            Category.fromDTO(it)
+        }
+    }
 
     suspend fun getAll() = withContext(Dispatchers.IO) {
         withQuery { it.orderBy("name", Query.Direction.ASCENDING) }.map {
