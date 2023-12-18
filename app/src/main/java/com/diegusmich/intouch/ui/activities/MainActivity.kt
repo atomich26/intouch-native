@@ -64,7 +64,7 @@ class MainActivity : BaseActivity() {
                 else -> 0
             }
 
-            binding.mainViewPager.setCurrentItem(pageId, true)
+            binding.mainViewPager.setCurrentItem(pageId, false)
             true
         }
     }
