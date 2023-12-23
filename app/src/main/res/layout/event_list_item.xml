@@ -9,7 +9,7 @@
     android:backgroundTint="@android:color/transparent"
     style="?attr/materialCardViewFilledStyle">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
@@ -22,20 +22,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:placeholder="@drawable/user_placeholder" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.EventThumbRadius"/>
 
         <TextView
             android:id="@+id/eventListItemName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Username"
+            android:text="Event name"
             android:textSize="18sp"
             android:textStyle="bold"
             android:maxLength="30"
             android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@id/eventListItemThumbnail"
-            app:layout_constraintBottom_toTopOf="@id/eventListItemName"
+            app:layout_constraintBottom_toTopOf="@id/eventListItemCity"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
@@ -43,25 +43,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="name"
-            android:textSize="14sp"
+            android:text="City"
+            android:textStyle="italic"
+            android:textSize="15sp"
             android:maxLength="50"
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/eventListItemName"
-            app:layout_constraintStart_toEndOf="@id/eventListItemThumbnail"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/eventListItemThumbnail" />
 
         <TextView
-            android:id="@+id/userListItemNameText"
+            android:id="@+id/eventListItemDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="name"
+            android:text="date"
             android:textSize="14sp"
             android:maxLength="50"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/userListItemUsernameText"
-            app:layout_constraintStart_toEndOf="@id/userListItemAvatar"
+            app:layout_constraintTop_toBottomOf="@id/eventListItemCity"
+            app:layout_constraintStart_toEndOf="@id/eventListItemThumbnail"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

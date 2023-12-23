@@ -14,6 +14,7 @@ data class EventWrapper(
     val address: String,
     val available: Int,
     val city: String,
+    val categoryId: String,
     val geo: GeoPoint,
     val restricted: Boolean,
     val fromCache: Boolean
@@ -29,6 +30,7 @@ data class EventWrapper(
                 description = documentSnapshot.getString("description")!!,
                 address = documentSnapshot.getString("address")!!,
                 available = documentSnapshot.get("available") as Int,
+                categoryId = documentSnapshot.getString("categoryId")!!,
                 city = documentSnapshot.getString("city")!!,
                 geo = documentSnapshot.getGeoPoint("geo")!!,
                 restricted = documentSnapshot.getBoolean("restricted")!!,

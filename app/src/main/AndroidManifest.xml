@@ -20,6 +20,9 @@
         android:theme="@style/Intouch.Theme.Material3"
         tools:targetApi="33">
         <activity
+            android:name=".ui.activities.EventActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.UserFriendsActivity"
             android:exported="false" />
         <activity
