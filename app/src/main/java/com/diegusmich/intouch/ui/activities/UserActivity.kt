@@ -7,13 +7,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.model.Friendship
+import com.diegusmich.intouch.data.domain.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.fragments.ModalPreferencesBottomSheet
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
-import kotlinx.coroutines.Job
 
 class UserActivity : BaseActivity() {
 
@@ -44,7 +43,7 @@ class UserActivity : BaseActivity() {
             AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.onLoadProfile(this.userId)
+            viewModel.onLoadData(this.userId, true)
         }
 
         val prefsModalBottomSheet = ModalPreferencesBottomSheet()
@@ -54,7 +53,7 @@ class UserActivity : BaseActivity() {
         }
 
         binding.userInfoFriendship.setOnClickListener {
-            with(viewModel.profile) {
+            with(viewModel.userProfile) {
                 if (value?.friends?.compareTo(0) == 1) {
                     startActivity(Intent(this@UserActivity, UserFriendsActivity::class.java).apply {
                         putExtra(UserFriendsActivity.USER_ARG, value?.id)
@@ -63,12 +62,12 @@ class UserActivity : BaseActivity() {
             }
         }
 
-        viewModel.onLoadProfile(this.userId)
+        viewModel.onLoadData(this.userId)
     }
 
 
     override fun lifecycleStateObserve() {
-        viewModel.profile.observe(this) {
+        viewModel.userProfile.observe(this) {
             if (it == null)
                 return@observe
 

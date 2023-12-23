@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.model.Category
+import com.diegusmich.intouch.data.domain.Category
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.views.GlideImageView
 

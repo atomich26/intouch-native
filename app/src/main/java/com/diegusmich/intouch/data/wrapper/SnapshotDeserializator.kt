@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.data.dto
+package com.diegusmich.intouch.data.wrapper
 
 import com.google.firebase.firestore.DocumentSnapshot
 

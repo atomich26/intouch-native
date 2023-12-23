@@ -6,18 +6,17 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="7dp"
         android:orientation="vertical">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:background="@drawable/user_preview_post_feed_bg">
-            <com.diegusmich.intouch.ui.views.GlideImageView
-                android:id="@+id/userImagePreview"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/user_placeholder"
-                app:circleCrop="true" />
-        </FrameLayout>
+
+    <com.diegusmich.intouch.ui.views.GlideImageView
+        android:id="@+id/userImagePreview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:padding="2dp"
+        app:contentPadding="20dp"
+        app:strokeColor="@color/seed"
+        app:strokeWidth="2dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"
+        android:background="@drawable/user_placeholder" />
 
         <TextView
             android:layout_width="match_parent"

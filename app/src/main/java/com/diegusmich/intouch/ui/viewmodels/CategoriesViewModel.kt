@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.model.Category
+import com.diegusmich.intouch.data.domain.Category
 import com.diegusmich.intouch.data.repository.CategoryRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -22,10 +22,9 @@ class CategoriesViewModel : StateViewModel() {
         updateState(_LOADING, true)
 
         with(CategoryRepository.getAll()) {
-            if (this.isEmpty()){
+            if (this.isEmpty()) {
                 updateState(_ERROR, R.string.unable_to_update_error)
-            }
-            else {
+            } else {
                 _categories.value = this
                 updateState(_CONTENT_LOADED, true)
             }

@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.model.FeedPostPreview
-import com.diegusmich.intouch.data.model.UserPreview
+import com.diegusmich.intouch.data.domain.Post
+import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.databinding.FragmentFeedBinding
 import com.diegusmich.intouch.ui.adapters.PostFeedAdapter
-import com.diegusmich.intouch.ui.fragments.BaseFragment
 import com.diegusmich.intouch.ui.viewmodels.FeedViewModel
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -40,10 +39,11 @@ class FeedFragment : BaseFragment() {
         toolbar.title = getString(R.string.feed_title)
 
         binding.postsFeedListView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        val fakeData = mutableListOf<FeedPostPreview>()
+        val fakeData = mutableListOf<Post.FeedPreview>()
 
         for (i in 0..10){
-            fakeData.add(FeedPostPreview("sada", false,UserPreview("sadas", false,  "sdasda", "adasdasd", "sadasd")))
+            fakeData.add(Post.FeedPreview("sada", false,
+                User.Preview("sadas", false,  "sdasda", "adasdasd", "sadasd")))
         }
         binding.postsFeedListView.adapter = PostFeedAdapter(fakeData)
 

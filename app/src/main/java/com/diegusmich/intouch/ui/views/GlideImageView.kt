@@ -12,30 +12,36 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.storage.StorageReference
 
 @SuppressLint("CheckResult")
-open class GlideImageView(private val ctx: Context, attrs: AttributeSet) : ShapeableImageView(ctx, attrs) {
+class GlideImageView(ctx: Context, attrs: AttributeSet) : ShapeableImageView(ctx, attrs) {
 
-    private val _glideRequest: GlideRequest<Drawable>
+    private lateinit var _glideRequest: GlideRequest<Drawable>
+    private val isCircleCropped : Boolean
+    private val placeholderDrawable : Int
 
     init {
         ctx.theme.obtainStyledAttributes(attrs, R.styleable.GlideImageView, 0, 0).apply {
             try {
-                val isCircleCropped = getBoolean(R.styleable.GlideImageView_circleCrop, false)
-                val placeholderDrawable = (getResourceId(
+                isCircleCropped = getBoolean(R.styleable.GlideImageView_circleCrop, false)
+                placeholderDrawable = (getResourceId(
                     R.styleable.GlideImageView_placeholder,
                     R.drawable.glide_image_placeholder_blank
                 ))
-                _glideRequest = GlideApp.with(ctx).load(this@GlideImageView.drawable).apply {
-                    placeholder(placeholderDrawable)
-
-                    if (isCircleCropped)
-                        circleCrop()
-
-                    diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    into(this@GlideImageView)
-                }
             } finally {
                 recycle()
             }
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        _glideRequest = GlideApp.with(context).load(this@GlideImageView.drawable).apply {
+            placeholder(placeholderDrawable)
+
+            if (isCircleCropped)
+                circleCrop()
+
+            diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            into(this@GlideImageView)
         }
     }
 
@@ -49,6 +55,6 @@ open class GlideImageView(private val ctx: Context, attrs: AttributeSet) : Shape
     }
 
     fun clear() {
-        GlideApp.with(ctx).clear(this)
+        GlideApp.with(context).clear(this)
     }
 }

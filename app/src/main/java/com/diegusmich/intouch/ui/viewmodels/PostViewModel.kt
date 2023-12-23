@@ -2,10 +2,7 @@ package com.diegusmich.intouch.ui.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.diegusmich.intouch.data.model.Post
-import com.diegusmich.intouch.data.repository.PostRepository
-import kotlinx.coroutines.launch
+import com.diegusmich.intouch.data.domain.Post
 
 class PostViewModel : StateViewModel(){
 

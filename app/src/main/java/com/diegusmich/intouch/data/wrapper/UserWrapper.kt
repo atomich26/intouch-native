@@ -1,10 +1,10 @@
-package com.diegusmich.intouch.data.dto
+package com.diegusmich.intouch.data.wrapper
 
 import com.google.firebase.firestore.DocumentSnapshot
 import java.util.Date
 
 @Suppress("UNCHECKED_CAST")
-data class UserDTO(
+data class UserWrapper(
     val id: String,
     val name: String,
     val username: String,
@@ -17,9 +17,9 @@ data class UserDTO(
     val created: List<String>,
     val fromCache: Boolean
 ){
-    companion object Factory : SnapshotDeserializator<UserDTO> {
-        override fun fromSnapshot(documentSnapshot: DocumentSnapshot): UserDTO {
-            return UserDTO(
+    companion object Factory : SnapshotDeserializator<UserWrapper> {
+        override fun fromSnapshot(documentSnapshot: DocumentSnapshot): UserWrapper {
+            return UserWrapper(
                 id = documentSnapshot.id,
                 name = documentSnapshot.getString("name")!!,
                 username = documentSnapshot.getString("username")!!,

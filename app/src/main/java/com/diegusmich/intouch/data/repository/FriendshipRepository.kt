@@ -1,7 +1,7 @@
 package com.diegusmich.intouch.data.repository
 
-import com.diegusmich.intouch.data.dto.FriendshipDTO
-import com.diegusmich.intouch.data.model.Friendship
+import com.diegusmich.intouch.data.wrapper.FriendshipWrapper
+import com.diegusmich.intouch.data.domain.Friendship
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object FriendshipRepository :
-    FirestoreCollection<FriendshipDTO, FriendshipDTO.Factory>(FriendshipDTO.Factory::class.java) {
+    FirestoreCollection<FriendshipWrapper, FriendshipWrapper.Factory>(FriendshipWrapper.Factory::class.java) {
     override val collectionRef: CollectionReference =
         Firebase.firestore.collection("friendship_requests")
 

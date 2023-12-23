@@ -1,6 +1,6 @@
 package com.diegusmich.intouch.data.repository
 
-import com.diegusmich.intouch.data.dto.SnapshotDeserializator
+import com.diegusmich.intouch.data.wrapper.SnapshotDeserializator
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
@@ -13,7 +13,7 @@ abstract class FirestoreCollection<T, F : SnapshotDeserializator<T>>(factoryClaz
     abstract val collectionRef: CollectionReference
     protected val factory: F = factoryClazz.getDeclaredConstructor().newInstance()
 
-    suspend fun getDoc(id: String, source: Source = Source.DEFAULT): T? = withContext(Dispatchers.IO) {
+    suspend fun getDoc(id: String, source: Source = Source.SERVER): T? = withContext(Dispatchers.IO) {
         val doc = collectionRef.document(id).get(source).await()
 
         if (!doc.exists())
@@ -22,13 +22,13 @@ abstract class FirestoreCollection<T, F : SnapshotDeserializator<T>>(factoryClaz
         factory.fromSnapshot(doc)
     }
 
-    suspend fun allDocs(source: Source = Source.DEFAULT): List<T> = withContext(Dispatchers.IO){
+    suspend fun allDocs(source: Source = Source.SERVER): List<T> = withContext(Dispatchers.IO){
         collectionRef.get(source).await().map {
             factory.fromSnapshot(it)
         }
     }
 
-    suspend fun withQuery(source : Source = Source.DEFAULT, query : (CollectionReference) -> Query) = withContext(Dispatchers.IO){
+    suspend fun withQuery(source : Source = Source.SERVER, query : (CollectionReference) -> Query) = withContext(Dispatchers.IO){
         query(collectionRef).get(source).await().map {
             factory.fromSnapshot(it)
         }

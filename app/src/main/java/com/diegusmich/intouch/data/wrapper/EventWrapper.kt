@@ -1,11 +1,10 @@
-package com.diegusmich.intouch.data.dto
+package com.diegusmich.intouch.data.wrapper
 
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.GeoPoint
 import java.util.Date
 
-data class EventDTO(
+data class EventWrapper(
     val id: String,
     val name: String,
     val cover: String,
@@ -13,14 +12,15 @@ data class EventDTO(
     val userId: String,
     val description: String,
     val address: String,
+    val available: Int,
     val city: String,
     val geo: GeoPoint,
     val restricted: Boolean,
     val fromCache: Boolean
 ){
-    companion object Factory : SnapshotDeserializator<EventDTO>{
-        override fun fromSnapshot(documentSnapshot: DocumentSnapshot): EventDTO {
-            return EventDTO(
+    companion object Factory : SnapshotDeserializator<EventWrapper>{
+        override fun fromSnapshot(documentSnapshot: DocumentSnapshot): EventWrapper {
+            return EventWrapper(
                 id = documentSnapshot.id,
                 name = documentSnapshot.getString("name")!!,
                 cover = documentSnapshot.getString("cover")!!,
@@ -28,6 +28,7 @@ data class EventDTO(
                 userId = documentSnapshot.getString("userId")!!,
                 description = documentSnapshot.getString("description")!!,
                 address = documentSnapshot.getString("address")!!,
+                available = documentSnapshot.get("available") as Int,
                 city = documentSnapshot.getString("city")!!,
                 geo = documentSnapshot.getGeoPoint("geo")!!,
                 restricted = documentSnapshot.getBoolean("restricted")!!,

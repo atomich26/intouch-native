@@ -2,11 +2,7 @@ package com.diegusmich.intouch.data.response
 
 class FormErrorsCallableResponse(details: Any?) : HttpsCallableResponseParser<Map<String, String>>(){
 
-    val errors : Map<String, String>
-
-    init{
-        errors = this.parse(details)
-    }
+    val errors : Map<String, String> = parse(details)
 
     override fun parse(data: Any?): Map<String, String> {
         return (data as List<HashMap<String, String>>?)?.associate {

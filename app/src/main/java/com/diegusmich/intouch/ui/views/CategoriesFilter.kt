@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.model.Category
+import com.diegusmich.intouch.data.domain.Category
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.CoroutineScope

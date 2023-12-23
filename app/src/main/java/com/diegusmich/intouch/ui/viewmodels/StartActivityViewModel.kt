@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.model.Category
+import com.diegusmich.intouch.data.domain.Category
 import com.diegusmich.intouch.data.repository.CategoryRepository
 import com.diegusmich.intouch.network.NetworkStateObserver
 import com.diegusmich.intouch.service.NetworkService

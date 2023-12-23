@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.data.model
+package com.diegusmich.intouch.data.domain
 
 class Friendship(val status: Status){
 
