@@ -20,6 +20,12 @@
         android:theme="@style/Intouch.Theme.Material3"
         tools:targetApi="33">
         <activity
+            android:name=".ui.activities.EventJoinedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.EventCreatedActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.EventActivity"
             android:exported="false" />
         <activity

@@ -8,6 +8,7 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityMainBinding
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.CategoriesFragment
+import com.diegusmich.intouch.ui.fragments.CreateModalBottomSheet
 import com.diegusmich.intouch.ui.fragments.FeedFragment
 import com.diegusmich.intouch.ui.fragments.ModalPreferencesBottomSheet
 import com.diegusmich.intouch.ui.fragments.NotificationFragment
@@ -56,6 +57,15 @@ class MainActivity : BaseActivity() {
         }
 
         binding.mainBottomNavigation.setOnItemSelectedListener {
+
+            if(it.itemId == R.id.navigation_create){
+                with(supportFragmentManager){
+                    if (findFragmentByTag(CreateModalBottomSheet.TAG) == null)
+                        CreateModalBottomSheet().show(this, CreateModalBottomSheet.TAG)
+                }
+                return@setOnItemSelectedListener false
+            }
+
             val pageId = when (it.itemId) {
                 R.id.feedFragment -> 0
                 R.id.categoriesFragment -> 1
