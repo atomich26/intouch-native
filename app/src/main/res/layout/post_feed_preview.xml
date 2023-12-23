@@ -9,21 +9,23 @@
 
     <com.diegusmich.intouch.ui.views.GlideImageView
         android:id="@+id/userImagePreview"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:padding="2dp"
-        app:contentPadding="20dp"
+        app:contentPadding="5dp"
         app:strokeColor="@color/seed"
-        app:strokeWidth="2dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"
-        android:background="@drawable/user_placeholder" />
+        app:strokeWidth="2.5dp"
+        app:srcCompat="@drawable/user_placeholder"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textSize="13sp"
             android:text="username"
             android:maxLines="1"
             android:maxLength="15"
             android:ellipsize="end"/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

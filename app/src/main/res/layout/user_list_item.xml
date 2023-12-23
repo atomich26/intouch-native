@@ -23,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:placeholder="@drawable/user_placeholder"
-        app:circleCrop="true"/>
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"/>
 
     <TextView
         android:id="@+id/userListItemUsernameText"
