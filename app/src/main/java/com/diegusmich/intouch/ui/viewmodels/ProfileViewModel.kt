@@ -30,9 +30,6 @@ class ProfileViewModel : StateViewModel() {
 
         updateState(_LOADING, true)
 
-        if(isRefreshing && !NetworkService.isNetworkAvailable)
-            return@launch updateState(_ERROR, R.string.unable_to_update_error)
-
         try {
             _userProfile.value = UserRepository.userProfile(userId)
             _archivedPosts.value = PostRepository.archived(userId)
@@ -40,7 +37,12 @@ class ProfileViewModel : StateViewModel() {
             updateState(_CONTENT_LOADED, true)
         }
         catch (e: FirebaseFirestoreException) {
-            updateState(_ERROR, R.string.firebaseFirestoreException)
+            val messageId =
+                if (isRefreshing)
+                    R.string.unable_to_update_error
+                else
+                    R.string.firebaseFirestoreException
+            updateState(_ERROR, messageId)
         }
     }
 

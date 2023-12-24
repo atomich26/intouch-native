@@ -27,12 +27,12 @@ object EventRepository : FirestoreCollection<EventWrapper, EventWrapper.Factory>
     suspend fun createdBy(userId: String) = withContext(Dispatchers.IO){
         UserRepository.getDoc(userId)?.let { userWrapper ->
             withQuery {
-                it.whereArrayContainsAny("__name__", userWrapper.created).orderBy("startAt", Query.Direction.DESCENDING)
-            }.map { eventWrapper ->
-                CategoryRepository.getDoc(eventWrapper.id)?.let { categoryWrapper ->
+                it.whereIn("__name__", userWrapper.created)
+            }.mapNotNull { eventWrapper ->
+                CategoryRepository.getDoc(eventWrapper.categoryId)?.let { categoryWrapper ->
                     Event.Preview(eventWrapper, categoryWrapper)
                 }
-            }
+            }.sortedByDescending { it.startAt }
         } ?: mutableListOf()
     }
 
@@ -40,19 +40,19 @@ object EventRepository : FirestoreCollection<EventWrapper, EventWrapper.Factory>
     suspend fun joinedBy(userId: String) = withContext(Dispatchers.IO){
         UserRepository.getDoc(userId)?.let { userWrapper ->
             withQuery {
-                it.whereArrayContainsAny("__name__", userWrapper.joined).orderBy("startAt", Query.Direction.DESCENDING)
-            }.map { eventWrapper ->
-                CategoryRepository.getDoc(eventWrapper.id)?.let { categoryWrapper ->
+                it.whereIn("__name__", userWrapper.joined)
+            }.mapNotNull { eventWrapper ->
+                CategoryRepository.getDoc(eventWrapper.categoryId)?.let { categoryWrapper ->
                     Event.Preview(eventWrapper, categoryWrapper)
                 }
-            }
+            }.sortedByDescending { it.startAt }
         } ?: mutableListOf()
     }
 
     suspend fun selectByCategory(categoryId: String) = withContext(Dispatchers.IO){
         withQuery {
             it.whereEqualTo("categoryId", categoryId).orderBy("startAt", Query.Direction.DESCENDING)
-        }.map { eventWrapper ->
+        }.mapNotNull { eventWrapper ->
             CategoryRepository.getDoc(eventWrapper.categoryId)?.let {
                 Event.Preview(eventWrapper, it)
             }
@@ -60,6 +60,6 @@ object EventRepository : FirestoreCollection<EventWrapper, EventWrapper.Factory>
     }
 
     suspend fun search(query: String) = withContext(Dispatchers.IO){
-        //TODO("Da implementare")
+
     }
 }

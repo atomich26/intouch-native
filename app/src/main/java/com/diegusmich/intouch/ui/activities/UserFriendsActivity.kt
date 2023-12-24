@@ -41,7 +41,7 @@ class UserFriendsActivity : BaseActivity() {
         }
 
         binding.userListSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.onLoadFriends(userId)
+            viewModel.onLoadFriends(userId, true)
         }
 
         binding.userListRecyclerView.layoutManager =

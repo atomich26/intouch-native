@@ -13,6 +13,8 @@ import com.diegusmich.intouch.ui.fragments.FeedFragment
 import com.diegusmich.intouch.ui.fragments.ModalPreferencesBottomSheet
 import com.diegusmich.intouch.ui.fragments.NotificationFragment
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch

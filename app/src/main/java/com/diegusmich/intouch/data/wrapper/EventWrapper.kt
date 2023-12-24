@@ -29,7 +29,7 @@ data class EventWrapper(
                 userId = documentSnapshot.getString("userId")!!,
                 description = documentSnapshot.getString("description")!!,
                 address = documentSnapshot.getString("address")!!,
-                available = documentSnapshot.get("available") as Int,
+                available = documentSnapshot.getDouble("available")?.toInt() ?: 0,
                 categoryId = documentSnapshot.getString("categoryId")!!,
                 city = documentSnapshot.getString("city")!!,
                 geo = documentSnapshot.getGeoPoint("geo")!!,

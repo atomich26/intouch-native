@@ -18,6 +18,8 @@ import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.activities.AuthActivity
 import com.diegusmich.intouch.ui.activities.UserFriendsActivity
+import com.diegusmich.intouch.ui.activities.eventlist.EventCreatedActivity
+import com.diegusmich.intouch.ui.activities.eventlist.EventJoinedActivity
 import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
@@ -108,6 +110,26 @@ class ProfileFragment : BaseFragment() {
                 if (value?.friends?.compareTo(0) == 1) {
                     startActivity(Intent(requireContext(), UserFriendsActivity::class.java).apply {
                         putExtra(UserFriendsActivity.USER_ARG, value?.id)
+                    })
+                }
+            }
+        }
+
+        binding.userInfoCreated.setOnClickListener {
+            with(viewModel.userProfile) {
+                if (value?.created?.compareTo(0) == 1) {
+                    startActivity(Intent(requireContext(), EventCreatedActivity::class.java).apply {
+                        putExtra(EventCreatedActivity.USER_ARG, value?.id)
+                    })
+                }
+            }
+        }
+
+        binding.userInfoJoined.setOnClickListener {
+            with(viewModel.userProfile) {
+                if (value?.joined?.compareTo(0) == 1) {
+                    startActivity(Intent(requireContext(), EventJoinedActivity::class.java).apply {
+                        putExtra(EventJoinedActivity.USER_ARG, value?.id)
                     })
                 }
             }

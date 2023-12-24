@@ -11,6 +11,8 @@
     <string name="add_event_title">Crea evento</string>
     <string name="notifications_title">Notifiche</string>
     <string name="user_friends_activity">Amici</string>
+    <string name="event_joined_activity">Eventi partecipati</string>
+    <string name="event_created_activity">Eventi creati</string>
 
     <string name="action_login_short">Accedi</string>
     <string name="action_create_account_short">Registrati</string>
@@ -68,7 +70,7 @@
     <string name="firebaseNetworkException">Errore di rete</string>
     <string name="firebaseTooManyRequestsException">Blocco temporaneo per attività insolite</string>
     <string name="firebaseDefaultExceptionMessage">Errore interno! Contatta l\'assistenza</string>
-    <string name="firebaseFirestoreException">Si è verificato un errore.</string>
+    <string name="firebaseFirestoreException">Si è verificato un errore, riprova più tardi.</string>
 
     <!-- Error messages API -->
     <string name="form_blank_fields">Compila tutti i campi</string>

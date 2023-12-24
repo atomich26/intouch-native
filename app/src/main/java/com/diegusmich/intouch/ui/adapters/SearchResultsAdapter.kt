@@ -26,7 +26,7 @@ class SearchResultsAdapter(collection: List<Any>) :
 
     override fun getItemViewType(position: Int): Int {
         return when (data[position]) {
-            is Event.Preview -> R.layout.event_preview_small
+            is Event.Preview -> 1
             is User.Preview -> R.layout.user_list_item
             else -> 0
         }

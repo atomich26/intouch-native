@@ -8,16 +8,17 @@
     <include android:id="@+id/appBarLayout" layout="@layout/material_toolbar"/>
 
     <com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout
-        android:id="@+id/userListSwipeRefreshLayout"
+        android:id="@+id/eventListSwipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/userListRecyclerView"
+            android:id="@+id/eventListRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingHorizontal="@dimen/materialHorizontalPadding"
             android:layout_weight="1"/>
 
     </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
+
 </androidx.appcompat.widget.LinearLayoutCompat>
