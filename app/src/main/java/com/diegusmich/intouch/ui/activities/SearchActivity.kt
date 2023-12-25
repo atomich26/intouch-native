@@ -10,12 +10,14 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.diegusmich.intouch.R
+import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.databinding.ActivitySearchBinding
 import com.diegusmich.intouch.ui.adapters.EventsListAdapter
 import com.diegusmich.intouch.ui.adapters.MutableAdapter
 import com.diegusmich.intouch.ui.adapters.UsersListAdapter
 import com.diegusmich.intouch.ui.viewmodels.SearchActivityViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
+import kotlinx.coroutines.Job
 
 class SearchActivity : BaseActivity() {
 
@@ -23,8 +25,8 @@ class SearchActivity : BaseActivity() {
     private val binding get() = _binding!!
 
     private lateinit var searchListView: RecyclerView
-
     private val viewModel: SearchActivityViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +72,8 @@ class SearchActivity : BaseActivity() {
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     if (newText.isNullOrBlank()) {
-                        (binding.searchResultsRecyclerView.adapter as MutableAdapter<*>).clear()
+                        (binding.searchResultsRecyclerView.adapter as MutableAdapter<*>?)?.clear()
+                        viewModel.onCancelSearch()
                     }
                     return true
                 }
@@ -81,6 +84,10 @@ class SearchActivity : BaseActivity() {
 
     override fun lifecycleStateObserve() {
 
+        viewModel.LOADING.observe(this) {
+            binding.pgLayout.progressBar.visible(it)
+        }
+
         viewModel.ERROR.observe(this) {
             if (it != null)
                 Toast.makeText(this@SearchActivity, getString(it), Toast.LENGTH_SHORT)
@@ -88,26 +95,34 @@ class SearchActivity : BaseActivity() {
         }
 
         viewModel.searchUserResult.observe(this) {
-            if(searchListView.adapter !is UsersListAdapter)
-                searchListView.adapter = UsersListAdapter(it)
-            else
-                (searchListView.adapter as UsersListAdapter).replace(it)
+
+            if(it != null){
+                if(searchListView.adapter !is UsersListAdapter)
+                    searchListView.adapter = UsersListAdapter(it)
+                else{
+                    if(it.isEmpty()){
+                        (searchListView.adapter as UsersListAdapter).clear()
+                        Toast.makeText(this, getString(R.string.search_users_not_found), Toast.LENGTH_SHORT).show()
+                    }
+                    else
+                        (searchListView.adapter as UsersListAdapter).replace(it)
+                }
+            }
         }
 
         viewModel.searchEventResult.observe(this){
-            if(searchListView.adapter !is EventsListAdapter)
-                searchListView.adapter = EventsListAdapter(it)
-            else
-                (searchListView.adapter as EventsListAdapter).replace(it)
-
-        }
-
-        viewModel.CONTENT_LOADED.observe(this) {
-
-        }
-
-        viewModel.LOADING.observe(this) {
-            binding.pgLayout.progressBar.visible(it)
+            if(it != null){
+                if(searchListView.adapter !is EventsListAdapter)
+                    searchListView.adapter = EventsListAdapter(it)
+                else{
+                    if(it.isEmpty()){
+                        (searchListView.adapter as EventsListAdapter).clear()
+                        Toast.makeText(this, getString(R.string.search_events_not_found), Toast.LENGTH_SHORT).show()
+                    }
+                    else
+                        (searchListView.adapter as EventsListAdapter).replace(it)
+                }
+            }
         }
     }
 

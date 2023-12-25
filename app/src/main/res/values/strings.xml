@@ -38,7 +38,7 @@
     <string name="search_action">Cerca eventi o utenti</string>
     <string name="search_empty_text">Il termine di ricerca non può essere vuoto.</string>
     <string name="search_users_not_found">Nessun utente trovato</string>
-    <string name="searc_events_not_found">Nessun evento trovato</string>
+    <string name="search_events_not_found">Nessun evento trovato</string>
     <string name="user_info_friends">amicizie</string>
     <string name="user_info_created">creati</string>
     <string name="user_info_joined">partecipati</string>

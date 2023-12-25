@@ -5,6 +5,7 @@ import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.data.response.SearchCallableResponse
 import com.diegusmich.intouch.data.wrapper.EventWrapper
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.functions.ktx.functions
@@ -38,7 +39,6 @@ object EventRepository :
             }.sortedByDescending { it.startAt }
         } ?: mutableListOf()
     }
-
 
     suspend fun joinedBy(userId: String) = withContext(Dispatchers.IO) {
         UserRepository.getDoc(userId)?.let { userWrapper ->
