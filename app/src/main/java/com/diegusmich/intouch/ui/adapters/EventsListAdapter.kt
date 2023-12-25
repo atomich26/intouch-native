@@ -13,7 +13,7 @@ import com.diegusmich.intouch.ui.views.GlideImageView
 import com.diegusmich.intouch.utils.TimeUtil
 
 class EventsListAdapter(collection: List<Event.Preview>) :
-    DynamicDataAdapter<Event.Preview, EventsListAdapter.EventListViewHolder>(collection) {
+    MutableAdapterImpl<Event.Preview>(collection) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventListViewHolder {
         return LayoutInflater.from(parent.context).inflate(R.layout.event_list_item, parent, false)
@@ -24,7 +24,7 @@ class EventsListAdapter(collection: List<Event.Preview>) :
 
     override fun getItemCount(): Int = data.size
 
-    override fun onBindViewHolder(holder: EventListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder<Event.Preview>, position: Int) {
         holder.bind(data[position])
     }
 

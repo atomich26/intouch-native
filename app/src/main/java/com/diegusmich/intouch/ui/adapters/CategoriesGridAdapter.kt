@@ -33,11 +33,15 @@ class CategoriesGridAdapter(private val data: List<Category>) :
             val imgRef = CloudImageService.CATEGORIES.imageRef(category.cover)
             itemView.findViewById<TextView>(R.id.categoryNameGridItem).text = category.name
             itemView.findViewById<GlideImageView>(R.id.categoryImageGridItem).load(imgRef)
-            itemView.setOnClickListener{
-                itemView.context.startActivity(Intent(itemView.context, EventByCategoryActivity::class.java).apply {
-                    putExtra(EventByCategoryActivity.CATEGORY_ID_ARG, category.id)
-                    putExtra(EventByCategoryActivity.CATEGORY_NAME_ARG, category.name)
-                })
+            itemView.setOnClickListener {
+                itemView.context.startActivity(
+                    Intent(
+                        itemView.context,
+                        EventByCategoryActivity::class.java
+                    ).apply {
+                        putExtra(EventByCategoryActivity.CATEGORY_ID_ARG, category.id)
+                        putExtra(EventByCategoryActivity.CATEGORY_NAME_ARG, category.name)
+                    })
             }
         }
     }

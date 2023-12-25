@@ -12,7 +12,7 @@ import com.diegusmich.intouch.ui.activities.UserActivity
 import com.diegusmich.intouch.ui.views.GlideImageView
 
 class UsersListAdapter(collection: List<User.Preview>) :
-    DynamicDataAdapter<User.Preview, UsersListAdapter.UserListAdapterViewHolder>(collection) {
+    MutableAdapterImpl<User.Preview>(collection) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListAdapterViewHolder {
         val view =
@@ -22,7 +22,7 @@ class UsersListAdapter(collection: List<User.Preview>) :
 
     override fun getItemCount(): Int = data.size
 
-    override fun onBindViewHolder(holder: UserListAdapterViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder<User.Preview>, position: Int) {
         holder.bind(data[position])
     }
 

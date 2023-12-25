@@ -3,28 +3,29 @@ package com.diegusmich.intouch.ui.adapters
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class DynamicDataAdapter<E, T : DynamicDataAdapter.ViewHolder<E>>(collection: List<E>) : RecyclerView.Adapter<T>() {
+abstract class MutableAdapterImpl<E>(collection: List<E>) :
+    RecyclerView.Adapter<MutableAdapterImpl.ViewHolder<E>>(), MutableAdapter<E> {
 
     protected val data = collection.toMutableList()
 
-    fun add(items : List<E>){
+    override fun add(items: List<E>) {
         data.addAll(items)
         notifyItemRangeInserted(data.size, items.size)
     }
 
-    fun replace(items : List<E>){
+    override fun replace(items: List<E>) {
         this.clear()
         data.addAll(items)
         notifyItemRangeInserted(0, data.size)
     }
 
-    fun clear(){
+    override fun clear() {
         val size = data.size
         data.clear()
         notifyItemRangeRemoved(0, size)
     }
 
-    abstract class ViewHolder<E>(view: View) : RecyclerView.ViewHolder(view){
-        abstract fun bind(item : E)
+    abstract class ViewHolder<E>(view: View) : RecyclerView.ViewHolder(view) {
+        abstract fun bind(item: E)
     }
 }
