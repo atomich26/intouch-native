@@ -91,7 +91,7 @@ class LoginFragment : BaseFragment() {
 
         viewModel.LOADING.observe(viewLifecycleOwner){
             progressBar.visible(it)
-            binding.loginEmailTextField.isEnabled = !it
+            binding.loginEmailInputLayout.isEnabled = !it
             binding.loginPasswordInputLayout.isEnabled = !it
             binding.loginButton.isEnabled = !it
             binding.recoverPasswordButton.isEnabled = !it
