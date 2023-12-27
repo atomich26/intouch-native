@@ -24,7 +24,7 @@ class ProfileViewModel : StateViewModel() {
 
     fun onLogout() = Firebase.auth.signOut()
 
-    fun onLoadData(userId: String?, isRefreshing: Boolean = false) = viewModelScope.launch{
+    fun onLoadUserData(userId: String?, isRefreshing: Boolean = false) = viewModelScope.launch{
         if (userId == null)
             return@launch updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
 
@@ -41,7 +41,7 @@ class ProfileViewModel : StateViewModel() {
                 if (isRefreshing)
                     R.string.unable_to_update_error
                 else
-                    R.string.firebaseFirestoreException
+                    R.string.firebaseNetworkException
             updateState(_ERROR, messageId)
         }
     }
@@ -53,6 +53,4 @@ class ProfileViewModel : StateViewModel() {
     private fun onLoadArchivedPosts(userId: String) = viewModelScope.launch {
 
     }
-
-    fun onLoadAuthData(isRefreshing: Boolean = false) = onLoadData(Firebase.auth.currentUser?.uid!!, isRefreshing)
 }

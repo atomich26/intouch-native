@@ -49,8 +49,7 @@ class SearchActivityViewModel : StateViewModel() {
             }catch (e : Exception){
                 if(e is CancellationException)
                     return@launch
-
-                updateState(_ERROR, R.string.firebaseFirestoreException)
+                updateState(_ERROR, R.string.firebaseNetworkException)
             }
         }.apply {
             invokeOnCompletion {

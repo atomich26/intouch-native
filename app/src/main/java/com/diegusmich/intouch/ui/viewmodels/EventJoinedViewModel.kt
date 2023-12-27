@@ -27,7 +27,7 @@ class EventJoinedViewModel : StateViewModel(){
                 if (isRefreshing)
                     R.string.unable_to_update_error
                 else
-                    R.string.firebaseFirestoreException
+                    R.string.firebaseNetworkException
             updateState(_ERROR, messageId)
         }
     }

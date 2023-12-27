@@ -2,6 +2,7 @@ package com.diegusmich.intouch.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
@@ -43,7 +44,7 @@ class MainActivity : BaseActivity() {
                     FeedFragment(),
                     CategoriesFragment(),
                     NotificationFragment(),
-                    ProfileFragment()
+                    ProfileFragment.newInstance(Firebase.auth.currentUser?.uid)
                 ), supportFragmentManager, lifecycle
             )
 

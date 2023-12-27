@@ -39,7 +39,7 @@ class GlideImageView(ctx: Context, attrs: AttributeSet) : ShapeableImageView(ctx
             Glide.with(context).load(url).apply(glideOptions).into(this@GlideImageView)
     }
 
-    fun load(imgReference: StorageReference) {
+    fun load(imgReference: StorageReference?) {
         Glide.with(context).load(imgReference).apply(glideOptions).into(this@GlideImageView)
     }
 

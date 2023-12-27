@@ -14,6 +14,8 @@ import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.net.ConnectException
+import java.net.UnknownHostException
 import java.util.Date
 
 class SignupViewModel : StateViewModel() {
@@ -89,7 +91,12 @@ class SignupViewModel : StateViewModel() {
         } catch (e: FirebaseFunctionsException) {
             when (e.code) {
                 FirebaseFunctionsException.Code.INTERNAL -> {
-                    updateState(_ERROR, R.string.firebaseNetworkException)
+                    val messageId = if(e.cause is UnknownHostException || e.cause is ConnectException)
+                        R.string.firebaseNetworkException
+                    else
+                        R.string.internal_error
+
+                    updateState(_ERROR, messageId)
                 }
 
                 FirebaseFunctionsException.Code.INVALID_ARGUMENT -> {

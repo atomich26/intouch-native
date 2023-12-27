@@ -10,8 +10,10 @@ class CloudImageService(path : String) {
 
     private val storageRef = Firebase.storage.reference.child(path)
 
-    fun imageRef(namePath : String) : StorageReference {
-        return storageRef.child(namePath)
+    fun imageRef(namePath : String) : StorageReference? {
+        return if(namePath.isNotBlank())
+            storageRef.child(namePath)
+        else null
     }
 
     suspend fun uploadImage(uri : Uri){

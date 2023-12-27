@@ -68,7 +68,7 @@
     <string name="firebaseAuthInvalidCredentials">Credenziali non valide</string>
     <string name="firebaseAuthInvalidUserException">L\'account richiesto non esiste.</string>
     <string name="firebaseAuthEmailException">L\'email inserita non è associata a nessun account Intouch</string>
-    <string name="firebaseNetworkException">Errore di rete</string>
+    <string name="firebaseNetworkException">Errore di rete, riprova più tardi.</string>
     <string name="firebaseTooManyRequestsException">Blocco temporaneo per attività insolite</string>
     <string name="firebaseDefaultExceptionMessage">Errore interno! Contatta l\'assistenza</string>
     <string name="firebaseFirestoreException">Si è verificato un errore, riprova più tardi.</string>
@@ -95,6 +95,5 @@
     <string name="date_after_now">La data è successiva a quella corrente</string>
     <string name="empty_birthdate">La data di nascita non può essere vuota</string>
     <string name="default_invalid_error">Campo non valido</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="internal_error">Errore interno, riprova più tardi.</string>
 </resources>
