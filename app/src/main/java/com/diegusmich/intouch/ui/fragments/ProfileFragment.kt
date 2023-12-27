@@ -196,6 +196,26 @@ class ProfileFragment : BaseFragment() {
             binding.userInfoFriendship.setInfoValue(it.friends)
             binding.userInfoCreated.setInfoValue(it.created)
             binding.userInfoJoined.setInfoValue(it.joined)
+
+            /*when (it.friendship.status) {
+                is Friendship.Status.PENDING -> {
+                    val isVisible = if (it.friendship.status.isActor) View.GONE else View.VISIBLE
+                    binding.friendshipRequestBanner.visibility = isVisible
+                }
+
+                is Friendship.Status.FRIEND -> {
+                    binding.userProfileButtonGroup.visibility = View.VISIBLE
+                }
+
+                is Friendship.Status.NONE -> {
+                    binding.friendshipRequestBanner.visibility = View.GONE
+                    binding.userProfileButtonGroup.visibility = View.VISIBLE
+                }
+
+                else -> {
+
+                }
+            }*/
         }
 
         viewModel.archivedPosts.observe(this) {
