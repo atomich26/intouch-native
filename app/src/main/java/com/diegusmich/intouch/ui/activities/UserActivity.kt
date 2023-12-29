@@ -24,7 +24,7 @@ class UserActivity : BaseActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.profileLayoutHost, ProfileFragment.newInstance(userIdArg))
+                add(R.id.profileLayoutHost, ProfileFragment.newInstance(userIdArg, true))
             }
         }
     }

@@ -16,7 +16,7 @@ class IntouchDateInputLayout(ctx : Context, attrs: AttributeSet) : FormInputLayo
 
     override fun toText(data: Date?) : String{
         return if(data != null)
-            TimeUtil.toLocaleString(data)
+            TimeUtil.toLocaleString(data, TimeUtil.DAY_OF_YEAR)
         else
             ""
     }

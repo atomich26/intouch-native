@@ -5,7 +5,8 @@ import java.util.Date
 import java.util.Locale
 
 object TimeUtil {
-    private val _dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+    val DAY_OF_YEAR = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+    val DAY_OF_YEAR_HH_MM = SimpleDateFormat("dd/MM/yyyy 'alle ore' HH:mm", Locale.ITALY)
 
-    fun toLocaleString(date: Date): String = _dateFormat.format(date)
+    fun toLocaleString(date: Date, dateFormat : SimpleDateFormat): String = dateFormat.format(date)
 }

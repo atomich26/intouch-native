@@ -16,6 +16,7 @@ sealed interface Event{
         val name: String,
         val cover: String,
         val startAt: Date,
+        val endAt: Date?,
         val categoryInfo : Category,
         val userInfo: User.Preview,
         val description: String,
@@ -24,6 +25,7 @@ sealed interface Event{
         val city: String,
         val geo: GeoPoint,
         val restricted: Boolean,
+        val closed : Boolean,
         val canEdit: Boolean
     ) : Event{
         constructor(eventWrapper: EventWrapper, userWrapper: UserWrapper, categoryWrapper: CategoryWrapper) : this(
@@ -31,6 +33,7 @@ sealed interface Event{
             name = eventWrapper.name,
             cover = eventWrapper.cover,
             startAt = eventWrapper.startAt,
+            endAt = eventWrapper.endAt,
             categoryInfo = Category(categoryWrapper),
             userInfo = User.Preview(userWrapper),
             description = eventWrapper.description,
@@ -38,6 +41,7 @@ sealed interface Event{
             address = eventWrapper.address,
             city = eventWrapper.city,
             geo = eventWrapper.geo,
+            closed = false,
             restricted = eventWrapper.restricted,
             canEdit = Firebase.auth.currentUser?.uid == userWrapper.id
         )

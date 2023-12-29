@@ -29,6 +29,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 private const val USER_ID_ARG: String = "userId"
+private const val ACTIVITY_WRAPPED = "wrapped"
 
 class ProfileFragment : BaseFragment() {
 
@@ -37,6 +38,7 @@ class ProfileFragment : BaseFragment() {
 
     private var isAuthProfileFragmentArg : Boolean = false
     private var userIdArg : String? = null
+    private var activityWrapped: Boolean = false
 
     private lateinit var toolbar: MaterialToolbar
     private val viewModel: ProfileViewModel by activityViewModels()
@@ -45,9 +47,12 @@ class ProfileFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        with(arguments?.getString(USER_ID_ARG)){
-            isAuthProfileFragmentArg = this@with == Firebase.auth.currentUser?.uid
-            userIdArg = this@with
+        arguments?.let {  bundle ->
+            activityWrapped = bundle.getBoolean(ACTIVITY_WRAPPED, false)
+            bundle.getString(USER_ID_ARG)?.let {
+                isAuthProfileFragmentArg = it == Firebase.auth.currentUser?.uid
+                userIdArg = it
+            }
         }
     }
 
@@ -72,7 +77,20 @@ class ProfileFragment : BaseFragment() {
 
         toolbar.title = getString(R.string.profile_title)
 
-        if(isAuthProfileFragmentArg){
+        if(activityWrapped){
+            toolbar.apply {
+                setNavigationOnClickListener {
+                    requireActivity().finish()
+                }
+                navigationIcon =
+                    AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.baseline_arrow_back_24
+                    )
+            }
+        }
+
+        if(isAuthProfileFragmentArg && !activityWrapped){
             toolbar.addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.profile_auth_menu, menu)
@@ -101,23 +119,9 @@ class ProfileFragment : BaseFragment() {
                     }
                 }
             }, viewLifecycleOwner)
-        }else {
-            binding.userProfileButtonGroup.visibility = View.GONE
-
-            toolbar.apply {
-                setNavigationOnClickListener {
-                    requireActivity().finish()
-                }
-                navigationIcon =
-                    AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.baseline_arrow_back_24
-                    )
-            }
         }
-
-        if(userIdArg == null)
-            return Toast.makeText(requireContext(), getString(R.string.user_not_exists), Toast.LENGTH_SHORT).show()
+        else
+            binding.userProfileButtonGroup.visibility = View.GONE
 
         binding.userImageProfile.setOnLongClickListener {
             viewModel.userProfile.value?.img.let { imagePath ->
@@ -251,9 +255,9 @@ class ProfileFragment : BaseFragment() {
 
     companion object{
         @JvmStatic
-        fun newInstance(userId: String?) =
+        fun newInstance(userId: String?, activityWrapped: Boolean) =
             ProfileFragment().apply {
-                arguments = bundleOf(USER_ID_ARG to userId)
+                arguments = bundleOf(USER_ID_ARG to userId, ACTIVITY_WRAPPED to activityWrapped)
             }
     }
 }

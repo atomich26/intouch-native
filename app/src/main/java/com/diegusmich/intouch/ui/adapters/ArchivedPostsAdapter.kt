@@ -34,7 +34,7 @@ class ArchivedPostsAdapter(collection: List<Post.ArchivePreview>) :
             val imgRef = CloudImageService.POSTS.imageRef(item.thumbnail)
             itemView.findViewById<GlideImageView>(R.id.postPreviewProfileGridItem).load(imgRef)
             itemView.findViewById<TextView>(R.id.datePostProfileGridItem).text =
-                TimeUtil.toLocaleString(item.createdAt)
+                TimeUtil.toLocaleString(item.createdAt, TimeUtil.DAY_OF_YEAR)
 
             itemView.setOnClickListener { _ ->
                 (itemView.context as BaseActivity).supportFragmentManager.let {

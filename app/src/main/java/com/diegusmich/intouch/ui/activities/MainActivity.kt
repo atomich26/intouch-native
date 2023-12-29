@@ -44,7 +44,7 @@ class MainActivity : BaseActivity() {
                     FeedFragment(),
                     CategoriesFragment(),
                     NotificationFragment(),
-                    ProfileFragment.newInstance(Firebase.auth.currentUser?.uid)
+                    ProfileFragment.newInstance(Firebase.auth.currentUser?.uid, false)
                 ), supportFragmentManager, lifecycle
             )
 

@@ -63,4 +63,7 @@
     <color name="md_theme_dark_outlineVariant">#49454E</color>
     <color name="md_theme_dark_scrim">#000000</color>
     <color name="md_card_light_bg_custom">#F6F1FF</color>
+    <color name="chip_event_open">#9A4FFF81</color>
+    <color name="chip_event_restricted">#9AFFDE00</color>
+
 </resources>

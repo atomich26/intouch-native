@@ -35,7 +35,8 @@ class EventsListAdapter(collection: List<Event.Preview>) :
             }
             itemView.findViewById<TextView>(R.id.eventListItemCity).text = item.city
             itemView.findViewById<TextView>(R.id.eventListItemName).text = item.name
-            itemView.findViewById<TextView>(R.id.eventListItemDate).text = TimeUtil.toLocaleString(item.startAt)
+            itemView.findViewById<TextView>(R.id.eventListItemDate).text =
+                TimeUtil.toLocaleString(item.startAt, TimeUtil.DAY_OF_YEAR)
 
             itemView.setOnClickListener {
                 itemView.context.startActivity(

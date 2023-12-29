@@ -24,14 +24,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/postsFeedListView"
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/eventsFeedListView"
+                    android:layout_height="wrap_content">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/postsFeedListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/eventsFeedListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                </androidx.core.widget.NestedScrollView>
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.core.widget.NestedScrollView>
     </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>

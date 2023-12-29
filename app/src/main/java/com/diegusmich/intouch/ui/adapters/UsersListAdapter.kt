@@ -35,15 +35,13 @@ class UsersListAdapter(collection: List<User.Preview>) :
             itemView.findViewById<GlideImageView>(R.id.userListItemAvatar).load(imgRef)
 
             itemView.setOnClickListener {
-                if (!item.isAuth) {
-                    itemView.context.startActivity(
-                        Intent(
-                            itemView.context,
-                            UserActivity::class.java
-                        ).apply {
-                            putExtra(UserActivity.USER_ARG, item.id)
-                        })
-                }
+                itemView.context.startActivity(
+                    Intent(
+                        itemView.context,
+                        UserActivity::class.java
+                    ).apply {
+                        putExtra(UserActivity.USER_ARG, item.id)
+                    })
             }
         }
     }

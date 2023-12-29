@@ -54,10 +54,32 @@
     <string name="create_event_or_post">Crea</string>
     <string name="create_event_modal">Crea evento</string>
     <string name="create_post_modal">Aggiungi post</string>
+    <string name="event_not_exists">L\'evento non esiste</string>
+    <string name="event_join_action">Parteciperò</string>
+    <string name="title_event_toolbar">Scheda evento</string>
+    <string name="event_location_formatted">%1$s, %2$s</string>
+    <string name="username_formatted">"@"%s</string>
+    <string name="edit_event">Modifica</string>
+    <string name="show_attendees">Partecipanti</string>
+    <string name="event_restricted_text">Solo amici</string>
+    <string name="event_open_text">Aperto a tutti</string>
+    <string name="event_not_available">Nessun posto disponibile.</string>
+    <string name="event_closed">Terminato.</string>
+
+    <plurals name="event_availability_warning">
+        <item quantity="one">Resta solo %d posto disponibile!</item>
+        <item quantity="other">Restano %d posti disponibili.</item>
+    </plurals>
+
     <!-- Dialog strings -->
     <string name="alert_title_error">Errore</string>
     <string name="dialog_neutral_action">OK</string>
 
+    <plurals name="numberOfSongsAvailable">
+        <item quantity="one">Znaleziono %d piosenkę.</item>
+        <item quantity="few">Znaleziono %d piosenki.</item>
+        <item quantity="other">Znaleziono %d piosenek.</item>
+    </plurals>
     <!-- Network service strings-->
     <string name="internet_connection_lost">Connessione internet persa</string>
     <string name="internet_offline">Al momento non sei online</string>
