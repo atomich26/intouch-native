@@ -1,34 +1,49 @@
 package com.diegusmich.intouch.ui.fragments
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.diegusmich.intouch.databinding.ProfileImageFragmentDialogBinding
 import com.diegusmich.intouch.service.CloudImageService
 
 private const val IMAGE_PATH_ARG: String = "imagePath"
+private const val CAN_EDIT_ARG: String = "canEdit"
 
 class ProfileImageFragmentDialog : DialogFragment() {
 
-    private var _binding : ProfileImageFragmentDialogBinding? = null
+    private var _binding: ProfileImageFragmentDialogBinding? = null
     private val binding get() = _binding!!
 
-    private var imagePath : String? = null
+    private var imagePathArg: String? = null
+    private var canEditArg: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imagePath = arguments?.getString(IMAGE_PATH_ARG)
+        imagePathArg = arguments?.getString(IMAGE_PATH_ARG)
+        canEditArg = arguments?.getBoolean(CAN_EDIT_ARG, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        imagePath?.let {
+        imagePathArg?.let {
             binding.profileImage.load(CloudImageService.USERS.imageRef(it))
+        }
+
+        binding.profileImageEditButtonsGroup.visibility =
+            if (canEditArg == true) View.VISIBLE else View.GONE
+
+        if(imagePathArg.isNullOrBlank())
+            binding.profileImageEditButtonsGroup
+
+        binding.deleteUserImage.setOnClickListener{
+            binding.profileImage.clear()
         }
     }
 
@@ -49,13 +64,21 @@ class ProfileImageFragmentDialog : DialogFragment() {
         }
     }
 
-    companion object{
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        requireActivity().supportFragmentManager.popBackStack()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+    companion object {
         @JvmStatic
-        fun newInstance(imagePath: String) =
+        fun newInstance(imagePath: String, canEdit: Boolean) =
             ProfileImageFragmentDialog().apply {
-                arguments = Bundle().apply {
-                    putString(IMAGE_PATH_ARG, imagePath)
-                }
+                arguments = bundleOf(IMAGE_PATH_ARG to imagePath, CAN_EDIT_ARG to canEdit)
             }
     }
 }

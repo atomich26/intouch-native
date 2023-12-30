@@ -63,5 +63,6 @@ dependencies {
     implementation("com.google.firebase:firebase-functions-ktx")
     implementation("com.airbnb.android:lottie:5.0.3")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("org.ocpsoft.prettytime:prettytime:5.0.4.Final")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 }

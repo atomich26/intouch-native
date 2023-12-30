@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.ui.fragments
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +13,7 @@ import com.diegusmich.intouch.databinding.FragmentPostBinding
 
 class PostFragmentDialog : DialogFragment() {
 
-    private var _binding : FragmentPostBinding? = null
+    private var _binding: FragmentPostBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -32,12 +33,18 @@ class PostFragmentDialog : DialogFragment() {
 
         binding.appBarLayout.materialToolbar.apply {
             setBackgroundColor(Color.BLACK)
-            navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.baseline_close_24)
+            navigationIcon =
+                AppCompatResources.getDrawable(requireContext(), R.drawable.baseline_close_24)
             setNavigationIconTint(Color.WHITE)
-            setNavigationOnClickListener{
+            setNavigationOnClickListener {
                 this@PostFragmentDialog.dismiss()
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun onDestroy() {

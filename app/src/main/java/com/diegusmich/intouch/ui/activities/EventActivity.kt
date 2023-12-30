@@ -18,6 +18,7 @@ import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.viewmodels.EventViewModel
 import com.diegusmich.intouch.utils.TimeUtil
 import com.google.firebase.firestore.GeoPoint
+import org.ocpsoft.prettytime.PrettyTime
 import java.util.Date
 import kotlin.math.abs
 

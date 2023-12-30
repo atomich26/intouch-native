@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <com.diegusmich.intouch.ui.views.GlideImageView
         android:id="@+id/profileImage"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_gravity="center"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"
         app:placeholder="@drawable/user_placeholder"/>
 
-</FrameLayout>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/profileImageEditButtonsGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addUserImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/baseline_edit_24"
+            app:iconSize="26dp"
+            style="@style/Widget.Material3.Button.IconButton.Filled"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deleteUserImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:iconSize="26dp"
+            app:iconTint="@color/design_default_color_error"
+            app:icon="@drawable/baseline_delete_24"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

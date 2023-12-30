@@ -2,7 +2,6 @@ package com.diegusmich.intouch.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
@@ -11,11 +10,8 @@ import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.CategoriesFragment
 import com.diegusmich.intouch.ui.fragments.CreateModalBottomSheet
 import com.diegusmich.intouch.ui.fragments.FeedFragment
-import com.diegusmich.intouch.ui.fragments.ModalPreferencesBottomSheet
 import com.diegusmich.intouch.ui.fragments.NotificationFragment
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch

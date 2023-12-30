@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Intouch.Base.Theme.Material3" parent="Theme.Material3.Light.NoActionBar">
-        <!--<item name="fontFamily">@font/googlesans</item>
-       <item name="android:fontFamily">@font/googlesans</item>-->
+        <item name="fontFamily">sans-serif</item>
+       <item name="android:fontFamily">sans-serif</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/md_theme_light_secondaryContainer</item>
         <item name="android:windowLightStatusBar">true</item>

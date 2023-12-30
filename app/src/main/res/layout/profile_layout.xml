@@ -82,30 +82,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.diegusmich.intouch.ui.views.GlideImageView
+        <FrameLayout
             android:id="@+id/userImageProfile"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginRight="16dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"
-            app:placeholder="@drawable/user_placeholder" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.diegusmich.intouch.ui.views.GlideImageView
+                android:id="@+id/userImageProfileContent"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="16dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"
+                app:placeholder="@drawable/user_placeholder" />
+
+            <com.diegusmich.intouch.ui.views.GlideImageView
+                android:id="@+id/userImageProfileOverlay"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:visibility="gone"
+                android:layout_marginRight="16dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"
+                app:srcCompat="@drawable/user_image_edit_overlay"/>
+
+        </FrameLayout>
 
         <com.diegusmich.intouch.ui.views.UserInfoNumber
             android:id="@+id/user_info_friendship"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             app:displayText="@string/user_info_friends" />
 
         <com.diegusmich.intouch.ui.views.UserInfoNumber
             android:id="@+id/user_info_created"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             app:displayText="@string/user_info_created" />
 
         <com.diegusmich.intouch.ui.views.UserInfoNumber
             android:id="@+id/user_info_joined"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             app:displayText="@string/user_info_joined" />
 
     </LinearLayout>

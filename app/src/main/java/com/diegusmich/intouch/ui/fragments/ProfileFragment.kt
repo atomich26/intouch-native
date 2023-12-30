@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
+import com.diegusmich.intouch.data.domain.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.activities.AuthActivity
@@ -36,8 +37,8 @@ class ProfileFragment : BaseFragment() {
     private var _binding: ProfileLayoutBinding? = null
     val binding get() = _binding!!
 
-    private var isAuthProfileFragmentArg : Boolean = false
-    private var userIdArg : String? = null
+    private var isAuthProfileFragmentArg: Boolean = false
+    private var userIdArg: String? = null
     private var activityWrapped: Boolean = false
 
     private lateinit var toolbar: MaterialToolbar
@@ -47,7 +48,7 @@ class ProfileFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {  bundle ->
+        arguments?.let { bundle ->
             activityWrapped = bundle.getBoolean(ACTIVITY_WRAPPED, false)
             bundle.getString(USER_ID_ARG)?.let {
                 isAuthProfileFragmentArg = it == Firebase.auth.currentUser?.uid
@@ -77,7 +78,7 @@ class ProfileFragment : BaseFragment() {
 
         toolbar.title = getString(R.string.profile_title)
 
-        if(activityWrapped){
+        if (activityWrapped) {
             toolbar.apply {
                 setNavigationOnClickListener {
                     requireActivity().finish()
@@ -90,7 +91,7 @@ class ProfileFragment : BaseFragment() {
             }
         }
 
-        if(isAuthProfileFragmentArg && !activityWrapped){
+        if (isAuthProfileFragmentArg && !activityWrapped) {
             toolbar.addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.profile_auth_menu, menu)
@@ -119,18 +120,16 @@ class ProfileFragment : BaseFragment() {
                     }
                 }
             }, viewLifecycleOwner)
-        }
-        else
+        } else
             binding.userProfileButtonGroup.visibility = View.GONE
 
-        binding.userImageProfile.setOnLongClickListener {
-            viewModel.userProfile.value?.img.let { imagePath ->
-
-                if (imagePath.isNullOrBlank())
-                    return@let false
-
+        binding.userImageProfile.setOnClickListener {
+            viewModel.image.value?.let { imagePath ->
                 requireActivity().supportFragmentManager.let { fragmentManager ->
-                    ProfileImageFragmentDialog.newInstance(imagePath).let { fragment ->
+                    ProfileImageFragmentDialog.newInstance(
+                        imagePath,
+                        isAuthProfileFragmentArg && !activityWrapped
+                    ).let { fragment ->
                         fragmentManager.beginTransaction().apply {
                             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             add(fragment, "PROFILE_IMAGE_FRAGMENT_DIALOG")
@@ -139,41 +138,51 @@ class ProfileFragment : BaseFragment() {
                         }
                     }
                 }
-                true
             }
         }
 
-        val prefsModalBottomSheet = ModalPreferencesBottomSheet()
-        /* binding.showUserPrefButton.setOnClickListener {
-            if (supportFragmentManager.findFragmentByTag(ModalPreferencesBottomSheet.TAG) == null)
-                prefsModalBottomSheet.show(supportFragmentManager, ModalPreferencesBottomSheet.TAG)
-        }*/
+        binding.showUserPrefButton.setOnClickListener {
+            val prefsModalBottomSheet = PreferencesModalBottomSheet().apply {
+                val prefsNameArray = viewModel.preferences.value?.map { it.name }?.toTypedArray()
+                arguments = bundleOf(PreferencesModalBottomSheet.PREFS_ARRAY to prefsNameArray)
+            }
+            val fragmentManager = requireActivity().supportFragmentManager
 
-        binding.userInfoFriendship.setOnClickListener {
-            with(viewModel.userProfile) {
-                if (value?.friends?.compareTo(0) == 1) {
+            if (fragmentManager.findFragmentByTag(PreferencesModalBottomSheet.TAG) == null)
+                prefsModalBottomSheet.show(fragmentManager, PreferencesModalBottomSheet.TAG)
+        }
+
+        binding.userInfoFriendship.setOnClickListener { _ ->
+            viewModel.friends.value?.let { friends ->
+                if (friends > 0) {
                     startActivity(Intent(requireContext(), UserFriendsActivity::class.java).apply {
-                        putExtra(UserFriendsActivity.USER_ARG, value?.id)
+                        viewModel.id.value?.let {
+                            putExtra(UserFriendsActivity.USER_ARG, it)
+                        }
                     })
                 }
             }
         }
 
-        binding.userInfoCreated.setOnClickListener {
-            with(viewModel.userProfile) {
-                if (value?.created?.compareTo(0) == 1) {
+        binding.userInfoCreated.setOnClickListener { _ ->
+            viewModel.eventsCreated.value?.let { created ->
+                if (created > 0) {
                     startActivity(Intent(requireContext(), EventCreatedActivity::class.java).apply {
-                        putExtra(EventCreatedActivity.USER_ARG, value?.id)
+                        viewModel.id.value?.let {
+                            putExtra(EventCreatedActivity.USER_ARG, it)
+                        }
                     })
                 }
             }
         }
 
-        binding.userInfoJoined.setOnClickListener {
-            with(viewModel.userProfile) {
-                if (value?.joined?.compareTo(0) == 1) {
+        binding.userInfoJoined.setOnClickListener { _ ->
+            viewModel.eventsJoined.value?.let { joined ->
+                if (joined > 0) {
                     startActivity(Intent(requireContext(), EventJoinedActivity::class.java).apply {
-                        putExtra(EventJoinedActivity.USER_ARG, value?.id)
+                        viewModel.id.value?.let {
+                            putExtra(EventJoinedActivity.USER_ARG, it)
+                        }
                     })
                 }
             }
@@ -188,38 +197,61 @@ class ProfileFragment : BaseFragment() {
     }
 
     override fun lifecycleStateObserve() {
-        viewModel.userProfile.observe(viewLifecycleOwner) {
-            if (it == null)
-                return@observe
 
-            toolbar.title = it.username
+        viewModel.name.observe(viewLifecycleOwner) {
+            binding.nameProfileLayout.text = it
+        }
 
-            binding.userImageProfile.load(CloudImageService.USERS.imageRef(it.img))
-            binding.nameProfileLayout.text = it.name
-            binding.biographyProfileLayout.text = it.biography
-            binding.userInfoFriendship.setInfoValue(it.friends)
-            binding.userInfoCreated.setInfoValue(it.created)
-            binding.userInfoJoined.setInfoValue(it.joined)
+        viewModel.username.observe(viewLifecycleOwner) {
+            toolbar.title = it
+        }
 
-            /*when (it.friendship.status) {
-                is Friendship.Status.PENDING -> {
-                    val isVisible = if (it.friendship.status.isActor) View.GONE else View.VISIBLE
-                    binding.friendshipRequestBanner.visibility = isVisible
+        viewModel.biography.observe(viewLifecycleOwner) {
+            binding.biographyProfileLayout.text = it
+        }
+
+        viewModel.friends.observe(viewLifecycleOwner) {
+            binding.userInfoFriendship.setInfoValue(it)
+        }
+
+        viewModel.eventsCreated.observe(viewLifecycleOwner) {
+            binding.userInfoCreated.setInfoValue(it)
+        }
+
+        viewModel.eventsJoined.observe(viewLifecycleOwner) {
+            binding.userInfoJoined.setInfoValue(it)
+        }
+
+        viewModel.friendship.observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    is Friendship.Status.PENDING -> {
+                        val isVisible = if (it.status.isActor) View.GONE else View.VISIBLE
+                        binding.friendshipRequestBanner.visibility = isVisible
+                    }
+
+                    is Friendship.Status.FRIEND -> {
+                        binding.userProfileButtonGroup.visibility = View.VISIBLE
+                    }
+
+                    is Friendship.Status.NONE -> {
+                        binding.friendshipRequestBanner.visibility = View.GONE
+                        binding.userProfileButtonGroup.visibility = View.VISIBLE
+                    }
+
+                    else -> {
+
+                    }
                 }
+            }
+        }
 
-                is Friendship.Status.FRIEND -> {
-                    binding.userProfileButtonGroup.visibility = View.VISIBLE
+        viewModel.image.observe(viewLifecycleOwner) { imagePath ->
+            imagePath?.let {
+                viewModel.isAuth.value?.let { isAuth ->
+                    loadProfileImage(it, isAuth)
                 }
-
-                is Friendship.Status.NONE -> {
-                    binding.friendshipRequestBanner.visibility = View.GONE
-                    binding.userProfileButtonGroup.visibility = View.VISIBLE
-                }
-
-                else -> {
-
-                }
-            }*/
+            }
         }
 
         viewModel.archivedPosts.observe(this) {
@@ -238,6 +270,12 @@ class ProfileFragment : BaseFragment() {
         }
     }
 
+    private fun loadProfileImage(imagePath: String, isAuth: Boolean) {
+        binding.userImageProfileOverlay.visibility =
+            if (isAuth && !activityWrapped) View.VISIBLE else View.GONE
+        binding.userImageProfileContent.load(CloudImageService.USERS.imageRef(imagePath))
+    }
+
     override fun onResume() {
         super.onResume()
         binding.swipeRefreshLayout.onResumeView(viewModel.LOADING.value!!)
@@ -253,7 +291,7 @@ class ProfileFragment : BaseFragment() {
         _binding = null
     }
 
-    companion object{
+    companion object {
         @JvmStatic
         fun newInstance(userId: String?, activityWrapped: Boolean) =
             ProfileFragment().apply {

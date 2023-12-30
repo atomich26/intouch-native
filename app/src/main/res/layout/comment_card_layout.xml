@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <com.diegusmich.intouch.ui.views.GlideImageView
+            android:id="@+id/commentUserThumbnail"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:padding="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"
+            app:placeholder="@drawable/user_placeholder"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"
+            app:strokeColor="@color/seed"
+            app:strokeWidth="1.5dp" />
+
+        <TextView
+            android:id="@+id/commentUsernameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintStart_toEndOf="@id/commentUserThumbnail"
+            app:layout_constraintTop_toTopOf="parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLength="22"
+            android:text="username"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/commentCreatedDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintStart_toEndOf="@id/commentUsernameText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/commentText"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLength="40"
+            android:text="username"
+            android:textSize="12sp"
+            android:textColor="?attr/colorSecondary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/commentText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintStart_toEndOf="@id/commentUserThumbnail"
+            app:layout_constraintEnd_toStartOf="@id/commenteDeleteButton"
+            app:layout_constraintTop_toBottomOf="@id/commentUsernameText"
+            android:text="ijdoaisjdisajdioasjdioasjodijasiodjasidjasoidjoiasjdioasjdoiasjdioj ioa jioaj dioasj dioa jisadjaisoj ioasj ioaj daoisj aois"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/commenteDeleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/commentText"
+            app:icon="@drawable/baseline_delete_24"
+            app:iconSize="20dp"
+            app:strokeWidth="0dp"
+            app:iconTint="@color/design_default_color_error"
+            style="@style/Widget.Material3.Button.IconButton.Outlined"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

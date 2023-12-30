@@ -55,7 +55,7 @@
     <string name="create_event_modal">Crea evento</string>
     <string name="create_post_modal">Aggiungi post</string>
     <string name="event_not_exists">L\'evento non esiste</string>
-    <string name="event_join_action">Parteciperò</string>
+    <string name="event_join_action">Partecipa</string>
     <string name="title_event_toolbar">Scheda evento</string>
     <string name="event_location_formatted">%1$s, %2$s</string>
     <string name="username_formatted">"@"%s</string>

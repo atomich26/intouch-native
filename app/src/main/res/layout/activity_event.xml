@@ -183,7 +183,7 @@
                             android:gravity="center_vertical"
                             android:layout_marginEnd="10dp"
                             android:paddingHorizontal="7dp"
-                            android:drawableLeft="@drawable/baseline_group_24"
+                            android:drawableLeft="@drawable/baseline_group_24_event"
                             android:drawablePadding="2dp"
                             android:textColor="@android:color/black"
                             android:background="@drawable/event_open_tag"
@@ -208,6 +208,7 @@
                 android:layout_marginVertical="10dp"
                 android:layout_marginHorizontal="@dimen/materialHorizontalPadding"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 android:paddingVertical="15dp"
                 android:text="@string/event_join_action"
                 style="@style/Widget.Material3.Button" />
