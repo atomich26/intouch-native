@@ -95,32 +95,29 @@ class SearchActivity : BaseActivity() {
         }
 
         viewModel.searchUserResult.observe(this) {
-
-            if(it != null){
-                if(searchListView.adapter !is UsersListAdapter)
-                    searchListView.adapter = UsersListAdapter(it)
-                else{
-                    if(it.isEmpty()){
-                        (searchListView.adapter as UsersListAdapter).clear()
-                        Toast.makeText(this, getString(R.string.search_users_not_found), Toast.LENGTH_SHORT).show()
-                    }
+            it?.let {
+                if(it.isNotEmpty()){
+                    if(searchListView.adapter !is UsersListAdapter)
+                        searchListView.adapter = UsersListAdapter(it)
                     else
                         (searchListView.adapter as UsersListAdapter).replace(it)
+                }else {
+                    (searchListView.adapter as MutableAdapter<*>?)?.clear()
+                    Toast.makeText(this, getString(R.string.search_users_not_found), Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         viewModel.searchEventResult.observe(this){
-            if(it != null){
-                if(searchListView.adapter !is EventsListAdapter)
-                    searchListView.adapter = EventsListAdapter(it)
-                else{
-                    if(it.isEmpty()){
-                        (searchListView.adapter as EventsListAdapter).clear()
-                        Toast.makeText(this, getString(R.string.search_events_not_found), Toast.LENGTH_SHORT).show()
-                    }
+            it?.let {
+                if(it.isNotEmpty()){
+                    if(searchListView.adapter !is EventsListAdapter)
+                        searchListView.adapter = EventsListAdapter(it)
                     else
                         (searchListView.adapter as EventsListAdapter).replace(it)
+                }else {
+                    (searchListView.adapter as MutableAdapter<*>?)?.clear()
+                    Toast.makeText(this, getString(R.string.search_events_not_found), Toast.LENGTH_SHORT).show()
                 }
             }
         }

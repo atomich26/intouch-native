@@ -53,7 +53,7 @@ class SearchActivityViewModel : StateViewModel() {
             }
         }.apply {
             invokeOnCompletion {
-                if(it != null)
+                if(it != null )
                     updateState(_CONTENT_LOADED, false)
             }
         }
