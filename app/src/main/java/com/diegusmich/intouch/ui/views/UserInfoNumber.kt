@@ -25,13 +25,6 @@ class  UserInfoNumber(ctx : Context, attrs: AttributeSet) : MaterialCardView(ctx
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
-       /* layoutParams = (layoutParams as LinearLayout.LayoutParams).apply {
-            height = LinearLayout.LayoutParams.MATCH_PARENT
-            width = 0
-            weight = 1.0f
-        }*/
-
         isClickable = true
         strokeWidth = 0
         setBackgroundColor(Color.TRANSPARENT)

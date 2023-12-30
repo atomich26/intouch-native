@@ -108,21 +108,21 @@
 
         <com.diegusmich.intouch.ui.views.UserInfoNumber
             android:id="@+id/user_info_friendship"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:displayText="@string/user_info_friends" />
 
         <com.diegusmich.intouch.ui.views.UserInfoNumber
             android:id="@+id/user_info_created"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:displayText="@string/user_info_created" />
 
         <com.diegusmich.intouch.ui.views.UserInfoNumber
             android:id="@+id/user_info_joined"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:displayText="@string/user_info_joined" />
