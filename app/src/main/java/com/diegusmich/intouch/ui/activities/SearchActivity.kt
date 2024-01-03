@@ -10,14 +10,12 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.databinding.ActivitySearchBinding
 import com.diegusmich.intouch.ui.adapters.EventsListAdapter
 import com.diegusmich.intouch.ui.adapters.MutableAdapter
 import com.diegusmich.intouch.ui.adapters.UsersListAdapter
 import com.diegusmich.intouch.ui.viewmodels.SearchActivityViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
-import kotlinx.coroutines.Job
 
 class SearchActivity : BaseActivity() {
 
@@ -36,13 +34,14 @@ class SearchActivity : BaseActivity() {
         setContentView(binding.root)
 
         val toolbar = binding.appBarLayout.materialToolbar
+        toolbar.title = ""
+        toolbar.navigationIcon =
+            AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
+
         setSupportActionBar(toolbar)
         toolbar.setNavigationOnClickListener {
             this.finish()
         }
-        toolbar.navigationIcon =
-            AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
-
         searchListView.layoutManager = LinearLayoutManager(this).apply {
             orientation = LinearLayoutManager.VERTICAL
         }
@@ -96,28 +95,36 @@ class SearchActivity : BaseActivity() {
 
         viewModel.searchUserResult.observe(this) {
             it?.let {
-                if(it.isNotEmpty()){
-                    if(searchListView.adapter !is UsersListAdapter)
+                if (it.isNotEmpty()) {
+                    if (searchListView.adapter !is UsersListAdapter)
                         searchListView.adapter = UsersListAdapter(it)
                     else
                         (searchListView.adapter as UsersListAdapter).replace(it)
-                }else {
+                } else {
                     (searchListView.adapter as MutableAdapter<*>?)?.clear()
-                    Toast.makeText(this, getString(R.string.search_users_not_found), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.search_users_not_found),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
 
-        viewModel.searchEventResult.observe(this){
+        viewModel.searchEventResult.observe(this) {
             it?.let {
-                if(it.isNotEmpty()){
-                    if(searchListView.adapter !is EventsListAdapter)
+                if (it.isNotEmpty()) {
+                    if (searchListView.adapter !is EventsListAdapter)
                         searchListView.adapter = EventsListAdapter(it)
                     else
                         (searchListView.adapter as EventsListAdapter).replace(it)
-                }else {
+                } else {
                     (searchListView.adapter as MutableAdapter<*>?)?.clear()
-                    Toast.makeText(this, getString(R.string.search_events_not_found), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.search_events_not_found),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
