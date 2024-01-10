@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -32,7 +33,7 @@ import com.google.firebase.ktx.Firebase
 private const val USER_ID_ARG: String = "userId"
 private const val ACTIVITY_WRAPPED = "wrapped"
 
-class ProfileFragment : BaseFragment() {
+class ProfileFragment : Fragment() {
 
     private var _binding: ProfileLayoutBinding? = null
     val binding get() = _binding!!
@@ -193,11 +194,11 @@ class ProfileFragment : BaseFragment() {
 
         binding.userPostsGridView.adapter = ArchivedPostsAdapter(viewModel.archivedPosts.value!!)
 
+        observeData()
         viewModel.onLoadUserData(userIdArg)
     }
 
-    override fun lifecycleStateObserve() {
-
+    private fun observeData() {
         viewModel.name.observe(viewLifecycleOwner) {
             binding.nameProfileLayout.text = it
         }
@@ -254,16 +255,16 @@ class ProfileFragment : BaseFragment() {
             }
         }
 
-        viewModel.archivedPosts.observe(this) {
+        viewModel.archivedPosts.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty())
                 (binding.userPostsGridView.adapter as ArchivedPostsAdapter).replace(it)
         }
 
-        viewModel.LOADING.observe(this) {
+        viewModel.LOADING.observe(viewLifecycleOwner) {
             binding.swipeRefreshLayout.isRefreshingDelayed(viewLifecycleOwner, it, 0)
         }
 
-        viewModel.ERROR.observe(this) {
+        viewModel.ERROR.observe(viewLifecycleOwner) {
             if (it != null)
                 Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT)
                     .show()

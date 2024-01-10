@@ -1,12 +1,13 @@
 package com.diegusmich.intouch.ui.activities
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityUserBinding
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
 
-class UserActivity : BaseActivity() {
+class UserActivity : AppCompatActivity() {
 
     private var _binding: ActivityUserBinding? = null
     private val binding get() = _binding!!
@@ -27,10 +28,6 @@ class UserActivity : BaseActivity() {
                 add(R.id.profileLayoutHost, ProfileFragment.newInstance(userIdArg, true))
             }
         }
-    }
-
-    override fun lifecycleStateObserve() {
-        return
     }
 
     override fun onDestroy() {

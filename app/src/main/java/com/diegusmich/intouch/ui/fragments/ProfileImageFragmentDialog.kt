@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.databinding.ProfileImageFragmentDialogBinding
 import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.ui.viewmodels.ProfileImageFragmentViewModel
 
 private const val IMAGE_PATH_ARG: String = "imagePath"
 private const val CAN_EDIT_ARG: String = "canEdit"
@@ -20,6 +22,8 @@ class ProfileImageFragmentDialog : DialogFragment() {
 
     private var _binding: ProfileImageFragmentDialogBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel : ProfileImageFragmentViewModel by viewModels()
 
     private var imagePathArg: String? = null
     private var canEditArg: Boolean? = null
@@ -33,7 +37,7 @@ class ProfileImageFragmentDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imagePathArg?.let {
-            binding.profileImage.load(CloudImageService.USERS.imageRef(it))
+            viewModel.loadImage(it)
         }
 
         binding.profileImageEditButtonsGroup.visibility =

@@ -118,4 +118,17 @@
     <string name="empty_birthdate">La data di nascita non può essere vuota</string>
     <string name="default_invalid_error">Campo non valido</string>
     <string name="internal_error">Errore interno, riprova più tardi.</string>
+
+
+    <!-- Notification string -->
+    <string name="notification_friendship_ch">Richieste di amicizia</string>
+    <string name="notification_friendship_id">INTOUCH_FRIENDSHIP_NOTIFICATION</string>
+    <string name="notification_friendship_desc">Ricevi avvisi sullo stato delle richieste di amicizia</string>
+    <string name="notification_event_ch">Eventi</string>
+    <string name="notification_event_id">INTOUCH_EVENT_NOTIFICATION</string>
+    <string name="notification_event_desc">Ricevi avvisi quando i dettagli di un evento che segui cambiano</string>
+    <string name="notification_post_comment_ch">Commenti dei post</string>
+    <string name="notification_post_comment_id">INTOUCH_POST_COMMENT_NOTIFICATION</string>
+    <string name="notification_post_comment_desc">Notifica quando un utente commenta un post pubblicato da te</string>
+
 </resources>

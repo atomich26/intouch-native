@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
@@ -17,7 +18,7 @@ import com.diegusmich.intouch.ui.adapters.UsersListAdapter
 import com.diegusmich.intouch.ui.viewmodels.SearchActivityViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
 
-class SearchActivity : BaseActivity() {
+class SearchActivity : AppCompatActivity() {
 
     private var _binding: ActivitySearchBinding? = null
     private val binding get() = _binding!!
@@ -45,6 +46,8 @@ class SearchActivity : BaseActivity() {
         searchListView.layoutManager = LinearLayoutManager(this).apply {
             orientation = LinearLayoutManager.VERTICAL
         }
+
+        observeData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -81,7 +84,7 @@ class SearchActivity : BaseActivity() {
         return true
     }
 
-    override fun lifecycleStateObserve() {
+    private fun observeData() {
 
         viewModel.LOADING.observe(this) {
             binding.pgLayout.progressBar.visible(it)

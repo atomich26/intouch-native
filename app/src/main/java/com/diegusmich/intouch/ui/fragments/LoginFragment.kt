@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentLoginBinding
@@ -16,13 +17,13 @@ import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
-class LoginFragment : BaseFragment() {
+class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var progressBar : LinearProgressIndicator
-    private lateinit var toolbar : MaterialToolbar
+    private lateinit var progressBar: LinearProgressIndicator
+    private lateinit var toolbar: MaterialToolbar
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -39,9 +40,8 @@ class LoginFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
-
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         toolbar.title = getString(R.string.login_fragment_title)
         toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
@@ -67,20 +67,20 @@ class LoginFragment : BaseFragment() {
         }
 
         startPostponedEnterTransition()
+        observeData()
     }
 
-    override fun lifecycleStateObserve() {
-
-        viewModel.email.observe(viewLifecycleOwner){
-             binding.loginEmailInputLayout.updateState(it)
+    private fun observeData() {
+        viewModel.email.observe(viewLifecycleOwner) {
+            binding.loginEmailInputLayout.updateState(it)
         }
 
-        viewModel.password.observe(viewLifecycleOwner){
+        viewModel.password.observe(viewLifecycleOwner) {
             binding.loginPasswordInputLayout.updateState(it)
         }
 
-        viewModel.RECOVERY_EMAIL_SENT.observe(viewLifecycleOwner){
-            if(it){
+        viewModel.RECOVERY_EMAIL_SENT.observe(viewLifecycleOwner) {
+            if (it) {
                 Toast.makeText(
                     requireContext(),
                     R.string.recover_email_sent,
@@ -89,7 +89,7 @@ class LoginFragment : BaseFragment() {
             }
         }
 
-        viewModel.LOADING.observe(viewLifecycleOwner){
+        viewModel.LOADING.observe(viewLifecycleOwner) {
             progressBar.visible(it)
             binding.loginEmailInputLayout.isEnabled = !it
             binding.loginPasswordInputLayout.isEnabled = !it
@@ -97,8 +97,8 @@ class LoginFragment : BaseFragment() {
             binding.recoverPasswordButton.isEnabled = !it
         }
 
-        viewModel.LOGGED.observe(viewLifecycleOwner){
-            if(it){
+        viewModel.LOGGED.observe(viewLifecycleOwner) {
+            if (it) {
                 startActivity(Intent(requireContext(), MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                 })
@@ -106,10 +106,15 @@ class LoginFragment : BaseFragment() {
             }
         }
 
-        viewModel.ERROR.observe(viewLifecycleOwner){
-            if(it != null){
+        viewModel.ERROR.observe(viewLifecycleOwner) {
+            if (it != null) {
                 Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

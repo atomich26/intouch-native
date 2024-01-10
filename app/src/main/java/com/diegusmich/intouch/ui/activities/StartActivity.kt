@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.diegusmich.intouch.databinding.ActivityStartBinding
 import com.diegusmich.intouch.ui.viewmodels.StartActivityViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
-class StartActivity : BaseActivity() {
+class StartActivity : AppCompatActivity() {
 
     private val viewModel : StartActivityViewModel by viewModels()
 
@@ -42,9 +43,10 @@ class StartActivity : BaseActivity() {
         }
 
         setContentView(binding.root)
+        observeData()
     }
 
-    override fun lifecycleStateObserve() {
+    private fun observeData() {
 
         viewModel.PREFERENCES_SAVED.observe(this){
             if(it)

@@ -49,7 +49,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLength="40"
-            android:text="username"
+            android:text="data pretty formatted"
             android:textSize="12sp"
             android:textColor="?attr/colorSecondary"
             android:textStyle="bold" />
@@ -62,7 +62,7 @@
             app:layout_constraintStart_toEndOf="@id/commentUserThumbnail"
             app:layout_constraintEnd_toStartOf="@id/commenteDeleteButton"
             app:layout_constraintTop_toBottomOf="@id/commentUsernameText"
-            android:text="ijdoaisjdisajdioasjdioasjodijasiodjasidjasoidjoiasjdioasjdoiasjdioj ioa jioaj dioasj dioa jisadjaisoj ioasj ioaj daoisj aois"/>
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/commenteDeleteButton"
@@ -76,8 +76,6 @@
             app:iconSize="20dp"
             app:strokeWidth="0dp"
             app:iconTint="@color/design_default_color_error"
-            style="@style/Widget.Material3.Button.IconButton.Outlined"
-            />
-
+            style="@style/Widget.Material3.Button.IconButton.Outlined" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -6,6 +6,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.diegusmich.intouch.service.NetworkService
+import com.diegusmich.intouch.service.NotificationService
+import com.diegusmich.intouch.service.UserLocationService
 import com.google.firebase.FirebaseApp
 
 class IntouchApplication : Application(), LifecycleEventObserver {
@@ -19,6 +21,8 @@ class IntouchApplication : Application(), LifecycleEventObserver {
         super.onCreate()
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         NetworkService.build(this)
+        NotificationService.build(this)
+        UserLocationService.build(this)
         FirebaseApp.initializeApp(this)
     }
 

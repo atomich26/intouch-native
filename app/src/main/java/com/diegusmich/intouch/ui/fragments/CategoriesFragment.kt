@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
@@ -19,7 +20,7 @@ import com.diegusmich.intouch.ui.adapters.CategoriesGridAdapter
 import com.diegusmich.intouch.ui.viewmodels.CategoriesViewModel
 import com.google.android.material.appbar.MaterialToolbar
 
-class CategoriesFragment : BaseFragment() {
+class CategoriesFragment : Fragment() {
 
     private var _binding: FragmentCategoriesBinding? = null
     val binding get() = _binding!!
@@ -68,10 +69,11 @@ class CategoriesFragment : BaseFragment() {
             }
         }, viewLifecycleOwner)
 
+        observeData()
         viewModel.onLoadCategories()
     }
 
-    override fun lifecycleStateObserve() {
+    private fun observeData(){
         viewModel.categories.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
                 binding.categoriesGridView.adapter = CategoriesGridAdapter(it)

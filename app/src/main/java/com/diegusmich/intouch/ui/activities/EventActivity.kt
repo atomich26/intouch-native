@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Event
@@ -23,7 +24,7 @@ import java.util.Date
 import kotlin.math.abs
 
 
-class EventActivity : BaseActivity() {
+class EventActivity : AppCompatActivity() {
 
     private var _binding: ActivityEventBinding? = null
     private val binding get() = _binding!!
@@ -75,7 +76,7 @@ class EventActivity : BaseActivity() {
         }
 
         binding.collapsingMaterialToolbar.inflateMenu(R.menu.event_menu)
-
+        observeData()
         viewModel.onLoadEvent(eventIdArg)
     }
 
@@ -85,7 +86,7 @@ class EventActivity : BaseActivity() {
         return true
     }
 
-    override fun lifecycleStateObserve() {
+    private fun observeData(){
         viewModel.LOADING.observe(this) {
             binding.swipeRefreshLayout.isRefreshingDelayed(this, it)
         }

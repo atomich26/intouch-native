@@ -88,12 +88,4 @@ class ProfileViewModel : StateViewModel() {
             updateState(_ERROR, messageId)
         }
     }
-
-    private fun onLoadUserProfile(userId: String) = viewModelScope.launch {
-
-    }
-
-    private fun onLoadArchivedPosts(userId: String) = viewModelScope.launch {
-
-    }
 }

@@ -1,8 +1,6 @@
 package com.diegusmich.intouch.ui.activities
 
-class PostActivity : BaseActivity() {
+import androidx.appcompat.app.AppCompatActivity
 
-    override fun lifecycleStateObserve() {
-
-    }
+class PostActivity : AppCompatActivity(){
 }

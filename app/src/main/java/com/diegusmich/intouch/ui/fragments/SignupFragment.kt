@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentSignupBinding
@@ -27,15 +28,15 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import java.util.Date
 
-class SignupFragment : BaseFragment() {
+class SignupFragment : Fragment() {
 
-    private var _binding : FragmentSignupBinding? = null
+    private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var progressBar : LinearProgressIndicator
-    private lateinit var toolbar : MaterialToolbar
+    private lateinit var progressBar: LinearProgressIndicator
+    private lateinit var toolbar: MaterialToolbar
 
-    private val viewModel : SignupViewModel by viewModels()
+    private val viewModel: SignupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +52,6 @@ class SignupFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         postponeEnterTransition()
 
         toolbar.title = getString(R.string.create_account_fragment_title)
@@ -61,15 +61,98 @@ class SignupFragment : BaseFragment() {
             activity?.onBackPressedDispatcher?.onBackPressed()
         }
 
-        binding.textviewGdpr.text =
-            Html.fromHtml(getString(R.string.text_gdpr_consent), Html.FROM_HTML_MODE_COMPACT)
-        Linkify.addLinks(binding.textviewGdpr, Linkify.WEB_URLS)
-        binding.textviewGdpr.movementMethod = LinkMovementMethod.getInstance()
+        with(binding.textviewGdpr) {
+            text = Html.fromHtml(getString(R.string.text_gdpr_consent), Html.FROM_HTML_MODE_COMPACT)
+            Linkify.addLinks(binding.textviewGdpr, Linkify.WEB_URLS)
+            movementMethod = LinkMovementMethod.getInstance()
+        }
 
-        //Birthdate input
-        val datePickerValidator = CalendarConstraints.Builder().setValidator(CompositeDateValidator.allOf(
-            listOf(DateValidatorPointBackward.now(), DateValidatorPointForward.from(-2208988800000))
-        ))
+        setupBirthdateInput()
+
+        binding.signupEmailTextField.doAfterTextChanged {
+            viewModel.onUpdateEmail(it.toString())
+        }
+
+        binding.signupPasswordTextField.doOnTextChanged { text, start, before, count ->
+            if (count != before)
+                viewModel.onUpdatePassword(text.toString())
+        }
+
+        binding.signupNameTextField.doAfterTextChanged {
+            viewModel.onUpdateName(it.toString())
+        }
+
+        binding.signupUsernameTextField.doAfterTextChanged {
+            viewModel.onUpdateUsername(it.toString())
+        }
+
+        binding.createUserNextButton.setOnClickListener {
+            viewModel.onCreateAccount()
+        }
+
+        startPostponedEnterTransition()
+        observeData()
+    }
+
+    private fun observeData() {
+        viewModel.name.observe(viewLifecycleOwner) {
+            binding.signupNameInputLayout.updateState(it)
+        }
+
+        viewModel.username.observe(viewLifecycleOwner) {
+            binding.signupUsernameInputLayout.updateState(it)
+        }
+
+        viewModel.email.observe(viewLifecycleOwner) {
+            binding.signupEmailInputLayout.updateState(it)
+        }
+
+        viewModel.password.observe(viewLifecycleOwner) {
+            binding.signupPasswordInputLayout.updateState(it)
+        }
+
+        viewModel.birthdate.observe(viewLifecycleOwner) {
+            binding.signupBirthdateInputLayout.updateState(it)
+        }
+
+        viewModel.ERROR.observe(viewLifecycleOwner) {
+            if (it != null)
+                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.LOADING.observe(viewLifecycleOwner) {
+            progressBar.visible(it)
+            binding.signupPasswordTextField.isEnabled = !it
+            binding.signupNameTextField.isEnabled = !it
+            binding.signupUsernameTextField.isEnabled = !it
+            binding.signupEmailTextField.isEnabled = !it
+            binding.createUserNextButton.isEnabled = !it
+            binding.signupBirthdateTextField.isEnabled = !it
+        }
+
+        viewModel.LOGGED.observe(viewLifecycleOwner) {
+            if (it) {
+                requireActivity().startActivity(
+                    Intent(
+                        requireContext(),
+                        StartActivity::class.java
+                    ).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    })
+                requireActivity().finish()
+            }
+        }
+    }
+
+    private fun setupBirthdateInput() {
+        val datePickerValidator = CalendarConstraints.Builder().setValidator(
+            CompositeDateValidator.allOf(
+                listOf(
+                    DateValidatorPointBackward.now(),
+                    DateValidatorPointForward.from(-2208988800000)
+                )
+            )
+        )
 
         val datePicker = MaterialDatePicker.Builder
             .datePicker()
@@ -93,75 +176,10 @@ class SignupFragment : BaseFragment() {
             if (hasFocus && !datePicker.isVisible)
                 datePicker.show(activity?.supportFragmentManager!!, null)
         }
-
-        binding.signupEmailTextField.doAfterTextChanged {
-            viewModel.onUpdateEmail(it.toString())
-        }
-
-        binding.signupPasswordTextField.doOnTextChanged { text, start, before, count ->
-            if(count != before)
-                viewModel.onUpdatePassword(text.toString())
-        }
-
-        binding.signupNameTextField.doAfterTextChanged {
-            viewModel.onUpdateName(it.toString())
-        }
-
-        binding.signupUsernameTextField.doAfterTextChanged {
-            viewModel.onUpdateUsername(it.toString())
-        }
-
-        binding.createUserNextButton.setOnClickListener {
-            viewModel.onCreateAccount()
-        }
-
-        startPostponedEnterTransition()
     }
 
-    override fun lifecycleStateObserve() {
-
-        viewModel.name.observe(viewLifecycleOwner){
-            binding.signupNameInputLayout.updateState(it)
-        }
-
-        viewModel.username.observe(viewLifecycleOwner){
-            binding.signupUsernameInputLayout.updateState(it)
-        }
-
-        viewModel.email.observe(viewLifecycleOwner){
-            binding.signupEmailInputLayout.updateState(it)
-        }
-
-        viewModel.password.observe(viewLifecycleOwner){
-            binding.signupPasswordInputLayout.updateState(it)
-        }
-
-        viewModel.birthdate.observe(viewLifecycleOwner){
-            binding.signupBirthdateInputLayout.updateState(it)
-        }
-
-        viewModel.ERROR.observe(viewLifecycleOwner){
-            if(it != null)
-                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.LOADING.observe(viewLifecycleOwner){
-            progressBar.visible(it)
-            binding.signupPasswordTextField.isEnabled =!it
-            binding.signupNameTextField.isEnabled =!it
-            binding.signupUsernameTextField.isEnabled =!it
-            binding.signupEmailTextField.isEnabled =!it
-            binding.createUserNextButton.isEnabled =!it
-            binding.signupBirthdateTextField.isEnabled =!it
-        }
-
-        viewModel.LOGGED.observe(viewLifecycleOwner){
-            if(it){
-                requireActivity().startActivity(Intent(requireContext(), StartActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-                })
-                requireActivity().finish()
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

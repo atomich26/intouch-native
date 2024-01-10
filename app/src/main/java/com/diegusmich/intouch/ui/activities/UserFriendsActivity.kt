@@ -3,6 +3,7 @@ package com.diegusmich.intouch.ui.activities
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +14,7 @@ import com.diegusmich.intouch.ui.viewmodels.UserFriendsActivityViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.launch
 
-class UserFriendsActivity : BaseActivity() {
+class UserFriendsActivity : AppCompatActivity() {
 
     private var _binding: UserListLayoutBinding? = null
     private val binding get() = _binding!!
@@ -48,10 +49,11 @@ class UserFriendsActivity : BaseActivity() {
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.userListRecyclerView.adapter = UsersListAdapter(mutableListOf())
 
+        observeData()
         viewModel.onLoadFriends(userId)
     }
 
-    override fun lifecycleStateObserve() {
+    private fun observeData(){
 
         viewModel.userFriends.observe(this) {
             if (!it.isNullOrEmpty())

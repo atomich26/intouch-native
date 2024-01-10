@@ -1,49 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <include
-        android:id="@+id/appBarLayout"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        layout="@layout/material_toolbar"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hapticFeedbackEnabled="true">
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedScroll"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/appBarLayout"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            layout="@layout/material_toolbar"/>
+
+        <com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
-            <androidx.appcompat.widget.LinearLayoutCompat
+            android:hapticFeedbackEnabled="true">
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nestedScroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-                <androidx.core.widget.NestedScrollView
+                android:visibility="visible">
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/postsFeedListView"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <androidx.core.widget.NestedScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </androidx.core.widget.NestedScrollView>
+                        android:layout_height="wrap_content">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/postsFeedListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </androidx.core.widget.NestedScrollView>
 
-                <androidx.core.widget.NestedScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/eventsFeedListView"
+                    <androidx.core.widget.NestedScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="wrap_content">
 
-                </androidx.core.widget.NestedScrollView>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </androidx.core.widget.NestedScrollView>
-    </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
-</androidx.appcompat.widget.LinearLayoutCompat>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/eventsFeedListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                    </androidx.core.widget.NestedScrollView>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.core.widget.NestedScrollView>
+        </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Posizione"
+        android:contentDescription="Posizione"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:srcCompat="@drawable/baseline_my_location_24"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

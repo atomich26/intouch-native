@@ -1,19 +1,13 @@
 package com.diegusmich.intouch.ui.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.domain.Event
 import com.diegusmich.intouch.data.repository.EventRepository
 import kotlinx.coroutines.launch
 
-class EventCreatedViewModel : StateViewModel() {
+class EventCreatedViewModel : EventsFilterListViewModel() {
 
-    private val _events: MutableLiveData<List<Event.Preview>> = MutableLiveData(mutableListOf())
-    val events: LiveData<List<Event.Preview>> = _events
-
-    fun onLoadCreatedEvents(userId: String?, isRefreshing: Boolean = false) = viewModelScope.launch {
+    override fun onLoadEvents(userId: String?, isRefreshing: Boolean) = viewModelScope.launch {
         if (userId.isNullOrBlank())
             return@launch updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
 

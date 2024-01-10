@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include android:id="@+id/appBarLayout" layout="@layout/material_toolbar"/>
-
     <com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout
         android:id="@+id/eventListSwipeRefreshLayout"
         android:layout_width="match_parent"

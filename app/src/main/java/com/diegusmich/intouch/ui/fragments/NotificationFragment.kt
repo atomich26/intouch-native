@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentNotificationBinding
-import com.diegusmich.intouch.ui.fragments.BaseFragment
 import com.diegusmich.intouch.ui.viewmodels.NotificationViewModel
 import com.google.android.material.appbar.MaterialToolbar
 
-class NotificationFragment : BaseFragment() {
+class NotificationFragment : Fragment() {
 
     private var _binding : FragmentNotificationBinding? = null
     private val binding get() = _binding!!
@@ -35,9 +35,6 @@ class NotificationFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar.title = getString(R.string.notifications_title)
-    }
-
-    override fun lifecycleStateObserve() {
     }
 
     override fun onResume() {

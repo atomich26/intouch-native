@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Post
 import com.diegusmich.intouch.service.CloudImageService
-import com.diegusmich.intouch.ui.activities.BaseActivity
 import com.diegusmich.intouch.ui.fragments.PostFragmentDialog
 import com.diegusmich.intouch.ui.views.GlideImageView
 import com.diegusmich.intouch.utils.TimeUtil
