@@ -213,12 +213,14 @@ class UpsertUserFragment : Fragment() {
         }
 
         viewModel.EDITED.observe(viewLifecycleOwner) {
-            if (it)
+            if (it){
                 Toast.makeText(
                     requireContext(),
                     getString(R.string.user_edited_success),
                     Toast.LENGTH_SHORT
                 ).show()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
         }
 
         viewModel.RECOVERY_EMAIL_SENT.observe(viewLifecycleOwner) {
