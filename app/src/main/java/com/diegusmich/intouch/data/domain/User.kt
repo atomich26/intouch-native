@@ -1,8 +1,10 @@
 package com.diegusmich.intouch.data.domain
 
 import com.diegusmich.intouch.data.wrapper.UserWrapper
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import java.util.Date
 
 sealed interface User {
 
@@ -15,6 +17,8 @@ sealed interface User {
         val img: String,
         val preferences: List<Category>,
         val friendship: Friendship,
+        val birthdate: Date,
+        val distanceRange: Int,
         val friends: Int,
         val joined: Int,
         val created: Int,
@@ -31,6 +35,8 @@ sealed interface User {
             biography = userWrapper.biography,
             img = userWrapper.img,
             preferences = preferences,
+            distanceRange = userWrapper.distanceRange,
+            birthdate = userWrapper.birthdate,
             friendship = friendship,
             friends = userWrapper.friends.size,
             joined = userWrapper.joined.size,

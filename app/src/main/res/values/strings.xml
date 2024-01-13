@@ -14,10 +14,13 @@
     <string name="event_joined_activity">Eventi partecipati</string>
     <string name="event_created_activity">Eventi creati</string>
 
+    <string name="user_edit_title">Modifica profilo</string>
     <string name="action_login_short">Accedi</string>
     <string name="action_create_account_short">Registrati</string>
+    <string name="action_save_changes_form">Salva</string>
     <string name="search_query_hint_text">Cerca @utenti o eventi</string>
     <string name="action_recover_password">Password dimenticata?</string>
+    <string name="action_reset_password">Cambia password</string>
     <string name="intro_text">Regalati momenti indimenticabili con i tuoi amici.</string>
     <string name="or">oppure</string>
     <string name="login_description">Inserisci le credenziali per recuperare l\'accesso al tuo account.</string>
@@ -25,6 +28,8 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_name">Nome</string>
     <string name="prompt_username">Nome utente</string>
+    <string name="prompt_biography">Biografia</string>
+    <string name="prompt_location_distance">Mostrami eventi entro</string>
     <string name="prompt_repeat_password">Ripeti password</string>
     <string name="prompt_birthdate">Data di nascita</string>
     <string name="text_gdpr_consent">Effettuando l\'iscrizione accetti il <br></br> <![CDATA[<a href="https://www.iubenda.com/privacy-policy/8207462/full-legal">Trattamento dei dati personali</a>]]> secondo le norme del GDPR.</string>
@@ -65,6 +70,9 @@
     <string name="event_open_text">Aperto a tutti</string>
     <string name="event_not_available">Nessun posto disponibile.</string>
     <string name="event_closed">Terminato.</string>
+    <string name="distance_formatted">%d km</string>
+    <string name="user_edited_success">Profilo aggiornato</string>
+    <string name="values_already_updated">Il profilo è già aggiornato.</string>
 
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>

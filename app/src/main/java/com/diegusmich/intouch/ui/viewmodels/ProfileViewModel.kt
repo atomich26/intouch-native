@@ -7,13 +7,13 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Category
 import com.diegusmich.intouch.data.domain.Friendship
 import com.diegusmich.intouch.data.domain.Post
-import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.data.repository.PostRepository
 import com.diegusmich.intouch.data.repository.UserRepository
-import com.diegusmich.intouch.service.NetworkService
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ProfileViewModel : StateViewModel() {
@@ -46,17 +46,22 @@ class ProfileViewModel : StateViewModel() {
     val eventsJoined: LiveData<Int> = _eventsJoined
 
     private val _friendship: MutableLiveData<Friendship?> = MutableLiveData(null)
-    val friendship : LiveData<Friendship?> = _friendship
+    val friendship: LiveData<Friendship?> = _friendship
 
-    private val _preferences: MutableLiveData<List<Category>>  = MutableLiveData(mutableListOf())
+    private val _preferences: MutableLiveData<List<Category>> = MutableLiveData(mutableListOf())
     val preferences: LiveData<List<Category>> = _preferences
 
-    private val _archivedPosts: MutableLiveData<List<Post.ArchivePreview>> = MutableLiveData(mutableListOf())
+    private val _archivedPosts: MutableLiveData<List<Post.ArchivePreview>> =
+        MutableLiveData(mutableListOf())
     val archivedPosts: LiveData<List<Post.ArchivePreview>> = _archivedPosts
 
+    private var onUpdateUserListener : ListenerRegistration? = null
+    private var onUpdateArchivePostListener : ListenerRegistration? = null
+
+    //Il flag non è necessario se la libreria è fatta bene. A quanto pare Firebase non lo è.
     fun onLogout() = Firebase.auth.signOut()
 
-    fun onLoadUserData(userId: String?, isRefreshing: Boolean = false) = viewModelScope.launch{
+    fun onLoadUserData(userId: String?, isRefreshing: Boolean = false) : Job = viewModelScope.launch {
         if (userId == null)
             return@launch updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
 
@@ -76,10 +81,14 @@ class ProfileViewModel : StateViewModel() {
                 _friendship.value = it.friendship
                 _preferences.value = it.preferences
             }
+
+            if(onUpdateUserListener == null && isAuth.value!!)
+                onUpdateUserListener = UserRepository.runOnDocumentUpdate(userId){
+                    onLoadUserData(userId, true)
+                }
             _archivedPosts.value = PostRepository.archived(userId)
             updateState(_CONTENT_LOADED, true)
-        }
-        catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseFirestoreException) {
             val messageId =
                 if (isRefreshing)
                     R.string.unable_to_update_error
@@ -87,5 +96,10 @@ class ProfileViewModel : StateViewModel() {
                     R.string.firebaseNetworkException
             updateState(_ERROR, messageId)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        onUpdateUserListener?.remove()
     }
 }

@@ -9,16 +9,11 @@ import com.diegusmich.intouch.ui.fragments.ProfileFragment
 
 class UserActivity : AppCompatActivity() {
 
-    private var _binding: ActivityUserBinding? = null
-    private val binding get() = _binding!!
-
     private var userIdArg: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityUserBinding.inflate(layoutInflater)
-
-        setContentView(binding.root)
+        setContentView(R.layout.activity_user)
 
         userIdArg = intent.extras?.getString(USER_ARG)
 
@@ -28,11 +23,6 @@ class UserActivity : AppCompatActivity() {
                 add(R.id.profileLayoutHost, ProfileFragment.newInstance(userIdArg, true))
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object {

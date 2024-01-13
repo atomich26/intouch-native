@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
@@ -21,40 +22,33 @@ import com.diegusmich.intouch.data.domain.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.activities.AuthActivity
+import com.diegusmich.intouch.ui.activities.EditUserActivity
 import com.diegusmich.intouch.ui.activities.UserFriendsActivity
 import com.diegusmich.intouch.ui.activities.eventlist.EventCreatedActivity
 import com.diegusmich.intouch.ui.activities.eventlist.EventJoinedActivity
 import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 private const val USER_ID_ARG: String = "userId"
-private const val ACTIVITY_WRAPPED = "wrapped"
+private const val ACTIVITY_WRAPPED_ARG: String = "wrapped"
 
 class ProfileFragment : Fragment() {
 
     private var _binding: ProfileLayoutBinding? = null
     val binding get() = _binding!!
 
-    private var isAuthProfileFragmentArg: Boolean = false
     private var userIdArg: String? = null
-    private var activityWrapped: Boolean = false
+    private var activityWrappedArg: Boolean? = null
 
     private lateinit var toolbar: MaterialToolbar
     private val viewModel: ProfileViewModel by activityViewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        arguments?.let { bundle ->
-            activityWrapped = bundle.getBoolean(ACTIVITY_WRAPPED, false)
-            bundle.getString(USER_ID_ARG)?.let {
-                isAuthProfileFragmentArg = it == Firebase.auth.currentUser?.uid
-                userIdArg = it
-            }
+        arguments?.let {
+            userIdArg = it.getString(USER_ID_ARG)
+            activityWrappedArg = it.getBoolean(ACTIVITY_WRAPPED_ARG)
         }
     }
 
@@ -73,63 +67,31 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.onLoadUserData(userIdArg, true)
-        }
-
         toolbar.title = getString(R.string.profile_title)
-
-        if (activityWrapped) {
-            toolbar.apply {
-                setNavigationOnClickListener {
-                    requireActivity().finish()
+        activityWrappedArg?.let {
+            if(it){
+                toolbar.apply {
+                    setNavigationOnClickListener {
+                        activity?.onBackPressedDispatcher?.onBackPressed()
+                    }
+                    navigationIcon =
+                        AppCompatResources.getDrawable(
+                            requireContext(),
+                            R.drawable.baseline_arrow_back_24
+                        )
                 }
-                navigationIcon =
-                    AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.baseline_arrow_back_24
-                    )
             }
         }
 
-        if (isAuthProfileFragmentArg && !activityWrapped) {
-            toolbar.addMenuProvider(object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.profile_auth_menu, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    return when (menuItem.itemId) {
-                        R.id.editUserMenuOption -> {
-                            false
-                        }
-
-                        R.id.logoutUserMenuOption -> {
-                            viewModel.onLogout()
-                            requireActivity().startActivity(
-                                Intent(
-                                    requireContext(),
-                                    AuthActivity::class.java
-                                ).apply {
-                                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                })
-                            requireActivity().finish()
-                            false
-                        }
-
-                        else -> false
-                    }
-                }
-            }, viewLifecycleOwner)
-        } else
-            binding.userProfileButtonGroup.visibility = View.GONE
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.onLoadUserData(userIdArg, true)
+        }
 
         binding.userImageProfile.setOnClickListener {
             viewModel.image.value?.let { imagePath ->
                 requireActivity().supportFragmentManager.let { fragmentManager ->
                     ProfileImageFragmentDialog.newInstance(
-                        imagePath,
-                        isAuthProfileFragmentArg && !activityWrapped
+                        imagePath, viewModel.isAuth.value!!
                     ).let { fragment ->
                         fragmentManager.beginTransaction().apply {
                             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -143,14 +105,17 @@ class ProfileFragment : Fragment() {
         }
 
         binding.showUserPrefButton.setOnClickListener {
-            val prefsModalBottomSheet = PreferencesModalBottomSheet().apply {
-                val prefsNameArray = viewModel.preferences.value?.map { it.name }?.toTypedArray()
-                arguments = bundleOf(PreferencesModalBottomSheet.PREFS_ARRAY to prefsNameArray)
-            }
-            val fragmentManager = requireActivity().supportFragmentManager
+            viewModel.id.value?.let {
+                val prefsModalBottomSheet = PreferencesModalBottomSheet().apply {
+                    val prefsNameArray =
+                        viewModel.preferences.value?.map { it.name }?.toTypedArray()
+                    arguments = bundleOf(PreferencesModalBottomSheet.PREFS_ARRAY to prefsNameArray)
+                }
+                val fragmentManager = requireActivity().supportFragmentManager
 
-            if (fragmentManager.findFragmentByTag(PreferencesModalBottomSheet.TAG) == null)
-                prefsModalBottomSheet.show(fragmentManager, PreferencesModalBottomSheet.TAG)
+                if (fragmentManager.findFragmentByTag(PreferencesModalBottomSheet.TAG) == null)
+                    prefsModalBottomSheet.show(fragmentManager, PreferencesModalBottomSheet.TAG)
+            }
         }
 
         binding.userInfoFriendship.setOnClickListener { _ ->
@@ -204,7 +169,9 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.username.observe(viewLifecycleOwner) {
-            toolbar.title = it
+            it?.let {
+                toolbar.title = it
+            }
         }
 
         viewModel.biography.observe(viewLifecycleOwner) {
@@ -221,6 +188,16 @@ class ProfileFragment : Fragment() {
 
         viewModel.eventsJoined.observe(viewLifecycleOwner) {
             binding.userInfoJoined.setInfoValue(it)
+        }
+
+        viewModel.isAuth.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.userProfileButtonGroup.visibility = View.VISIBLE
+                if(toolbar.menu.isEmpty())
+                    setAuthToolbarMenu()
+            } else{
+                binding.userProfileButtonGroup.visibility = View.GONE
+            }
         }
 
         viewModel.friendship.observe(viewLifecycleOwner) {
@@ -271,9 +248,41 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun setAuthToolbarMenu() {
+        toolbar.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.profile_auth_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.editUserMenuOption -> {
+                        requireContext().startActivity(Intent(requireContext(), EditUserActivity::class.java))
+                        true
+                    }
+
+                    R.id.logoutUserMenuOption -> {
+                        viewModel.onLogout()
+                        requireActivity().startActivity(
+                            Intent(
+                                requireContext(),
+                                AuthActivity::class.java
+                            ).apply {
+                                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            })
+                        requireActivity().finish()
+                        false
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner)
+    }
+
     private fun loadProfileImage(imagePath: String, isAuth: Boolean) {
         binding.userImageProfileOverlay.visibility =
-            if (isAuth && !activityWrapped) View.VISIBLE else View.GONE
+            if (isAuth) View.VISIBLE else View.GONE
         binding.userImageProfileContent.load(CloudImageService.USERS.imageRef(imagePath))
     }
 
@@ -296,7 +305,7 @@ class ProfileFragment : Fragment() {
         @JvmStatic
         fun newInstance(userId: String?, activityWrapped: Boolean) =
             ProfileFragment().apply {
-                arguments = bundleOf(USER_ID_ARG to userId, ACTIVITY_WRAPPED to activityWrapped)
+                arguments = bundleOf(USER_ID_ARG to userId, ACTIVITY_WRAPPED_ARG to activityWrapped)
             }
     }
 }

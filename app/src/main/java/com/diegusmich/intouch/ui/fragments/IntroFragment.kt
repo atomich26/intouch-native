@@ -4,13 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentIntroBinding
+import com.diegusmich.intouch.ui.activities.EditUserActivity
 
 class IntroFragment : Fragment() {
-    private var _binding : FragmentIntroBinding? = null
+    private var _binding: FragmentIntroBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -25,20 +27,22 @@ class IntroFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonLoginNext.setOnClickListener{
+        binding.buttonLoginNext.setOnClickListener {
             findNavController().navigate(R.id.action_introFragment_to_loginFragment)
         }
 
-        binding.buttonCreateAccountNext.setOnClickListener{
-            findNavController().navigate(R.id.action_introFragment_to_createAccountFragment)
+        binding.buttonCreateAccountNext.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_introFragment_to_createAccountFragment,
+                bundleOf(EditUserActivity.EDIT_MODE_ARG to false)
+            )
         }
     }
-
 
     override fun onStart() {
         super.onStart()
 
-        if(!binding.introBgAnimation.isAnimating)
+        if (!binding.introBgAnimation.isAnimating)
             binding.introBgAnimation.playAnimation()
     }
 

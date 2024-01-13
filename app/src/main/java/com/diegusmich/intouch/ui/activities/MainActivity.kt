@@ -20,7 +20,6 @@ import com.diegusmich.intouch.databinding.ActivityMainBinding
 import com.diegusmich.intouch.service.NotificationService
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.CategoriesFragment
-import com.diegusmich.intouch.ui.fragments.CreateModalBottomSheet
 import com.diegusmich.intouch.ui.fragments.FeedFragment
 import com.diegusmich.intouch.ui.fragments.NotificationFragment
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
@@ -28,7 +27,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
     private var _binding: ActivityMainBinding? = null
     val binding get() = _binding!!
@@ -80,10 +79,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainBottomNavigation.setOnItemSelectedListener {
 
             if (it.itemId == R.id.navigation_create) {
-                with(supportFragmentManager) {
-                    if (findFragmentByTag(CreateModalBottomSheet.TAG) == null)
-                        CreateModalBottomSheet().show(this, CreateModalBottomSheet.TAG)
-                }
+                // Launch create event activity
                 return@setOnItemSelectedListener false
             }
 
@@ -123,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun createNotificationChannel(){
+    private fun createNotificationChannel() {
         NotificationService.createChannel(
             getString(R.string.notification_friendship_ch),
             getString(R.string.notification_friendship_id),
@@ -146,11 +142,12 @@ class MainActivity : AppCompatActivity() {
 
 
         //TEST
-        val builder = NotificationCompat.Builder(this, getString(R.string.notification_friendship_id))
-            .setSmallIcon(R.drawable.baseline_group_24)
-            .setContentTitle("My notification")
-            .setContentText("Hello World!")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        val builder =
+            NotificationCompat.Builder(this, getString(R.string.notification_friendship_id))
+                .setSmallIcon(R.drawable.baseline_group_24)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
 
         with(NotificationManagerCompat.from(this)) {

@@ -27,9 +27,9 @@
     </fragment>
     <fragment
         android:id="@+id/createAccountFragment"
-        android:name="com.diegusmich.intouch.ui.fragments.SignupFragment"
+        android:name="com.diegusmich.intouch.ui.fragments.UpsertUserFragment"
         android:label="fragment_create_account"
-        tools:layout="@layout/fragment_signup" />
+        tools:layout="@layout/profile_form_layout" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.diegusmich.intouch.ui.fragments.LoginFragment"

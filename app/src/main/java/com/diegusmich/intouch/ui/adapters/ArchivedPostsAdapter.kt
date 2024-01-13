@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Post
@@ -36,7 +37,7 @@ class ArchivedPostsAdapter(collection: List<Post.ArchivePreview>) :
                 TimeUtil.toLocaleString(item.createdAt, TimeUtil.DAY_OF_YEAR)
 
             itemView.setOnClickListener { _ ->
-                (itemView.context as BaseActivity).supportFragmentManager.let {
+                (itemView.context as AppCompatActivity).supportFragmentManager.let {
                     val newFragment = PostFragmentDialog()
                     it.beginTransaction().apply {
                         setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

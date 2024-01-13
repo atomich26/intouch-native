@@ -38,7 +38,7 @@ class UserFriendsActivity : AppCompatActivity() {
         toolbar.navigationIcon =
             AppCompatResources.getDrawable(this, R.drawable.baseline_arrow_back_24)
         toolbar.setNavigationOnClickListener {
-            finish()
+            this.onBackPressedDispatcher.onBackPressed()
         }
 
         binding.userListSwipeRefreshLayout.setOnRefreshListener {

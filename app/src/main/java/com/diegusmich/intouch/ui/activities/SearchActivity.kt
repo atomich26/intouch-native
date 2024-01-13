@@ -41,8 +41,9 @@ class SearchActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         toolbar.setNavigationOnClickListener {
-            this.finish()
+            this.onBackPressedDispatcher.onBackPressed()
         }
+
         searchListView.layoutManager = LinearLayoutManager(this).apply {
             orientation = LinearLayoutManager.VERTICAL
         }

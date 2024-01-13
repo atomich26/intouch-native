@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.data.wrapper
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.GeoPoint
 import java.util.Date

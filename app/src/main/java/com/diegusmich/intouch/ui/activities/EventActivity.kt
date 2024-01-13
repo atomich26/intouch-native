@@ -52,7 +52,7 @@ class EventActivity : AppCompatActivity() {
         }
 
         binding.collapsingMaterialToolbar.setNavigationOnClickListener {
-            this.finish()
+            this.onBackPressedDispatcher.onBackPressed()
         }
 
         binding.eventStartAt.setOnClickListener {
@@ -73,6 +73,11 @@ class EventActivity : AppCompatActivity() {
                     putExtra(UserActivity.USER_ARG, it.userInfo.id)
                 })
             }
+        }
+
+
+        binding.eventNestedScrollView.setOnScrollChangeListener{ _, _, _, _, _ ->
+            binding.swipeRefreshLayout.clearAnimation()
         }
 
         binding.collapsingMaterialToolbar.inflateMenu(R.menu.event_menu)

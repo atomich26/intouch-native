@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/materialHorizontalPadding"
+            android:orientation="vertical">
+
+            <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+                android:id="@+id/userFormNameInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/prompt_name"
+                app:startIconDrawable="@drawable/baseline_mode_edit_24"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userFormNameTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="@integer/name_length"
+                    android:inputType="text"
+                    android:maxLength="@integer/name_length"
+                    android:textSize="16sp" />
+
+            </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+
+            <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+                android:id="@+id/userFormUsernameInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/prompt_username"
+                app:errorEnabled="true"
+                app:startIconDrawable="@drawable/baseline_person_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userFormUsernameTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tooltipText="nomeutente"
+                    android:ems="@integer/password_length"
+                    android:inputType="text"
+                    android:maxLength="@integer/username_length"
+                    android:textSize="16sp" />
+
+            </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+
+            <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+                android:id="@+id/userFormBiographyInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/prompt_biography"
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="@integer/biography_length">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userFormBiographyTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="@integer/biography_length"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5"
+                    android:gravity="top|start"
+                    android:minLines="1"
+                    android:scrollbars="vertical"
+                    android:maxLength="@integer/biography_length"
+                    android:textSize="16sp" />
+
+            </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+
+            <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+                android:id="@+id/userFormEmailInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:errorEnabled="true"
+                android:hint="@string/prompt_email"
+                app:startIconDrawable="@drawable/baseline_alternate_email_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userFormEmailTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="@integer/email_length"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="@integer/email_length"
+                    android:textSize="16sp" />
+            </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/userFormDistanceSliderGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/userFormSliderTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="@string/prompt_location_distance"
+                    android:textSize="16sp"/>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/userFormDistanceSlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/userFormSliderDistanceText"
+                    app:layout_constraintTop_toBottomOf="@id/userFormSliderTitle"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:valueFrom="5.0"
+                    android:valueTo="40"
+                    android:stepSize="5.0"  />
+
+                <TextView
+                    android:id="@+id/userFormSliderDistanceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toEndOf="@id/userFormDistanceSlider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/userFormSliderTitle"
+                    android:layout_gravity="center"
+                    android:textSize="16sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+                android:id="@+id/userFormPasswordInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/prompt_password"
+                app:endIconMode="password_toggle"
+                app:startIconDrawable="@drawable/baseline_password_24"
+                app:errorIconDrawable="@null"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userFormPasswordTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="@integer/password_length"
+                    android:inputType="textPassword"
+                    android:maxLength="@integer/password_length"
+                    android:textSize="16sp" />
+
+            </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+
+            <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
+                android:id="@+id/userFormBirthdateInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_birthdate"
+                app:startIconDrawable="@drawable/baseline_calendar_month_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userFormBirthdateTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="@integer/password_length"
+                    android:inputType="text|date"
+                    android:maxLength="@integer/password_length"
+                    android:textSize="16sp" />
+
+            </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
+
+            <TextView
+                android:id="@+id/textview_gdpr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/materialHorizontalPadding"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/userFormResetPasswordButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="12dp"
+            android:text="@string/action_reset_password"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/userFormSubmitButton"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="12dp"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <include android:id="@+id/pgLayout" layout="@layout/linear_progress_bar"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
