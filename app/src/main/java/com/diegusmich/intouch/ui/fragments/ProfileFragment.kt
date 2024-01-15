@@ -52,6 +52,18 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        activityWrappedArg?.let { outState.putBoolean(ACTIVITY_WRAPPED_ARG, it) }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.getBoolean(ACTIVITY_WRAPPED_ARG)?.let {
+            activityWrappedArg = it
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -91,7 +103,7 @@ class ProfileFragment : Fragment() {
             viewModel.image.value?.let { imagePath ->
                 requireActivity().supportFragmentManager.let { fragmentManager ->
                     ProfileImageFragmentDialog.newInstance(
-                        imagePath, viewModel.isAuth.value!!
+                        imagePath, !activityWrappedArg!!
                     ).let { fragment ->
                         fragmentManager.beginTransaction().apply {
                             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -193,7 +205,7 @@ class ProfileFragment : Fragment() {
         viewModel.isAuth.observe(viewLifecycleOwner) {
             if (it) {
                 binding.userProfileButtonGroup.visibility = View.VISIBLE
-                if(toolbar.menu.isEmpty())
+                if(toolbar.menu.isEmpty() && activityWrappedArg == false)
                     setAuthToolbarMenu()
             } else{
                 binding.userProfileButtonGroup.visibility = View.GONE
@@ -282,7 +294,7 @@ class ProfileFragment : Fragment() {
 
     private fun loadProfileImage(imagePath: String, isAuth: Boolean) {
         binding.userImageProfileOverlay.visibility =
-            if (isAuth) View.VISIBLE else View.GONE
+            if (!activityWrappedArg!! && isAuth) View.VISIBLE else View.GONE
         binding.userImageProfileContent.load(CloudImageService.USERS.imageRef(imagePath))
     }
 

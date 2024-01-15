@@ -4,5 +4,5 @@ import android.content.Context
 import android.util.AttributeSet
 
 class IntouchTextInputLayout(ctx: Context, attrs: AttributeSet) : FormInputLayout<String>(ctx, attrs) {
-    override fun toText(data: String?) = data ?: ""
+    override fun toText(data: String?) = data
 }

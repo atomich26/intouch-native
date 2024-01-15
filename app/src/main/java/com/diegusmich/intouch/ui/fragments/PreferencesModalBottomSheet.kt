@@ -15,10 +15,16 @@ class PreferencesModalBottomSheet : BottomSheetDialogFragment() {
     val binding get() = _binding!!
 
     private var prefsArray : Array<String>? = null
+    private var canEdit: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefsArray = arguments?.getStringArray(PREFS_ARRAY)
+
+        arguments?.let {
+            prefsArray = arguments?.getStringArray(PREFS_ARRAY)
+        }
+
+
     }
 
     override fun onCreateView(
@@ -47,5 +53,6 @@ class PreferencesModalBottomSheet : BottomSheetDialogFragment() {
     companion object{
         const val TAG = "PREF_MODAL_BOTTOM_SHEET"
         const val PREFS_ARRAY = "prefs"
+        const val CAN_EDIT_ARG = "canEdit"
     }
 }

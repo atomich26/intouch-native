@@ -8,6 +8,7 @@
     android:layout_height="match_parent">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -54,6 +55,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/eventContentGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="-20dp"
@@ -184,7 +186,7 @@
                             android:gravity="center_vertical"
                             android:layout_marginEnd="10dp"
                             android:paddingHorizontal="7dp"
-                            android:drawableLeft="@drawable/baseline_group_24_event"
+                            android:drawableLeft="@drawable/baseline_group_24__black"
                             android:drawablePadding="2dp"
                             android:textColor="@android:color/black"
                             android:background="@drawable/event_open_tag"

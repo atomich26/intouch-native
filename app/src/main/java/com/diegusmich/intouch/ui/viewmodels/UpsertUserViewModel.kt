@@ -7,6 +7,8 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.data.repository.UserRepository
 import com.diegusmich.intouch.data.response.FormErrorsCallableResponse
+import com.diegusmich.intouch.network.NetworkStateObserver
+import com.diegusmich.intouch.service.NetworkService
 import com.diegusmich.intouch.ui.views.form.FormInputLayout
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.ErrorUtil
@@ -15,6 +17,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.functions.FirebaseFunctionsException
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.net.ConnectException
@@ -69,7 +72,11 @@ class UpsertUserViewModel : StateViewModel() {
     private var userCurrentData : User.Profile? = null
     private var requestFormData = mutableMapOf<String, Any?>()
 
-    fun onLoadUserCurrentData() = viewModelScope.launch {
+    private var onNetworkAvailableJob = NetworkStateObserver {
+        onLoadUserCurrentData()
+    }
+
+    fun onLoadUserCurrentData() : Job = viewModelScope.launch {
         updateState(_LOADING, true)
 
         try{
@@ -82,7 +89,10 @@ class UpsertUserViewModel : StateViewModel() {
                 onUpdateDistanceRange(it.distanceRange.toFloat())
             }
             updateState(_CONTENT_LOADED, true)
+            NetworkService.removeOnNetworkAvailableObserver(onNetworkAvailableJob)
+
         } catch (e: Exception){
+            NetworkService.addOnNetworkAvailableObserver(onNetworkAvailableJob)
             updateState(_ERROR, R.string.firebaseNetworkException)
         }
     }

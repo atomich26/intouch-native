@@ -38,8 +38,6 @@ class UpsertUserFragment : Fragment() {
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
 
-    private var editModeArg : Boolean = false
-
     private lateinit var progressBar: LinearProgressIndicator
     private lateinit var toolbar: MaterialToolbar
 
@@ -48,7 +46,7 @@ class UpsertUserFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            editModeArg = it.getBoolean(EditUserActivity.EDIT_MODE_ARG, false)
+            viewModel.onActiveEditMode(it.getBoolean(EditUserActivity.EDIT_MODE_ARG, false))
         }
     }
 
@@ -68,7 +66,8 @@ class UpsertUserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
 
-        if (editModeArg){
+
+        if (viewModel.editMode.value!!){
             toolbar.title = getString(R.string.create_account_fragment_title)
             binding.form.root.visibility = View.INVISIBLE
             viewModel.onLoadUserCurrentData()
@@ -90,8 +89,11 @@ class UpsertUserFragment : Fragment() {
             movementMethod = LinkMovementMethod.getInstance()
         }
 
+        //Sto schifo di Views non vanno bene per l'architettura MVVM
         binding.form.userFormEmailTextField.doAfterTextChanged {
-            viewModel.onUpdateEmail(it.toString())
+            it?.let {
+                viewModel.onUpdateEmail(it.toString())
+            }
         }
 
         binding.form.userFormPasswordTextField.doOnTextChanged { text, start, before, count ->
@@ -100,15 +102,21 @@ class UpsertUserFragment : Fragment() {
         }
 
         binding.form.userFormBiographyTextField.doAfterTextChanged {
-            viewModel.onUpdateBiography(it.toString())
+            it?.let {
+                viewModel.onUpdateBiography(it.toString())
+            }
         }
 
         binding.form.userFormNameTextField.doAfterTextChanged {
-            viewModel.onUpdateName(it.toString())
+            it?.let {
+                viewModel.onUpdateName(it.toString())
+            }
         }
 
         binding.form.userFormUsernameTextField.doAfterTextChanged {
-            viewModel.onUpdateUsername(it.toString())
+            it?.let{
+                viewModel.onUpdateUsername(it.toString())
+            }
         }
 
         binding.form.userFormSubmitButton.setOnClickListener {
@@ -123,12 +131,7 @@ class UpsertUserFragment : Fragment() {
             viewModel.onSendResetPasswordEmail()
         }
 
-        editModeArg.let {
-            viewModel.onActiveEditMode(it)
-        }
-
         startPostponedEnterTransition()
-
         observeData()
     }
 
@@ -142,15 +145,18 @@ class UpsertUserFragment : Fragment() {
         }
 
         viewModel.email.observe(viewLifecycleOwner) {
-            binding.form.userFormEmailInputLayout.updateState(it)
+            if(viewModel.editMode.value!!)
+                binding.form.userFormEmailInputLayout.updateState(it)
         }
 
         viewModel.biography.observe(viewLifecycleOwner){
-            binding.form.userFormBiographyInputLayout.updateState(it)
+            if(viewModel.editMode.value!!)
+                binding.form.userFormBiographyInputLayout.updateState(it)
         }
 
         viewModel.password.observe(viewLifecycleOwner) {
-            binding.form.userFormPasswordInputLayout.updateState(it)
+            if(viewModel.editMode.value!!)
+                binding.form.userFormPasswordInputLayout.updateState(it)
         }
 
         viewModel.birthdate.observe(viewLifecycleOwner) {

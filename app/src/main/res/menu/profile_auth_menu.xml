@@ -5,11 +5,13 @@
         android:id="@+id/editUserMenuOption"
         android:icon="@drawable/baseline_edit_24"
         android:title="@string/edit_profile_action"
+        android:iconTint="@color/seed"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/logoutUserMenuOption"
         android:icon="@drawable/baseline_logout_24"
         android:title="@string/logout_action"
+        android:iconTint="@color/seed"
         app:showAsAction="always"/>
 </menu>

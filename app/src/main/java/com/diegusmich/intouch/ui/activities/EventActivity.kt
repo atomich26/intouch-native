@@ -12,14 +12,14 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Event
 import com.diegusmich.intouch.databinding.ActivityEventBinding
 import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.viewmodels.EventViewModel
 import com.diegusmich.intouch.utils.TimeUtil
-import com.google.firebase.firestore.GeoPoint
-import org.ocpsoft.prettytime.PrettyTime
 import java.util.Date
 import kotlin.math.abs
 
@@ -30,8 +30,14 @@ class EventActivity : AppCompatActivity() {
     private val binding get() = _binding!!
 
     private var eventIdArg: String? = null
+    private var isToolbarCollapsed: Boolean = false
 
     private val viewModel: EventViewModel by viewModels()
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(TOOLBAR_COLLAPSED, isToolbarCollapsed)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +48,20 @@ class EventActivity : AppCompatActivity() {
 
         binding.swipeRefreshLayout.setProgressViewOffset(true, 50, 250)
 
-        binding.collapsingAppBarLayout.addOnOffsetChangedListener { appBarLayout, offset ->
-            if (abs(offset) >= appBarLayout.totalScrollRange - 50)
-                binding.collapsingMaterialToolbar.setNavigationIconTint(Color.BLACK)
-            else
-                binding.collapsingMaterialToolbar.setNavigationIconTint(Color.WHITE)
+        savedInstanceState?.let {
+            isToolbarCollapsed = it.getBoolean(TOOLBAR_COLLAPSED)
+        }
+        binding.collapsingMaterialToolbar.inflateMenu(R.menu.event_menu)
 
+        setToolbarContentColor(isToolbarCollapsed)
+        binding.collapsingAppBarLayout.addOnOffsetChangedListener { appBarLayout, offset ->
+            val isCollapsed = abs(offset) >= appBarLayout.totalScrollRange - 50
+
+            isCollapsed.let {
+                if (it != isToolbarCollapsed)
+                    setToolbarContentColor(it)
+                isToolbarCollapsed = it
+            }
             binding.swipeRefreshLayout.isEnabled = (offset == 0)
         }
 
@@ -75,14 +89,38 @@ class EventActivity : AppCompatActivity() {
             }
         }
 
-
-        binding.eventNestedScrollView.setOnScrollChangeListener{ _, _, _, _, _ ->
+        binding.eventNestedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
             binding.swipeRefreshLayout.clearAnimation()
         }
 
-        binding.collapsingMaterialToolbar.inflateMenu(R.menu.event_menu)
         observeData()
         viewModel.onLoadEvent(eventIdArg)
+    }
+
+    private fun setToolbarContentColor(isCollapsed: Boolean) {
+        if (isCollapsed) {
+            binding.collapsingMaterialToolbar.overflowIcon?.colorFilter =
+                BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                    Color.BLACK,
+                    BlendModeCompat.SRC_ATOP
+                )
+            binding.collapsingMaterialToolbar.setNavigationIconTint(Color.BLACK)
+            binding.collapsingMaterialToolbar.menu.findItem(R.id.editEventMenuItem).icon =
+                AppCompatResources.getDrawable(this, R.drawable.baseline_edit_24)
+            binding.collapsingMaterialToolbar.menu.findItem(R.id.showAttendeesMenuItem).icon =
+                AppCompatResources.getDrawable(this, R.drawable.baseline_group_24__black)
+        } else {
+            binding.collapsingMaterialToolbar.overflowIcon?.colorFilter =
+                BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                    Color.WHITE,
+                    BlendModeCompat.SRC_ATOP
+                )
+            binding.collapsingMaterialToolbar.setNavigationIconTint(Color.WHITE)
+            binding.collapsingMaterialToolbar.menu.findItem(R.id.editEventMenuItem).icon =
+                AppCompatResources.getDrawable(this, R.drawable.baseline_edit_24_white)
+            binding.collapsingMaterialToolbar.menu.findItem(R.id.showAttendeesMenuItem).icon =
+                AppCompatResources.getDrawable(this, R.drawable.baseline_group_24_white)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -91,7 +129,7 @@ class EventActivity : AppCompatActivity() {
         return true
     }
 
-    private fun observeData(){
+    private fun observeData() {
         viewModel.LOADING.observe(this) {
             binding.swipeRefreshLayout.isRefreshingDelayed(this, it)
         }
@@ -186,20 +224,23 @@ class EventActivity : AppCompatActivity() {
         startActivity(calendarIntent)
     }
 
-    private fun openLocationOnMaps(event : Event.Full) {
+    private fun openLocationOnMaps(event: Event.Full) {
         val mapsIntent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("geo:${event.geo.latitude},${event.geo.longitude}?q=${event.address}, ${event.city}")
+            data =
+                Uri.parse("geo:${event.geo.latitude},${event.geo.longitude}?q=${event.address}, ${event.city}")
         }
 
         if (mapsIntent.resolveActivity(packageManager) != null) {
             startActivity(mapsIntent)
         } else {
-            val mapsUrl = "https://www.google.com/maps?q=" + Uri.parse("${event.address}, ${event.city}")
+            val mapsUrl =
+                "https://www.google.com/maps?q=" + Uri.parse("${event.address}, ${event.city}")
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl)))
         }
     }
 
     companion object {
         const val EVENT_ARG = "eventId"
+        private const val TOOLBAR_COLLAPSED = "toolbar_collapsed"
     }
 }

@@ -44,7 +44,6 @@ class MainActivity : AppCompatActivity(){
             finish()
         }
 
-        //requestPermission()
         locationBroadcastReceiver = LocationBroadcasterReceiver(this)
         registerReceiver(
             locationBroadcastReceiver,
@@ -75,6 +74,7 @@ class MainActivity : AppCompatActivity(){
             })
         }
 
+        createNotificationChannel()
         requestPermission()
         binding.mainBottomNavigation.setOnItemSelectedListener {
 
@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity(){
         //TEST
         val builder =
             NotificationCompat.Builder(this, getString(R.string.notification_friendship_id))
-                .setSmallIcon(R.drawable.baseline_group_24)
+                .setSmallIcon(R.drawable.baseline_group_24_white)
                 .setContentTitle("My notification")
                 .setContentText("Hello World!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

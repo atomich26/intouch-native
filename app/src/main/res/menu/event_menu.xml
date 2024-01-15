@@ -3,12 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/showAttendeesMenuItem"
         android:title="@string/show_attendees"
-        android:icon="@drawable/baseline_group_24"
+        android:iconTint="@color/seed"
+        android:icon="@drawable/baseline_group_24__black"
         app:showAsAction="ifRoom">
     </item>
+
     <item android:id="@+id/editEventMenuItem"
         android:title="@string/edit_event"
+        android:iconTint="@color/seed"
         android:icon="@drawable/baseline_edit_24"
-        app:showAsAction="ifRoom">
+        app:showAsAction="collapseActionView">
+    </item>
+
+    <item android:id="@+id/deleteEventMenuItem"
+        android:title="@string/delete_event"
+        android:iconTint="@color/seed"
+        android:icon="@drawable/baseline_delete_24"
+        app:showAsAction="collapseActionView">
     </item>
 </menu>
