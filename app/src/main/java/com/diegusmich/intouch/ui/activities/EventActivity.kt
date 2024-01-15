@@ -65,6 +65,9 @@ class EventActivity : AppCompatActivity() {
             binding.swipeRefreshLayout.isEnabled = (offset == 0)
         }
 
+        binding.collapsingMaterialToolbar.menu.findItem(R.id.editEventMenuItem).isVisible = false
+        binding.collapsingMaterialToolbar.menu.findItem(R.id.deleteEventMenuItem).isVisible = false
+
         binding.collapsingMaterialToolbar.setNavigationOnClickListener {
             this.onBackPressedDispatcher.onBackPressed()
         }
@@ -146,8 +149,9 @@ class EventActivity : AppCompatActivity() {
             binding.eventUserInfo.setUserInfo(it.userInfo)
             binding.eventCategoriesTag.text = it.categoryInfo.name
             binding.eventCategoriesTag.visibility = View.VISIBLE
+            binding.collapsingMaterialToolbar.menu.findItem(R.id.editEventMenuItem).isVisible = it.canEdit
+            binding.collapsingMaterialToolbar.menu.findItem(R.id.deleteEventMenuItem).isVisible = it.canEdit
             binding.eventButtonJoin.isEnabled = it.available > 0
-
             showIsRestrictedTag(it.restricted)
             showAvailabilityWarning(it.available)
             putEventDateInfo(it.startAt, it.endAt)
