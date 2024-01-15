@@ -187,7 +187,12 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.biography.observe(viewLifecycleOwner) {
-            binding.biographyProfileLayout.text = it
+            if(it?.isNotBlank() == true){
+                binding.biographyProfileLayout.text = it
+                binding.biographyProfileLayout.visibility = View.VISIBLE
+            }
+            else
+                binding.biographyProfileLayout.visibility = View.GONE
         }
 
         viewModel.friends.observe(viewLifecycleOwner) {

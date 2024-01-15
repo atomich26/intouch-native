@@ -101,12 +101,15 @@ class UpsertUserViewModel : StateViewModel() {
         _editMode.value = state
     }
 
+    //I red hot chili peppers aiutano a risolvere bug
     fun onUpdateEmail(emailText: String) {
-       updateFormInput(_email, emailText, emailText.isNotBlank(), null)
+        if(!editMode.value!!)
+            updateFormInput(_email, emailText, emailText.isNotBlank(), null)
     }
 
     fun onUpdatePassword(passwordText: String) {
-        updateFormInput(_password, passwordText, passwordText.isNotBlank(), null)
+        if(!editMode.value!!)
+            updateFormInput(_password, passwordText, passwordText.isNotBlank(), null)
     }
 
     private fun <T> updateFormInput(input: MutableLiveData<FormInputState<T>>, newValue: T, rule: Boolean, currentValue: T?){
@@ -123,11 +126,13 @@ class UpsertUserViewModel : StateViewModel() {
     }
 
     fun onUpdateBiography(biographyText: String) {
-        updateFormInput(_biography, biographyText, biographyText.isNotBlank(), userCurrentData?.biography)
+        if(editMode.value!!)
+            updateFormInput(_biography, biographyText, biographyText.isNotBlank(), userCurrentData?.biography)
     }
 
     fun onUpdateDistanceRange(distanceRange: Float) {
-        updateFormInput(_distance, distanceRange.toInt(), true, userCurrentData?.distanceRange)
+        if(editMode.value!!)
+            updateFormInput(_distance, distanceRange.toInt(), true, userCurrentData?.distanceRange)
     }
 
     fun onUpdateName(nameText: String) {
