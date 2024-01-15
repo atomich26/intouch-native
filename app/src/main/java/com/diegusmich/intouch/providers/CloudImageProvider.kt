@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.service
+package com.diegusmich.intouch.providers
 
 import android.net.Uri
 import com.google.firebase.ktx.Firebase
@@ -6,7 +6,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
 
-class CloudImageService(path : String) {
+class CloudImageProvider(path : String) {
 
     private val storageRef = Firebase.storage.reference.child(path)
 
@@ -21,9 +21,9 @@ class CloudImageService(path : String) {
     }
 
     companion object{
-        val CATEGORIES = CloudImageService("categories")
-        val USERS = CloudImageService("users")
-        val POSTS = CloudImageService("posts")
-        val EVENTS = CloudImageService("events")
+        val CATEGORIES = CloudImageProvider("categories")
+        val USERS = CloudImageProvider("users")
+        val POSTS = CloudImageProvider("posts")
+        val EVENTS = CloudImageProvider("events")
     }
 }

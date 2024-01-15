@@ -17,7 +17,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.broadcast.LocationBroadcasterReceiver
 import com.diegusmich.intouch.databinding.ActivityMainBinding
-import com.diegusmich.intouch.service.NotificationService
+import com.diegusmich.intouch.providers.NotificationProvider
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.CategoriesFragment
 import com.diegusmich.intouch.ui.fragments.FeedFragment
@@ -120,20 +120,20 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun createNotificationChannel() {
-        NotificationService.createChannel(
+        NotificationProvider.createChannel(
             getString(R.string.notification_friendship_ch),
             getString(R.string.notification_friendship_id),
             getString(R.string.notification_friendship_desc),
             NotificationManager.IMPORTANCE_DEFAULT
         )
 
-        NotificationService.createChannel(
+        NotificationProvider.createChannel(
             getString(R.string.notification_event_ch),
             getString(R.string.notification_event_id),
             getString(R.string.notification_event_desc),
             NotificationManager.IMPORTANCE_HIGH
         )
-        NotificationService.createChannel(
+        NotificationProvider.createChannel(
             getString(R.string.notification_post_comment_ch),
             getString(R.string.notification_post_comment_id),
             getString(R.string.notification_post_comment_desc),

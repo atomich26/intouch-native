@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.service
+package com.diegusmich.intouch.providers
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -11,7 +11,7 @@ import com.diegusmich.intouch.IntouchApplication
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.network.NetworkStateObserver
 
-object NetworkService {
+object NetworkProvider {
 
     private var _isNetworkAvailable = false
     val isNetworkAvailable get() = _isNetworkAvailable

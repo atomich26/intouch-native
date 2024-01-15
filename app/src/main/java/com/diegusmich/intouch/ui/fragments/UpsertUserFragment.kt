@@ -2,7 +2,6 @@ package com.diegusmich.intouch.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcel
 import android.text.Html
 import android.text.InputType
 import android.text.method.LinkMovementMethod
@@ -10,7 +9,6 @@ import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
@@ -20,12 +18,11 @@ import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentSignupBinding
 import com.diegusmich.intouch.ui.activities.EditUserActivity
-import com.diegusmich.intouch.ui.activities.StartActivity
+import com.diegusmich.intouch.ui.activities.EditPreferencesActivity
 import com.diegusmich.intouch.ui.viewmodels.UpsertUserViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.CalendarConstraints.DateValidator
 import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -46,7 +43,7 @@ class UpsertUserFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            viewModel.onActiveEditMode(it.getBoolean(EditUserActivity.EDIT_MODE_ARG, false))
+            viewModel.onSetEditMode(it.getBoolean(EditUserActivity.EDIT_MODE_ARG, false))
         }
     }
 
@@ -243,8 +240,9 @@ class UpsertUserFragment : Fragment() {
                 requireActivity().startActivity(
                     Intent(
                         requireContext(),
-                        StartActivity::class.java
+                        EditPreferencesActivity::class.java
                     ).apply {
+                        putExtra(EditPreferencesActivity.EDIT_MODE_ARG, false)
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                     })
                 requireActivity().finish()

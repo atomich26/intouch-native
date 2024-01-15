@@ -4,8 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
-import android.widget.Toast
-import com.diegusmich.intouch.service.UserLocationService
+import com.diegusmich.intouch.providers.UserLocationProvider
 
 class LocationBroadcasterReceiver(ctx: Context) : BroadcastReceiver() {
 
@@ -17,7 +16,7 @@ class LocationBroadcasterReceiver(ctx: Context) : BroadcastReceiver() {
         if(intent?.action == LocationManager.PROVIDERS_CHANGED_ACTION){
             isLocationEnabled().let {
                 if(oldState != it && it)
-                   UserLocationService.currentLocation(ctx)
+                   UserLocationProvider.currentLocation(ctx)
 
                 oldState = it
             }

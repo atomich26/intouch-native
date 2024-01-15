@@ -25,7 +25,6 @@ sealed interface Event{
         val city: String,
         val geo: GeoPoint,
         val restricted: Boolean,
-        val canEdit: Boolean
     ) : Event{
         constructor(eventWrapper: EventWrapper, userWrapper: UserWrapper, categoryWrapper: CategoryWrapper) : this(
             id = eventWrapper.id,
@@ -40,8 +39,7 @@ sealed interface Event{
             address = eventWrapper.address,
             city = eventWrapper.city,
             geo = eventWrapper.geo,
-            restricted = eventWrapper.restricted,
-            canEdit = Firebase.auth.currentUser?.uid == userWrapper.id
+            restricted = eventWrapper.restricted
         )
     }
 

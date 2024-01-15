@@ -11,6 +11,9 @@ class EventCreatedViewModel : EventsFilterListViewModel() {
         if (userId.isNullOrBlank())
             return@launch updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
 
+        if(!isRefreshing && _events.value?.isEmpty() == true)
+            return@launch updateState(_LOADING, false)
+
         updateState(_LOADING, true)
 
         try {

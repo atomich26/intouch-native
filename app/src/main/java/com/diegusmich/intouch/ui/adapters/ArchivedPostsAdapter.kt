@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Post
-import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.fragments.PostFragmentDialog
 import com.diegusmich.intouch.ui.views.GlideImageView
 import com.diegusmich.intouch.utils.TimeUtil
@@ -31,7 +31,7 @@ class ArchivedPostsAdapter(collection: List<Post.ArchivePreview>) :
 
     class ArchivedPostViewHolder(itemView: View) : ViewHolder<Post.ArchivePreview>(itemView) {
         override fun bind(item: Post.ArchivePreview) {
-            val imgRef = CloudImageService.POSTS.imageRef(item.thumbnail)
+            val imgRef = CloudImageProvider.POSTS.imageRef(item.thumbnail)
             itemView.findViewById<GlideImageView>(R.id.postPreviewProfileGridItem).load(imgRef)
             itemView.findViewById<TextView>(R.id.datePostProfileGridItem).text =
                 TimeUtil.toLocaleString(item.createdAt, TimeUtil.DAY_OF_YEAR)

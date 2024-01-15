@@ -4,10 +4,9 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.TextView
-import androidx.core.view.setPadding
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.User
-import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.google.android.material.card.MaterialCardView
 
 class UserInfoThumbnail(ctx: Context, attrs: AttributeSet) : MaterialCardView(ctx, attrs) {
@@ -24,7 +23,7 @@ class UserInfoThumbnail(ctx: Context, attrs: AttributeSet) : MaterialCardView(ct
     }
 
     fun setUserInfo(userInfo: User.Preview) {
-        findViewById<GlideImageView>(R.id.userThumbnail).load(CloudImageService.USERS.imageRef(userInfo.img))
+        findViewById<GlideImageView>(R.id.userThumbnail).load(CloudImageProvider.USERS.imageRef(userInfo.img))
         findViewById<TextView>(R.id.userUsernameText).text = context.getString(R.string.username_formatted, userInfo.username)
     }
 }

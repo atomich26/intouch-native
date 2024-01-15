@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Event
-import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.activities.EventActivity
 import com.diegusmich.intouch.ui.views.GlideImageView
 import com.diegusmich.intouch.utils.TimeUtil
@@ -31,7 +31,7 @@ class EventsListAdapter(collection: List<Event.Preview>) :
     class EventListViewHolder(itemView: View) : ViewHolder<Event.Preview>(itemView) {
         override fun bind(item: Event.Preview) {
             itemView.findViewById<GlideImageView>(R.id.eventListItemThumbnail).apply {
-                load(CloudImageService.EVENTS.imageRef(item.cover))
+                load(CloudImageProvider.EVENTS.imageRef(item.cover))
             }
             itemView.findViewById<TextView>(R.id.eventListItemCity).text = item.city
             itemView.findViewById<TextView>(R.id.eventListItemName).text = item.name

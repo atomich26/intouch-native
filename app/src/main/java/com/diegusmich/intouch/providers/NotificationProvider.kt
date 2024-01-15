@@ -1,15 +1,12 @@
-package com.diegusmich.intouch.service
+package com.diegusmich.intouch.providers
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import androidx.annotation.StringRes
-import androidx.core.app.NotificationCompat.NotificationVisibility
-import com.diegusmich.intouch.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
-object NotificationService : FirebaseMessagingService() {
+object NotificationProvider : FirebaseMessagingService() {
 
     private lateinit var token : String
     private lateinit var notificationManager : NotificationManager

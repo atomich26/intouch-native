@@ -1,11 +1,13 @@
 package com.diegusmich.intouch.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.PreferencesBottomSheetContentBinding
+import com.diegusmich.intouch.ui.activities.EditPreferencesActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 
@@ -15,16 +17,21 @@ class PreferencesModalBottomSheet : BottomSheetDialogFragment() {
     val binding get() = _binding!!
 
     private var prefsArray : Array<String>? = null
-    private var canEdit: Boolean? = null
+    private var canEdit: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            prefsArray = arguments?.getStringArray(PREFS_ARRAY)
+            prefsArray = it.getStringArray(PREFS_ARRAY)
+            canEdit = it.getBoolean(CAN_EDIT_ARG, false)
         }
+    }
 
-
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        canEdit.let { outState.putBoolean(CAN_EDIT_ARG, it) }
+        prefsArray?.let { outState.putStringArray(PREFS_ARRAY, it)}
     }
 
     override fun onCreateView(
@@ -37,6 +44,20 @@ class PreferencesModalBottomSheet : BottomSheetDialogFragment() {
             addPrefsChip(inflater, container, it)
         }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.preferencesEditButton.apply {
+            setOnClickListener{
+                dialog?.dismiss()
+                requireActivity().startActivity(Intent(requireContext(), EditPreferencesActivity::class.java).apply {
+                    putExtra(EditPreferencesActivity.EDIT_MODE_ARG, canEdit)
+                })
+            }
+            visibility = if(canEdit) View.VISIBLE else View.GONE
+        }
     }
 
     private fun addPrefsChip(inflater: LayoutInflater, container:ViewGroup?, name: String){

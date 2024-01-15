@@ -9,6 +9,7 @@ import com.diegusmich.intouch.data.domain.Friendship
 import com.diegusmich.intouch.data.domain.Post
 import com.diegusmich.intouch.data.repository.PostRepository
 import com.diegusmich.intouch.data.repository.UserRepository
+import com.diegusmich.intouch.providers.AuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
@@ -59,7 +60,7 @@ class ProfileViewModel : StateViewModel() {
     private var onUpdateArchivePostListener : ListenerRegistration? = null
 
     //Il flag non è necessario se la libreria è fatta bene. A quanto pare Firebase non lo è.
-    fun onLogout() = Firebase.auth.signOut()
+    fun onLogout() = AuthProvider.logout()
 
     fun onLoadUserData(userId: String?, isRefreshing: Boolean = false) : Job = viewModelScope.launch {
         if (userId == null)

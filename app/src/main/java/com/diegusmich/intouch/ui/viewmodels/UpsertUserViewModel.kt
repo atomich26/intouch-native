@@ -8,8 +8,7 @@ import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.data.repository.UserRepository
 import com.diegusmich.intouch.data.response.FormErrorsCallableResponse
 import com.diegusmich.intouch.network.NetworkStateObserver
-import com.diegusmich.intouch.service.NetworkService
-import com.diegusmich.intouch.ui.views.form.FormInputLayout
+import com.diegusmich.intouch.providers.NetworkProvider
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.ErrorUtil
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil
@@ -22,7 +21,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.net.ConnectException
 import java.net.UnknownHostException
-import java.util.Date
 
 private const val EMAIL_FIELD_FORM: String = "email"
 private const val NAME_FIELD_FORM: String = "name"
@@ -89,15 +87,15 @@ class UpsertUserViewModel : StateViewModel() {
                 onUpdateDistanceRange(it.distanceRange.toFloat())
             }
             updateState(_CONTENT_LOADED, true)
-            NetworkService.removeOnNetworkAvailableObserver(onNetworkAvailableJob)
+            NetworkProvider.removeOnNetworkAvailableObserver(onNetworkAvailableJob)
 
         } catch (e: Exception){
-            NetworkService.addOnNetworkAvailableObserver(onNetworkAvailableJob)
+            NetworkProvider.addOnNetworkAvailableObserver(onNetworkAvailableJob)
             updateState(_ERROR, R.string.firebaseNetworkException)
         }
     }
 
-    fun onActiveEditMode(state: Boolean) {
+    fun onSetEditMode(state: Boolean) {
         _editMode.value = state
     }
 
@@ -145,7 +143,6 @@ class UpsertUserViewModel : StateViewModel() {
 
     fun onUpdateBirthdate(timestamp: Long) {
         updateFormInput(_birthdate, timestamp, true, userCurrentData?.birthdate?.time)
-        return
     }
 
     fun onSendResetPasswordEmail() = viewModelScope.launch {

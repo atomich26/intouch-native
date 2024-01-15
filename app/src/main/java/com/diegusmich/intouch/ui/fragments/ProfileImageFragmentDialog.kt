@@ -12,7 +12,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.databinding.ProfileImageFragmentDialogBinding
-import com.diegusmich.intouch.service.CloudImageService
 import com.diegusmich.intouch.ui.viewmodels.ProfileImageFragmentViewModel
 
 private const val IMAGE_PATH_ARG: String = "imagePath"

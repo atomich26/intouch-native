@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".ui.activities.StartActivity">
+    tools:context=".ui.activities.EditPreferencesActivity">
+
+    <include layout="@layout/material_toolbar" android:id="@+id/appBarLayout"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -63,6 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
+            android:visibility="invisible"
             android:layout_weight="1"
             android:paddingVertical="12dp"
             android:text="@string/skip_text"

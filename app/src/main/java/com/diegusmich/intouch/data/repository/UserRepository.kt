@@ -4,6 +4,7 @@ import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.data.wrapper.UserWrapper
 import com.diegusmich.intouch.data.response.SearchCallableResponse
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.functions.HttpsCallableResult
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,11 @@ object UserRepository : FirestoreCollection<UserWrapper, UserWrapper.Factory>(Us
                     }
                 }
             }
+    }
+
+    suspend fun saveAuthUserPreferences(data: Map<String, Any?>): HttpsCallableResult = withContext(Dispatchers.IO){
+        Firebase.functions.getHttpsCallable("users-preferences")
+            .call(data).await()
     }
 
     suspend fun userFriends(id: String): List<User.Preview> = withContext(Dispatchers.IO) {

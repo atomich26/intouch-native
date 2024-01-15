@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Friendship
 import com.diegusmich.intouch.databinding.ProfileLayoutBinding
-import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.activities.AuthActivity
 import com.diegusmich.intouch.ui.activities.EditUserActivity
 import com.diegusmich.intouch.ui.activities.UserFriendsActivity
@@ -81,7 +81,7 @@ class ProfileFragment : Fragment() {
 
         toolbar.title = getString(R.string.profile_title)
         activityWrappedArg?.let {
-            if(it){
+            if (it) {
                 toolbar.apply {
                     setNavigationOnClickListener {
                         activity?.onBackPressedDispatcher?.onBackPressed()
@@ -121,7 +121,10 @@ class ProfileFragment : Fragment() {
                 val prefsModalBottomSheet = PreferencesModalBottomSheet().apply {
                     val prefsNameArray =
                         viewModel.preferences.value?.map { it.name }?.toTypedArray()
-                    arguments = bundleOf(PreferencesModalBottomSheet.PREFS_ARRAY to prefsNameArray)
+                    arguments = bundleOf(
+                        PreferencesModalBottomSheet.PREFS_ARRAY to prefsNameArray,
+                        PreferencesModalBottomSheet.CAN_EDIT_ARG to viewModel.isAuth.value
+                    )
                 }
                 val fragmentManager = requireActivity().supportFragmentManager
 
@@ -187,11 +190,10 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.biography.observe(viewLifecycleOwner) {
-            if(it?.isNotBlank() == true){
+            if (it?.isNotBlank() == true) {
                 binding.biographyProfileLayout.text = it
                 binding.biographyProfileLayout.visibility = View.VISIBLE
-            }
-            else
+            } else
                 binding.biographyProfileLayout.visibility = View.GONE
         }
 
@@ -210,9 +212,9 @@ class ProfileFragment : Fragment() {
         viewModel.isAuth.observe(viewLifecycleOwner) {
             if (it) {
                 binding.userProfileButtonGroup.visibility = View.VISIBLE
-                if(toolbar.menu.isEmpty() && activityWrappedArg == false)
+                if (toolbar.menu.isEmpty() && activityWrappedArg == false)
                     setAuthToolbarMenu()
-            } else{
+            } else {
                 binding.userProfileButtonGroup.visibility = View.GONE
             }
         }
@@ -256,6 +258,7 @@ class ProfileFragment : Fragment() {
 
         viewModel.LOADING.observe(viewLifecycleOwner) {
             binding.swipeRefreshLayout.isRefreshingDelayed(viewLifecycleOwner, it, 0)
+            binding.showUserPrefButton.isEnabled = !it
         }
 
         viewModel.ERROR.observe(viewLifecycleOwner) {
@@ -274,7 +277,12 @@ class ProfileFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.editUserMenuOption -> {
-                        requireContext().startActivity(Intent(requireContext(), EditUserActivity::class.java))
+                        requireContext().startActivity(
+                            Intent(
+                                requireContext(),
+                                EditUserActivity::class.java
+                            )
+                        )
                         true
                     }
 
@@ -300,7 +308,7 @@ class ProfileFragment : Fragment() {
     private fun loadProfileImage(imagePath: String, isAuth: Boolean) {
         binding.userImageProfileOverlay.visibility =
             if (!activityWrappedArg!! && isAuth) View.VISIBLE else View.GONE
-        binding.userImageProfileContent.load(CloudImageService.USERS.imageRef(imagePath))
+        binding.userImageProfileContent.load(CloudImageProvider.USERS.imageRef(imagePath))
     }
 
     override fun onResume() {

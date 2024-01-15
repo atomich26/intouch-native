@@ -12,6 +12,9 @@ class EventCategoryViewModel : EventsFilterListViewModel() {
         if (id.isNullOrBlank())
             return@launch updateState(_ERROR, R.string.firebaseFirestoreException)
 
+        if(!isRefreshing && _events.value?.isEmpty() == true)
+            return@launch updateState(_LOADING, false)
+
         updateState(_LOADING, true)
 
         try {

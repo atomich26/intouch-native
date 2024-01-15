@@ -6,19 +6,21 @@ import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Category
 import com.diegusmich.intouch.data.repository.CategoryRepository
+import com.diegusmich.intouch.data.repository.UserRepository
 import com.diegusmich.intouch.network.NetworkStateObserver
-import com.diegusmich.intouch.service.NetworkService
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
+import com.diegusmich.intouch.providers.NetworkProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException
 
-class StartActivityViewModel : StateViewModel() {
+class EditPreferencesActivityViewModel : StateViewModel() {
 
     private val _PREFERENCES_SAVED = MutableLiveData(false)
     val PREFERENCES_SAVED: LiveData<Boolean> = _PREFERENCES_SAVED
+
+    private val _editMode = MutableLiveData(false)
+    val editMode: LiveData<Boolean> = _editMode
 
     private val _categories = MutableLiveData<List<Category>>(mutableListOf())
     val categories: LiveData<List<Category>> = _categories
@@ -34,54 +36,62 @@ class StartActivityViewModel : StateViewModel() {
         onLoadCategories()
     }
 
+    fun onSetEditMode(state: Boolean) {
+        _editMode.value = state
+    }
+
     private fun onLoadCategories(): Job = viewModelScope.launch {
         if (categories.value?.isEmpty() == false)
             return@launch
 
         updateState(_LOADING, true)
 
+        try {
             with(CategoryRepository.getAll()) {
-                if (this.isEmpty()){
-                    updateState(_ERROR, R.string.unable_to_update_error)
-                    NetworkService.addOnNetworkAvailableObserver(this@StartActivityViewModel.retryOnNetworkAvailable)
+                _checkedCategories.value = CategoryRepository.getAuthUserCategories().map {
+                    it.id
                 }
-                else {
+                if (this.isEmpty()) {
+                    updateState(_ERROR, R.string.unable_to_update_error)
+                    NetworkProvider.addOnNetworkAvailableObserver(this@EditPreferencesActivityViewModel.retryOnNetworkAvailable)
+                } else {
                     _categories.value = this
-                    NetworkService.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
+                    NetworkProvider.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
                     updateState(_CONTENT_LOADED, true)
                 }
             }
+        } catch (e: Exception) {
+            updateState(_ERROR, R.string.firebaseNetworkException)
+        }
     }
 
     fun onUpdateCheckedCategories(checkedIds: List<String>) {
         _checkedCategories.value = checkedIds
     }
 
-    fun onSaveCategories() {
+    fun onSaveCategories() = viewModelScope.launch {
         updateState(_LOADING, true)
 
         if (checkedCategories.value?.size == categories.value?.size) {
-            return updateState(_PREFERENCES_SAVED, true)
+            return@launch updateState(_PREFERENCES_SAVED, true)
         }
 
-        Firebase.functions.getHttpsCallable("users-preferences")
-            .call(mapOf("preferences" to checkedCategories.value))
-            .addOnSuccessListener {
-                updateState(_PREFERENCES_SAVED, true)
-            }
-            .addOnFailureListener {
-                val messageId =
-                    if (it.cause is UnknownHostException || it.cause is ConnectException)
-                        R.string.firebaseNetworkException
-                    else
-                        R.string.firebaseDefaultExceptionMessage
+        try {
+            UserRepository.saveAuthUserPreferences(mapOf("preferences" to checkedCategories.value))
+            updateState(_PREFERENCES_SAVED, true)
+        }catch (e : Exception){
+            val messageId =
+                if (e.cause is UnknownHostException || e.cause is ConnectException)
+                    R.string.firebaseNetworkException
+                else
+                    R.string.firebaseDefaultExceptionMessage
 
-                updateState(_ERROR, messageId)
-            }
+            updateState(_ERROR, messageId)
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
-        NetworkService.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
+        NetworkProvider.removeOnNetworkAvailableObserver(retryOnNetworkAvailable)
     }
 }

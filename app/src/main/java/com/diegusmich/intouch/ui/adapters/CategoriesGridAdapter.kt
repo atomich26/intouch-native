@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Category
-import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.activities.eventlist.EventByCategoryActivity
 import com.diegusmich.intouch.ui.views.GlideImageView
 
@@ -30,7 +30,7 @@ class CategoriesGridAdapter(private val data: List<Category>) :
 
     class CategoryGridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(category: Category) {
-            val imgRef = CloudImageService.CATEGORIES.imageRef(category.cover)
+            val imgRef = CloudImageProvider.CATEGORIES.imageRef(category.cover)
             itemView.findViewById<TextView>(R.id.categoryNameGridItem).text = category.name
             itemView.findViewById<GlideImageView>(R.id.categoryImageGridItem).load(imgRef)
             itemView.setOnClickListener {

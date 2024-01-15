@@ -2,6 +2,7 @@ package com.diegusmich.intouch.data.repository
 
 import com.diegusmich.intouch.data.wrapper.CategoryWrapper
 import com.diegusmich.intouch.data.domain.Category
+import com.diegusmich.intouch.providers.AuthProvider
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
@@ -19,6 +20,14 @@ object CategoryRepository :
         getDoc(id, Source.DEFAULT)?.let {
             Category(it)
         }
+    }
+
+    suspend fun getAuthUserCategories() = withContext(Dispatchers.IO){
+        UserRepository.getDoc(AuthProvider.authUser()!!.uid)?.let {
+            it.preferences.mapNotNull {  catId ->
+                get(catId)
+            }
+        } ?: listOf()
     }
 
     suspend fun getAll() = withContext(Dispatchers.IO) {

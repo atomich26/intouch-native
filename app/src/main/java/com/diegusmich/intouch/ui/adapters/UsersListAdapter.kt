@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.User
-import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.activities.UserActivity
 import com.diegusmich.intouch.ui.views.GlideImageView
 
@@ -31,7 +31,7 @@ class UsersListAdapter(collection: List<User.Preview>) :
             itemView.findViewById<TextView>(R.id.userListItemNameText).text = item.name
             itemView.findViewById<TextView>(R.id.userListItemUsernameText).text = item.username
 
-            val imgRef = CloudImageService.USERS.imageRef(item.img)
+            val imgRef = CloudImageProvider.USERS.imageRef(item.img)
             itemView.findViewById<GlideImageView>(R.id.userListItemAvatar).load(imgRef)
 
             itemView.setOnClickListener {

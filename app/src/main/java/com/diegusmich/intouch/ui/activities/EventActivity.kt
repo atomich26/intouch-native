@@ -17,7 +17,7 @@ import androidx.core.graphics.BlendModeCompat
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Event
 import com.diegusmich.intouch.databinding.ActivityEventBinding
-import com.diegusmich.intouch.service.CloudImageService
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.viewmodels.EventViewModel
 import com.diegusmich.intouch.utils.TimeUtil
 import java.util.Date
@@ -133,6 +133,12 @@ class EventActivity : AppCompatActivity() {
     }
 
     private fun observeData() {
+
+        viewModel.canEdit.observe(this){
+            binding.collapsingMaterialToolbar.menu.findItem(R.id.editEventMenuItem).isVisible = it
+            binding.collapsingMaterialToolbar.menu.findItem(R.id.deleteEventMenuItem).isVisible = it
+        }
+
         viewModel.LOADING.observe(this) {
             binding.swipeRefreshLayout.isRefreshingDelayed(this, it)
         }
@@ -145,13 +151,12 @@ class EventActivity : AppCompatActivity() {
             binding.eventDescription.text = it.description
             binding.eventLocation.text =
                 getString(R.string.event_location_formatted, it.address, it.city)
-            binding.eventCoverImageView.load(CloudImageService.EVENTS.imageRef(it.cover))
+            binding.eventCoverImageView.load(CloudImageProvider.EVENTS.imageRef(it.cover))
             binding.eventUserInfo.setUserInfo(it.userInfo)
             binding.eventCategoriesTag.text = it.categoryInfo.name
             binding.eventCategoriesTag.visibility = View.VISIBLE
-            binding.collapsingMaterialToolbar.menu.findItem(R.id.editEventMenuItem).isVisible = it.canEdit
-            binding.collapsingMaterialToolbar.menu.findItem(R.id.deleteEventMenuItem).isVisible = it.canEdit
             binding.eventButtonJoin.isEnabled = it.available > 0
+
             showIsRestrictedTag(it.restricted)
             showAvailabilityWarning(it.available)
             putEventDateInfo(it.startAt, it.endAt)

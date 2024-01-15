@@ -1,4 +1,4 @@
-package com.diegusmich.intouch.service
+package com.diegusmich.intouch.providers
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -12,7 +12,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.tasks.await
 
-object UserLocationService {
+object UserLocationProvider {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 

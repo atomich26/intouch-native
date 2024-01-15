@@ -1,6 +1,7 @@
 package com.diegusmich.intouch.data.domain
 
 import com.diegusmich.intouch.data.wrapper.UserWrapper
+import com.diegusmich.intouch.providers.AuthProvider
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -29,7 +30,7 @@ sealed interface User {
             friendship: Friendship
         ) : this(
             id = userWrapper.id,
-            isAuth = Firebase.auth.currentUser?.uid!! == userWrapper.id,
+            AuthProvider.authUser()?.uid == userWrapper.id,
             name = userWrapper.name,
             username = userWrapper.username,
             biography = userWrapper.biography,
@@ -53,7 +54,7 @@ sealed interface User {
     ) : User {
         constructor(userWrapper: UserWrapper) : this(
             id = userWrapper.id,
-            isAuth = Firebase.auth.currentUser?.uid!! == userWrapper.id,
+            isAuth = AuthProvider.authUser()?.uid == userWrapper.id,
             name = userWrapper.name,
             username = userWrapper.username,
             img = userWrapper.img

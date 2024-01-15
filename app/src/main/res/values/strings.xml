@@ -74,6 +74,7 @@
     <string name="distance_formatted">%d km</string>
     <string name="user_edited_success">Profilo aggiornato</string>
     <string name="values_already_updated">Il profilo è già aggiornato.</string>
+    <string name="edit_preferences">Modifica i tuoi gusti</string>
 
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>
