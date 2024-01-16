@@ -75,6 +75,11 @@
     <string name="user_edited_success">Profilo aggiornato</string>
     <string name="values_already_updated">Il profilo è già aggiornato.</string>
     <string name="edit_preferences">Modifica i tuoi gusti</string>
+    <string name="open_camera_action">Scatta una foto</string>
+    <string name="open_gallery_image_action">Scegli un\'immagine</string>
+    <string name="remove_user_image_action">Rimuovi immagine</string>
+
+    <string name="image_cache_path_name">content_images</string>
 
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>
@@ -140,5 +145,7 @@
     <string name="notification_post_comment_ch">Commenti dei post</string>
     <string name="notification_post_comment_id">INTOUCH_POST_COMMENT_NOTIFICATION</string>
     <string name="notification_post_comment_desc">Notifica quando un utente commenta un post pubblicato da te</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

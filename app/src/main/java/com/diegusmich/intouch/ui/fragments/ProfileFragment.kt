@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
@@ -100,16 +101,23 @@ class ProfileFragment : Fragment() {
         }
 
         binding.userImageProfile.setOnClickListener {
-            viewModel.image.value?.let { imagePath ->
-                requireActivity().supportFragmentManager.let { fragmentManager ->
-                    ProfileImageFragmentDialog.newInstance(
-                        imagePath, !activityWrappedArg!!
-                    ).let { fragment ->
-                        fragmentManager.beginTransaction().apply {
-                            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            add(fragment, "PROFILE_IMAGE_FRAGMENT_DIALOG")
-                            addToBackStack(null)
-                            commit()
+            if(viewModel.isAuth.value!!){
+                val mediaPickModalBottomSheet = MediaPickModalBottomSheet.newInstance(viewModel.image.value)
+                val fragmentManager = requireActivity().supportFragmentManager
+                if (fragmentManager.findFragmentByTag(MediaPickModalBottomSheet.TAG) == null)
+                    mediaPickModalBottomSheet.show(fragmentManager, MediaPickModalBottomSheet.TAG)
+            }else{
+                viewModel.image.value?.let { imagePath ->
+                    requireActivity().supportFragmentManager.let { fragmentManager ->
+                        ProfileImageFragmentDialog.newInstance(
+                            imagePath, !activityWrappedArg!!
+                        ).let { fragment ->
+                            fragmentManager.beginTransaction().apply {
+                                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                add(fragment, "PROFILE_IMAGE_FRAGMENT_DIALOG")
+                                addToBackStack(null)
+                                commit()
+                            }
                         }
                     }
                 }

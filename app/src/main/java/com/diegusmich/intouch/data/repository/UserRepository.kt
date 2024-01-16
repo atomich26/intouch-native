@@ -40,6 +40,10 @@ object UserRepository : FirestoreCollection<UserWrapper, UserWrapper.Factory>(Us
             .call(data).await()
     }
 
+    suspend fun changeProfileImg() = withContext(Dispatchers.IO){
+
+    }
+
     suspend fun userFriends(id: String): List<User.Preview> = withContext(Dispatchers.IO) {
         getDoc(id)?.friends?.mapNotNull { friendId ->
             getDoc(friendId)?.let { User.Preview(it)}

@@ -10,43 +10,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.databinding.ProfileImageFragmentDialogBinding
-import com.diegusmich.intouch.ui.viewmodels.ProfileImageFragmentViewModel
+import com.diegusmich.intouch.providers.CloudImageProvider
 
 private const val IMAGE_PATH_ARG: String = "imagePath"
-private const val CAN_EDIT_ARG: String = "canEdit"
 
 class ProfileImageFragmentDialog : DialogFragment() {
 
     private var _binding: ProfileImageFragmentDialogBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel : ProfileImageFragmentViewModel by viewModels()
-
     private var imagePathArg: String? = null
-    private var canEditArg: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         imagePathArg = arguments?.getString(IMAGE_PATH_ARG)
-        canEditArg = arguments?.getBoolean(CAN_EDIT_ARG, false)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imagePathArg?.let {
-            viewModel.loadImage(it)
-        }
-
-        binding.profileImageEditButtonsGroup.visibility =
-            if (canEditArg == true) View.VISIBLE else View.GONE
-
-        if(imagePathArg.isNullOrBlank())
-            binding.profileImageEditButtonsGroup
-
-        binding.deleteUserImage.setOnClickListener{
-            binding.profileImage.clear()
+            binding.profileImage.load(CloudImageProvider.USERS.imageRef(it))
         }
     }
 
@@ -81,7 +66,7 @@ class ProfileImageFragmentDialog : DialogFragment() {
         @JvmStatic
         fun newInstance(imagePath: String, canEdit: Boolean) =
             ProfileImageFragmentDialog().apply {
-                arguments = bundleOf(IMAGE_PATH_ARG to imagePath, CAN_EDIT_ARG to canEdit)
+                arguments = bundleOf(IMAGE_PATH_ARG to imagePath)
             }
     }
 }

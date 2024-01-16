@@ -25,10 +25,21 @@
         android:supportsRtl="true"
         android:theme="@style/Intouch.Theme.Material3"
         tools:targetApi="33">
+
+        <provider
+            android:name="com.diegusmich.intouch.providers.IntouchFileProvider"
+            android:authorities="com.diegusmich.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".ui.activities.EditUserActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.eventlist.EventListActivity"
             android:exported="false"

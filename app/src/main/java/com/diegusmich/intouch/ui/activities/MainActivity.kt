@@ -26,13 +26,21 @@ import com.diegusmich.intouch.ui.fragments.ProfileFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import java.io.File
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     val binding get() = _binding!!
 
+    private var _onCameraPicturePicked: ((result: Boolean) -> Unit)? = null
+
     private lateinit var locationBroadcastReceiver: LocationBroadcasterReceiver
+
+    val pickImageFromCamera =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) {
+            _onCameraPicturePicked?.invoke(it)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +102,10 @@ class MainActivity : AppCompatActivity(){
             binding.mainViewPager.setCurrentItem(pageId, false)
             true
         }
+    }
+
+    fun addOnCameraPicturePickedCallback(callback: (Boolean) -> Unit) {
+        _onCameraPicturePicked = callback
     }
 
     private fun requestPermission() {

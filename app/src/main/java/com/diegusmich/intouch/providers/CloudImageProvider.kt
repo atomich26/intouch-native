@@ -5,8 +5,16 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
+import java.io.File
+import java.security.MessageDigest
+import java.util.Date
 
-class CloudImageProvider(path : String) {
+enum class CloudImageProvider(path : String) {
+
+    CATEGORIES("categories"),
+    USERS("users"),
+    POSTS("posts"),
+    EVENTS("events");
 
     private val storageRef = Firebase.storage.reference.child(path)
 
@@ -16,14 +24,14 @@ class CloudImageProvider(path : String) {
         else null
     }
 
-    suspend fun uploadImage(uri : Uri){
-        storageRef.putFile(uri).await()
-    }
+    suspend fun uploadImage(imageUri: Uri) : StorageReference{
+        val hashedBytes =
+            MessageDigest.getInstance("MD5").digest(AuthProvider.authUser()?.uid?.toByteArray()!!)
+        val hexString = hashedBytes.joinToString("") { "%02x".format(it) }
 
-    companion object{
-        val CATEGORIES = CloudImageProvider("categories")
-        val USERS = CloudImageProvider("users")
-        val POSTS = CloudImageProvider("posts")
-        val EVENTS = CloudImageProvider("events")
+        val fileRef = storageRef.child("${Date().time}_$hexString.jpg")
+        fileRef.putFile(imageUri).await()
+
+        return fileRef
     }
 }

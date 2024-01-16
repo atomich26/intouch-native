@@ -5,6 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.diegusmich.intouch.providers.CacheProvider
 import com.diegusmich.intouch.providers.NetworkProvider
 import com.diegusmich.intouch.providers.NotificationProvider
 import com.diegusmich.intouch.providers.UserLocationProvider
@@ -21,6 +22,7 @@ class IntouchApplication : Application(), LifecycleEventObserver {
         super.onCreate()
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         NetworkProvider.build(this)
+        CacheProvider.build(this)
         NotificationProvider.build(this)
         UserLocationProvider.build(this)
         FirebaseApp.initializeApp(this)
@@ -32,5 +34,10 @@ class IntouchApplication : Application(), LifecycleEventObserver {
             Lifecycle.Event.ON_STOP -> false
             else -> return
         }
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        CacheProvider.clear()
     }
 }
