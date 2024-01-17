@@ -9,7 +9,7 @@ import java.io.File
 import java.security.MessageDigest
 import java.util.Date
 
-enum class CloudImageProvider(path : String) {
+enum class CloudImageProvider(path: String) {
 
     CATEGORIES("categories"),
     USERS("users"),
@@ -18,15 +18,14 @@ enum class CloudImageProvider(path : String) {
 
     private val storageRef = Firebase.storage.reference.child(path)
 
-    fun imageRef(namePath : String) : StorageReference? {
-        return if(namePath.isNotBlank())
+    fun imageRef(namePath: String): StorageReference? {
+        return if (namePath.isNotBlank())
             storageRef.child(namePath)
         else null
     }
 
-    suspend fun uploadImage(imageUri: Uri) : StorageReference{
-        val hashedBytes =
-            MessageDigest.getInstance("MD5").digest(AuthProvider.authUser()?.uid?.toByteArray()!!)
+    suspend fun uploadImage(imageUri: Uri): StorageReference {
+        val hashedBytes = MessageDigest.getInstance("MD5").digest(AuthProvider.authUser()?.uid?.toByteArray()!!)
         val hexString = hashedBytes.joinToString("") { "%02x".format(it) }
 
         val fileRef = storageRef.child("${Date().time}_$hexString.jpg")

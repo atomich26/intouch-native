@@ -2,6 +2,7 @@ package com.diegusmich.intouch.providers
 
 import android.content.Context
 import java.io.File
+import java.security.MessageDigest
 import java.util.Date
 import kotlin.random.Random
 
@@ -16,7 +17,7 @@ object CacheProvider{
     }
 
     fun newImageTempFile() : File{
-        return File(images, "temp_${Random.nextInt()}_${Date().time}.jpg")
+        return File(images, "temp_${Date().time}_${Random.nextInt()}")
     }
 
     fun clear(){

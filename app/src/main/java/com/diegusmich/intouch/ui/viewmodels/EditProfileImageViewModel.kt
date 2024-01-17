@@ -7,9 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.repository.UserRepository
+import com.diegusmich.intouch.providers.AuthProvider
 import com.diegusmich.intouch.providers.CloudImageProvider
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
+import java.net.ConnectException
+import java.net.UnknownHostException
+import java.security.MessageDigest
 
 class EditProfileImageViewModel : StateViewModel() {
 
@@ -30,7 +34,7 @@ class EditProfileImageViewModel : StateViewModel() {
 
         try {
             _currentImgRef.value = CloudImageProvider.USERS.uploadImage(imageUri)
-            UserRepository.changeProfileImg()
+            UserRepository.changeProfileImg(_currentImgRef.value!!.name)
 
             updateState(_LOADING, false)
         } catch (e: Exception) {
@@ -41,13 +45,24 @@ class EditProfileImageViewModel : StateViewModel() {
     }
 
     fun onRemoveImage() = viewModelScope.launch {
+        if (currentImgRef.value == null)
+            return@launch
 
         updateState(_LOADING, true)
 
         try {
+            UserRepository.removeProfileImage()
+            _currentImgRef.value = null
+
             updateState(_IMAGE_REMOVED, true)
         } catch (e: Exception) {
+            val messageId =
+                if (e.cause is UnknownHostException || e.cause is ConnectException)
+                    R.string.firebaseNetworkException
+                else
+                    R.string.internal_error
 
+            updateState(_ERROR, messageId)
         }
     }
 }

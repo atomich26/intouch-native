@@ -40,8 +40,14 @@ object UserRepository : FirestoreCollection<UserWrapper, UserWrapper.Factory>(Us
             .call(data).await()
     }
 
-    suspend fun changeProfileImg() = withContext(Dispatchers.IO){
+    suspend fun changeProfileImg(imageName: String) = withContext(Dispatchers.IO){
+        Firebase.functions.getHttpsCallable("users-editImage").call(mapOf("img" to imageName)).await()
+        true
+    }
 
+    suspend fun removeProfileImage() = withContext(Dispatchers.IO){
+        Firebase.functions.getHttpsCallable("users-removeImage").call().await()
+        true
     }
 
     suspend fun userFriends(id: String): List<User.Preview> = withContext(Dispatchers.IO) {

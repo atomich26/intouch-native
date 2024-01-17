@@ -56,6 +56,10 @@ class MediaPickModalBottomSheet : BottomSheetDialogFragment() {
             pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
+        binding.deleteImageButton.setOnClickListener {
+            viewModel.onRemoveImage()
+        }
+
         binding.openCameraButton.setOnClickListener {
             val tempFile = CacheProvider.newImageTempFile()
             val uri = getUriForFile(
@@ -65,7 +69,7 @@ class MediaPickModalBottomSheet : BottomSheetDialogFragment() {
             )
 
             (requireActivity() as MainActivity).addOnCameraPicturePickedCallback {
-                if (it) {
+                if(it) {
                     tempFile.createNewFile()
                     viewModel.onLoadImage(uri)
                 }
@@ -86,9 +90,8 @@ class MediaPickModalBottomSheet : BottomSheetDialogFragment() {
         }
 
         viewModel.currentImgRef.observe(viewLifecycleOwner) {
-            it?.let { storageRef ->
-                binding.profileImagePreview.load(storageRef)
-            }
+            binding.deleteImageButton.visibility = if(it != null) View.VISIBLE else View.GONE
+            binding.profileImagePreview.load(it)
         }
 
         viewModel.ERROR.observe(viewLifecycleOwner) {
