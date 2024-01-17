@@ -35,10 +35,9 @@ class EditProfileImageViewModel : StateViewModel() {
         try {
             _currentImgRef.value = CloudImageProvider.USERS.uploadImage(imageUri)
             UserRepository.changeProfileImg(_currentImgRef.value!!.name)
-
             updateState(_LOADING, false)
         } catch (e: Exception) {
-            Log.d("UPLOAD", e.message.toString())
+            _currentImgRef.value = null
             updateState(_ERROR, R.string.firebaseNetworkException)
         }
 
