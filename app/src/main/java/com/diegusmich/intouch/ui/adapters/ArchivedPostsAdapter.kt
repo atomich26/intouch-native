@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentTransaction
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Post
@@ -38,7 +39,9 @@ class ArchivedPostsAdapter(collection: List<Post.ArchivePreview>) :
 
             itemView.setOnClickListener { _ ->
                 (itemView.context as AppCompatActivity).supportFragmentManager.let {
-                    val newFragment = PostFragmentDialog()
+                    val newFragment = PostFragmentDialog().apply {
+                        arguments = bundleOf(PostFragmentDialog.POST_ID_ARG to item.id)
+                    }
                     it.beginTransaction().apply {
                         setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         add(newFragment, "POST_FRAGMENT_DIALOG")
@@ -46,7 +49,6 @@ class ArchivedPostsAdapter(collection: List<Post.ArchivePreview>) :
                         commit()
                     }
                 }
-                Toast.makeText(itemView.context, "Post ${item.id}", Toast.LENGTH_SHORT).show()
             }
         }
     }

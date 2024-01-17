@@ -12,10 +12,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.diegusmich.intouch.ui.views.GlideImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_gravity="center"
-        android:src="@mipmap/ic_launcher_round"/>
+    <com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout
+        android:id="@+id/postSwipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/materialHorizontalPadding">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/carouselRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/materialHorizontalPadding"
+                    android:clipChildren="false"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
+    </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

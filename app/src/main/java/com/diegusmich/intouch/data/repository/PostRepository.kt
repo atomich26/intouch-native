@@ -33,6 +33,16 @@ object PostRepository : FirestoreCollection<PostWrapper, PostWrapper.Factory>(Po
         } ?: mutableListOf()
     }
 
+    suspend fun getPost(id: String) = withContext(Dispatchers.IO){
+        getDoc(id)?.let{ postWrapper ->
+            UserRepository.getDoc(postWrapper.userId)?.let { userWrapper ->
+                EventRepository.getDoc(postWrapper.eventId)?.let { eventWrapper ->
+                    Post.Full(postWrapper, userWrapper, eventWrapper)
+                }
+            }
+        }
+    }
+
     suspend fun viewPost(postId: String) = withContext(Dispatchers.IO) {
         Firebase.functions.getHttpsCallable("posts-viewed").call(mapOf("postId" to postId)).await()
         true

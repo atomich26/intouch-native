@@ -78,7 +78,7 @@
     <string name="open_camera_action">Scatta una foto</string>
     <string name="open_gallery_image_action">Scegli un\'immagine</string>
     <string name="remove_user_image_action">Rimuovi immagine</string>
-
+    <string name="post_not_exists">Il post richiesto non esiste.</string>
     <string name="image_cache_path_name">content_images</string>
 
     <plurals name="event_availability_warning">
