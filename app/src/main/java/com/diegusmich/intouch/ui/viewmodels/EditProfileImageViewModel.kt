@@ -1,19 +1,17 @@
 package com.diegusmich.intouch.ui.viewmodels
 
-import android.net.Uri
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.repository.UserRepository
-import com.diegusmich.intouch.providers.AuthProvider
 import com.diegusmich.intouch.providers.CloudImageProvider
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
+import java.io.File
 import java.net.ConnectException
 import java.net.UnknownHostException
-import java.security.MessageDigest
 
 class EditProfileImageViewModel : StateViewModel() {
 
@@ -21,7 +19,7 @@ class EditProfileImageViewModel : StateViewModel() {
     val currentImgRef: LiveData<StorageReference?> = _currentImgRef
 
     private val _IMAGE_REMOVED = MutableLiveData<Boolean>(false)
-    val IMAGE_REMOVED : LiveData<Boolean> = _IMAGE_REMOVED
+    val IMAGE_REMOVED: LiveData<Boolean> = _IMAGE_REMOVED
 
     fun onSetCurrentImgRef(path: String?) {
         path?.let {
@@ -29,18 +27,18 @@ class EditProfileImageViewModel : StateViewModel() {
         }
     }
 
-    fun onLoadImage(imageUri: Uri) = viewModelScope.launch {
+    fun onLoadImage(ctx: Context, image: File) = viewModelScope.launch {
         updateState(_LOADING, true)
 
         try {
-            _currentImgRef.value = CloudImageProvider.USERS.uploadImage(imageUri)
+            _currentImgRef.value = CloudImageProvider.USERS.uploadImage(ctx, image)
             UserRepository.changeProfileImg(_currentImgRef.value!!.name)
+
             updateState(_LOADING, false)
         } catch (e: Exception) {
             _currentImgRef.value = null
             updateState(_ERROR, R.string.firebaseNetworkException)
         }
-
     }
 
     fun onRemoveImage() = viewModelScope.launch {

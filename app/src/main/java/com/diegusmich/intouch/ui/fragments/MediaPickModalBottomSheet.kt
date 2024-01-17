@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.ui.fragments
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider.getUriForFile
+import androidx.core.net.toFile
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.databinding.FragmentMediaPickModalBottomSheetBinding
@@ -16,6 +18,7 @@ import com.diegusmich.intouch.providers.IntouchFileProvider
 import com.diegusmich.intouch.ui.activities.MainActivity
 import com.diegusmich.intouch.ui.viewmodels.EditProfileImageViewModel
 import com.diegusmich.intouch.ui.views.decorators.visible
+import com.diegusmich.intouch.utils.FileUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 private const val IMAGE_PATH_ARG: String = "imagePath"
@@ -29,7 +32,9 @@ class MediaPickModalBottomSheet : BottomSheetDialogFragment() {
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
         it?.let {
-            viewModel.onLoadImage(it)
+            FileUtil.fileFromContentUri(requireContext(), it)?.let { tempFile ->
+                viewModel.onLoadImage(requireContext(), tempFile)
+            }
         }
     }
 
@@ -61,19 +66,16 @@ class MediaPickModalBottomSheet : BottomSheetDialogFragment() {
         }
 
         binding.openCameraButton.setOnClickListener {
-            val tempFile = CacheProvider.newImageTempFile()
+            val tempFile = CacheProvider.newTempFile()
+            (requireActivity() as MainActivity).addOnCameraPicturePickedCallback {
+                if(it)
+                    viewModel.onLoadImage(requireContext(), tempFile)
+            }
             val uri = getUriForFile(
                 requireContext(),
                 IntouchFileProvider.AUTHORITY,
                 tempFile
             )
-
-            (requireActivity() as MainActivity).addOnCameraPicturePickedCallback {
-                if(it) {
-                    tempFile.createNewFile()
-                    viewModel.onLoadImage(uri)
-                }
-            }
             (requireActivity() as MainActivity).pickImageFromCamera.launch(uri)
         }
 

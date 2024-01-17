@@ -8,19 +8,20 @@ import kotlin.random.Random
 
 object CacheProvider{
 
-    private lateinit var _imagesCache : File
-    val images get() = _imagesCache
+    private lateinit var _dir : File
+    val dir get() = _dir
 
     fun build(ctx: Context){
-        _imagesCache = File(ctx.cacheDir, "images/")
-        _imagesCache.mkdir()
+        _dir = File(ctx.cacheDir, "temp/")
+        _dir.mkdir()
     }
 
-    fun newImageTempFile() : File{
-        return File(images, "temp_${Date().time}_${Random.nextInt()}")
+    fun newTempFile(name: String? = null) : File{
+        val fixedName = name ?: "object_${Date().time}_${Random.nextInt()}"
+        return File(dir, fixedName)
     }
 
     fun clear(){
-        _imagesCache.delete()
+        _dir.delete()
     }
 }
