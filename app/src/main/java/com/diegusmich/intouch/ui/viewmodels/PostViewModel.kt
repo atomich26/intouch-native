@@ -17,15 +17,17 @@ class PostViewModel : StateViewModel() {
         if (id.isNullOrBlank())
             return@launch updateState(_ERROR, R.string.post_not_exists)
 
-        updateState(_LOADING, true)
+        if(post.value == null || isRefreshing){
+            updateState(_LOADING, true)
 
-        try {
-            _post.value = PostRepository.getPost(id)
-            updateState(_CONTENT_LOADED, true)
-        } catch (e: Exception) {
-            val messageId =
-                if (isRefreshing) R.string.unable_to_update_error else R.string.firebaseNetworkException
-            updateState(_ERROR, messageId)
+            try {
+                _post.value = PostRepository.getPost(id)
+                updateState(_CONTENT_LOADED, true)
+            } catch (e: Exception) {
+                val messageId =
+                    if (isRefreshing) R.string.unable_to_update_error else R.string.firebaseNetworkException
+                updateState(_ERROR, messageId)
+            }
         }
     }
 }

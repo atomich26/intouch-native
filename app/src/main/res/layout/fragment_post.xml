@@ -1,41 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <include
-        android:id="@+id/appBarLayout"
-        layout="@layout/material_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    android:layout_height="match_parent">
 
     <com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout
         android:id="@+id/postSwipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/materialHorizontalPadding">
+                android:fillViewport="true">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/carouselRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="@dimen/materialHorizontalPadding"
-                    android:clipChildren="false"/>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </androidx.core.widget.NestedScrollView>
-    </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
+                    android:layout_height="match_parent"
+                    android:clipChildren="false" />
+            </androidx.core.widget.NestedScrollView>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/postTopInfoGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/post_user_info_background">
+
+                <com.diegusmich.intouch.ui.views.UserInfoThumbnail
+                    android:id="@+id/postUserInfoCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginLeft="5dp"/>
+
+                <TextView
+                    android:id="@+id/postCreatedAtText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="@dimen/materialHorizontalPadding"
+                    android:textSize="14dp"
+                    android:textColor="#F1F1F1"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/postBottomInfoGroup"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:visibility="invisible"
+                android:background="@drawable/post_user_info_bottom_background"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/postEventButton"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:maxLength="20"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    app:icon="@drawable/baseline_event_24"
+                    app:iconTint="@android:color/white"
+                    app:layout_constraintBottom_toTopOf="@id/postDescriptionText"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/postDescriptionText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/postCarouselCounter"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/postCarouselCounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/post_carousel_counter_background"
+                    android:padding="15dp"
+                    android:paddingHorizontal="@dimen/materialHorizontalPadding"
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <Button
+                    android:id="@+id/openCommentButton"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    app:icon="@drawable/baseline_comment_24"
+                    app:iconSize="26dp"
+                    app:iconTint="@android:color/white"
+                    app:layout_constraintBottom_toTopOf="@id/postCarouselCounter"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

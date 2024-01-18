@@ -1,10 +1,13 @@
 package com.diegusmich.intouch.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.ui.views.GlideImageView
+import com.google.android.material.carousel.MaskableFrameLayout
 import com.google.firebase.storage.StorageReference
 
 class PostImagesCarouselAdapter(images: List<StorageReference>) : MutableAdapterImpl<StorageReference>(images) {

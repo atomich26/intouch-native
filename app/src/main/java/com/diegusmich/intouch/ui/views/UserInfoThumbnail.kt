@@ -11,6 +11,9 @@ import com.google.android.material.card.MaterialCardView
 
 class UserInfoThumbnail(ctx: Context, attrs: AttributeSet) : MaterialCardView(ctx, attrs) {
 
+    val imageView get() = findViewById<GlideImageView>(R.id.userThumbnail)
+    val usernameTextView get() = findViewById<TextView>(R.id.userUsernameText)
+
     init {
         inflate(ctx, R.layout.user_info_card, this)
     }
@@ -23,7 +26,7 @@ class UserInfoThumbnail(ctx: Context, attrs: AttributeSet) : MaterialCardView(ct
     }
 
     fun setUserInfo(userInfo: User.Preview) {
-        findViewById<GlideImageView>(R.id.userThumbnail).load(CloudImageProvider.USERS.imageRef(userInfo.img))
-        findViewById<TextView>(R.id.userUsernameText).text = context.getString(R.string.username_formatted, userInfo.username)
+        imageView.load(CloudImageProvider.USERS.imageRef(userInfo.img))
+        usernameTextView.text = context.getString(R.string.username_formatted, userInfo.username)
     }
 }

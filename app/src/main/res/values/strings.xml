@@ -80,7 +80,8 @@
     <string name="remove_user_image_action">Rimuovi immagine</string>
     <string name="post_not_exists">Il post richiesto non esiste.</string>
     <string name="image_cache_path_name">content_images</string>
-
+    <string name="post_created_at_formatted">\u25CF  %s</string>
+    <string name="post_carousel_counter"> %1$d/%2$d</string>
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>
         <item quantity="other">Restano %d posti disponibili.</item>
@@ -119,7 +120,7 @@
     <string name="invalid_username">Il nome utente deve contenere almeno 3 caratteri e sono ammessi solo lettere minuscole, numeri e . _</string>
     <string name="username_already_exists">Nome utente non disponibile</string>
     <string name="empty_username">Il nome utente non può essere vuoto</string>
-    <string name="invalid_name">La lunghezza del nome deve essere compresa fra i 3 e i 40 caratteri</string>
+    <string name="invalid_name">La lunghezza del nome deve essere compresa fra i 3 e i 30 caratteri</string>
     <string name="invalid_special_chars_name">Il nome non può contenere caratteri speciali o numeri</string>
     <string name="empty_name">Il nome non può esser vuoto</string>
     <string name="invalid_email_length">L\'indirizzo email può contenere massimo 90 caratteri</string>

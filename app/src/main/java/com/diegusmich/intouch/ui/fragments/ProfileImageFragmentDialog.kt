@@ -64,7 +64,7 @@ class ProfileImageFragmentDialog : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(imagePath: String, canEdit: Boolean) =
+        fun newInstance(imagePath: String) =
             ProfileImageFragmentDialog().apply {
                 arguments = bundleOf(IMAGE_PATH_ARG to imagePath)
             }

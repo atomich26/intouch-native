@@ -63,11 +63,11 @@ class UpsertUserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
 
-
         if (viewModel.editMode.value!!){
             toolbar.title = getString(R.string.create_account_fragment_title)
             binding.form.root.visibility = View.INVISIBLE
             viewModel.onLoadUserCurrentData()
+
         }
         else
             toolbar.title = getString(R.string.user_edit_title)

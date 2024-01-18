@@ -85,6 +85,11 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.App.CornerCutCarousel" parent="">
+        <item name="cornerSize">5%</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
     <style name="ShapeAppearanceOverlay.EventThumbRadius" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10%</item>

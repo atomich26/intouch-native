@@ -101,17 +101,20 @@ class ProfileFragment : Fragment() {
         }
 
         binding.userImageProfile.setOnClickListener {
-            if(viewModel.isAuth.value!!){
+            if(viewModel.isAuth.value!! && activityWrappedArg == false){
                 val mediaPickModalBottomSheet = MediaPickModalBottomSheet.newInstance(viewModel.image.value)
-                val fragmentManager = requireActivity().supportFragmentManager
-                if (fragmentManager.findFragmentByTag(MediaPickModalBottomSheet.TAG) == null)
-                    mediaPickModalBottomSheet.show(fragmentManager, MediaPickModalBottomSheet.TAG)
+                requireActivity().supportFragmentManager.let {
+                    if (it.findFragmentByTag(MediaPickModalBottomSheet.TAG) == null)
+                        mediaPickModalBottomSheet.show(it, MediaPickModalBottomSheet.TAG)
+                }
+
             }else{
                 viewModel.image.value?.let { imagePath ->
+                    if(imagePath.isBlank())
+                        return@let
+
                     requireActivity().supportFragmentManager.let { fragmentManager ->
-                        ProfileImageFragmentDialog.newInstance(
-                            imagePath, !activityWrappedArg!!
-                        ).let { fragment ->
+                        ProfileImageFragmentDialog.newInstance(imagePath).let { fragment ->
                             fragmentManager.beginTransaction().apply {
                                 setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                                 add(fragment, "PROFILE_IMAGE_FRAGMENT_DIALOG")
@@ -131,7 +134,7 @@ class ProfileFragment : Fragment() {
                         viewModel.preferences.value?.map { it.name }?.toTypedArray()
                     arguments = bundleOf(
                         PreferencesModalBottomSheet.PREFS_ARRAY to prefsNameArray,
-                        PreferencesModalBottomSheet.CAN_EDIT_ARG to viewModel.isAuth.value
+                        PreferencesModalBottomSheet.CAN_EDIT_ARG to (viewModel.isAuth.value == true && activityWrappedArg == false)
                     )
                 }
                 val fragmentManager = requireActivity().supportFragmentManager

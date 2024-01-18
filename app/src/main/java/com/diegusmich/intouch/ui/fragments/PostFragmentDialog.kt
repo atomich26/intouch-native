@@ -1,10 +1,12 @@
 package com.diegusmich.intouch.ui.fragments
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnScrollChangeListener
 import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.Toast
@@ -12,15 +14,22 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.FragmentPostBinding
 import com.diegusmich.intouch.providers.CloudImageProvider
+import com.diegusmich.intouch.ui.activities.EventActivity
+import com.diegusmich.intouch.ui.activities.UserActivity
 import com.diegusmich.intouch.ui.adapters.PostImagesCarouselAdapter
 import com.diegusmich.intouch.ui.viewmodels.PostViewModel
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.FullScreenCarouselStrategy
 import com.google.android.material.carousel.HeroCarouselStrategy
+import org.ocpsoft.prettytime.PrettyTime
 
 class PostFragmentDialog : DialogFragment() {
 
@@ -65,16 +74,6 @@ class PostFragmentDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.appBarLayout.materialToolbar.apply {
-            setBackgroundColor(Color.BLACK)
-            navigationIcon =
-                AppCompatResources.getDrawable(requireContext(), R.drawable.baseline_close_24)
-            setNavigationIconTint(Color.WHITE)
-            setNavigationOnClickListener {
-                this@PostFragmentDialog.dismiss()
-            }
-        }
-
         if(viewModel.post.value == null){
             viewModel.onloadPost(postId, false)
         }
@@ -83,11 +82,26 @@ class PostFragmentDialog : DialogFragment() {
             viewModel.onloadPost(postId, true)
         }
 
-        binding.carouselRecyclerView.layoutManager = CarouselLayoutManager(FullScreenCarouselStrategy())
+        binding.postUserInfoCard.apply {
+            usernameTextView.setTextColor(Color.WHITE)
+            setOnClickListener {
+                viewModel.post.value?.userInfo?.id?.let{
+                    requireActivity().startActivity(Intent(requireContext(), UserActivity::class.java).apply {
+                        putExtra(UserActivity.USER_ARG, it)
+                    })
+                }
+            }
+        }
 
-        val snapHelper = CarouselSnapHelper()
-        snapHelper.attachToRecyclerView(binding.carouselRecyclerView)
+        binding.postEventButton.setOnClickListener {
+            viewModel.post.value?.let{
+                requireContext().startActivity(Intent(requireContext(), EventActivity::class.java).apply {
+                    putExtra(EventActivity.EVENT_ARG,it.eventInfo.id)
+                })
+            }
+        }
 
+        setupSliderCounter()
         observeData()
     }
 
@@ -95,10 +109,27 @@ class PostFragmentDialog : DialogFragment() {
 
         viewModel.post.observe(viewLifecycleOwner){
             it?.let {
-                val imagesRef = it.album.mapNotNull { imgName ->
-                    CloudImageProvider.POSTS.imageRef(imgName)
+                binding.carouselRecyclerView.apply {
+                    val imagesRef = it.album.mapNotNull { imgName ->
+                        CloudImageProvider.POSTS.imageRef(imgName)
+                    }
+                    adapter = PostImagesCarouselAdapter(imagesRef)
                 }
-                binding.carouselRecyclerView.adapter = PostImagesCarouselAdapter(imagesRef)
+                updateCarouselCounter(1)
+
+                binding.postTopInfoGroup.visibility = View.VISIBLE
+                binding.postBottomInfoGroup.visibility = View.VISIBLE
+
+                binding.postEventButton.text = it.eventInfo.name
+                binding.postDescriptionText.text = it.description
+                binding.postUserInfoCard.apply {
+                    setUserInfo(it.userInfo)
+                }
+
+                binding.postCreatedAtText.apply {
+                    visibility = View.VISIBLE
+                    text = getString(R.string.post_created_at_formatted, PrettyTime().format(it.createdAt))
+                }
             }
         }
 
@@ -111,6 +142,27 @@ class PostFragmentDialog : DialogFragment() {
                 Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun updateCarouselCounter(pos: Int){
+        binding.postCarouselCounter.text = getString(R.string.post_carousel_counter, pos, viewModel.post.value?.album?.size)
+    }
+
+    private fun setupSliderCounter(){
+        binding.carouselRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(binding.carouselRecyclerView)
+
+        binding.carouselRecyclerView.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if(newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    val pos =
+                        (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() + 1
+                    updateCarouselCounter(pos)
+                }
+            }
+        })
     }
 
     override fun onDismiss(dialog: DialogInterface) {

@@ -12,6 +12,7 @@
         android:layout_weight="1">
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/upsertUserForm"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingHorizontal="@dimen/materialHorizontalPadding"
@@ -51,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:tooltipText="nomeutente"
-                    android:ems="@integer/password_length"
+                    android:ems="@integer/username_length"
                     android:inputType="text"
                     android:maxLength="@integer/username_length"
                     android:textSize="16sp" />
