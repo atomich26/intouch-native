@@ -6,7 +6,7 @@ import android.content.Context
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
-object NotificationProvider : FirebaseMessagingService() {
+class NotificationProvider : FirebaseMessagingService() {
 
     private lateinit var token : String
     private lateinit var notificationManager : NotificationManager
