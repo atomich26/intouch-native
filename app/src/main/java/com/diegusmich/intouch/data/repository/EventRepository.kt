@@ -13,6 +13,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 object EventRepository :
     FirestoreCollection<EventWrapper, EventWrapper.Factory>(EventWrapper.Factory::class.java) {
@@ -54,7 +55,7 @@ object EventRepository :
 
     suspend fun selectByCategory(categoryId: String) = withContext(Dispatchers.IO) {
         withQuery {
-            it.whereEqualTo("categoryId", categoryId).orderBy("startAt", Query.Direction.DESCENDING)
+            it.whereEqualTo("categoryId", categoryId).whereGreaterThan("startAt", Date()).orderBy("startAt", Query.Direction.DESCENDING)
         }.mapNotNull { eventWrapper ->
             CategoryRepository.getDoc(eventWrapper.categoryId)?.let {
                 Event.Preview(eventWrapper, it)
