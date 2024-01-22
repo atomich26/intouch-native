@@ -17,9 +17,9 @@
         android:title="@string/add_event_title" />
 
     <item
-        android:id="@+id/notificationsFragment"
-        android:icon="@drawable/notification_nav_ic"
-        android:title="@string/notifications_title" />
+        android:id="@+id/friendshipRequestsFragment"
+        android:icon="@drawable/friendship_requests_ic_nav"
+        android:title="@string/friendship_requests_title" />
 
     <item
         android:id="@+id/profileFragment"

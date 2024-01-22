@@ -9,7 +9,7 @@
     <string name="categories_title">Categorie</string>
     <string name="profile_title">Profilo</string>
     <string name="add_event_title">Crea evento</string>
-    <string name="notifications_title">Notifiche</string>
+    <string name="friendship_requests_title">Richieste d\'amicizia</string>
     <string name="user_friends_activity">Amici</string>
     <string name="event_joined_activity">Eventi partecipati</string>
     <string name="event_created_activity">Eventi creati</string>

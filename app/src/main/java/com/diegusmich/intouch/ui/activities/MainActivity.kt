@@ -1,7 +1,6 @@
 package com.diegusmich.intouch.ui.activities
 
 import android.Manifest
-import android.app.NotificationManager
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -22,13 +21,11 @@ import com.diegusmich.intouch.providers.NotificationProvider
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.CategoriesFragment
 import com.diegusmich.intouch.ui.fragments.FeedFragment
-import com.diegusmich.intouch.ui.fragments.NotificationFragment
+import com.diegusmich.intouch.ui.fragments.FriendshipRequestsFragment
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -68,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(
                     FeedFragment(),
                     CategoriesFragment(),
-                    NotificationFragment(),
+                    FriendshipRequestsFragment(),
                     ProfileFragment.newInstance(Firebase.auth.currentUser?.uid, false)
                 ), supportFragmentManager, lifecycle
             )
@@ -96,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             val pageId = when (it.itemId) {
                 R.id.feedFragment -> 0
                 R.id.categoriesFragment -> 1
-                R.id.notificationsFragment -> 2
+                R.id.friendshipRequestsFragment -> 2
                 R.id.profileFragment -> 3
                 else -> 0
             }

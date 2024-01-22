@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.databinding.FragmentNotificationBinding
+import com.diegusmich.intouch.databinding.FragmentFriendshipRequestsBinding
 import com.diegusmich.intouch.ui.viewmodels.NotificationViewModel
 import com.google.android.material.appbar.MaterialToolbar
 
-class NotificationFragment : Fragment() {
+class FriendshipRequestsFragment : Fragment() {
 
-    private var _binding : FragmentNotificationBinding? = null
+    private var _binding : FragmentFriendshipRequestsBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var toolbar : MaterialToolbar
@@ -26,7 +26,7 @@ class NotificationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        _binding = FragmentNotificationBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentFriendshipRequestsBinding.inflate(layoutInflater, container, false)
         toolbar = binding.appBarLayout.materialToolbar
 
         return binding.root
@@ -34,7 +34,7 @@ class NotificationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.title = getString(R.string.notifications_title)
+        toolbar.title = getString(R.string.friendship_requests_title)
     }
 
     override fun onResume() {
