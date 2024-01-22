@@ -82,6 +82,7 @@
     <string name="image_cache_path_name">content_images</string>
     <string name="post_created_at_formatted">\u25CF  %s</string>
     <string name="post_carousel_counter"> %1$d/%2$d</string>
+    <string name="comment_input_hint">Scrivi un commento…</string>
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>
         <item quantity="other">Restano %d posti disponibili.</item>
@@ -90,12 +91,6 @@
     <!-- Dialog strings -->
     <string name="alert_title_error">Errore</string>
     <string name="dialog_neutral_action">OK</string>
-
-    <plurals name="numberOfSongsAvailable">
-        <item quantity="one">Znaleziono %d piosenkę.</item>
-        <item quantity="few">Znaleziono %d piosenki.</item>
-        <item quantity="other">Znaleziono %d piosenek.</item>
-    </plurals>
     <!-- Network service strings-->
     <string name="internet_connection_lost">Connessione internet persa</string>
     <string name="internet_offline">Al momento non sei online</string>
@@ -110,6 +105,8 @@
     <string name="firebaseTooManyRequestsException">Blocco temporaneo per attività insolite</string>
     <string name="firebaseDefaultExceptionMessage">Errore interno! Contatta l\'assistenza</string>
     <string name="firebaseFirestoreException">Si è verificato un errore, riprova più tardi.</string>
+    <string name="initFCMTokenException">Impossibile configurare l\'account, riprova più tardi.</string>
+    <string name="firebaseLogoutException">Impossibile disconnettersi, controlla la connessione internet.</string>
 
     <!-- Error messages API -->
     <string name="form_blank_fields">Compila tutti i campi</string>
@@ -135,7 +132,6 @@
     <string name="default_invalid_error">Campo non valido</string>
     <string name="internal_error">Errore interno, riprova più tardi.</string>
 
-
     <!-- Notification string -->
     <string name="notification_friendship_ch">Richieste di amicizia</string>
     <string name="notification_friendship_id">INTOUCH_FRIENDSHIP_NOTIFICATION</string>
@@ -146,7 +142,5 @@
     <string name="notification_post_comment_ch">Commenti dei post</string>
     <string name="notification_post_comment_id">INTOUCH_POST_COMMENT_NOTIFICATION</string>
     <string name="notification_post_comment_desc">Notifica quando un utente commenta un post pubblicato da te</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -25,6 +26,7 @@ import com.diegusmich.intouch.ui.fragments.NotificationFragment
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -132,7 +134,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationChannel() {
-        NotificationProvider.createChannel(
+
+       lifecycleScope.launch {
+           val token = NotificationProvider.getToken()
+           Log.d("FIREBASE_MESSAGING", "mainactivity" + token.toString())
+       }
+       /* NotificationProvider.createChannel(
             getString(R.string.notification_friendship_ch),
             getString(R.string.notification_friendship_id),
             getString(R.string.notification_friendship_desc),
@@ -151,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.notification_post_comment_desc),
             NotificationManager.IMPORTANCE_LOW
         )
-
+*/
 
         //TEST
         val builder =

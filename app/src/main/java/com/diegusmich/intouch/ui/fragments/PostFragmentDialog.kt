@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -98,6 +99,20 @@ class PostFragmentDialog : DialogFragment() {
                 requireContext().startActivity(Intent(requireContext(), EventActivity::class.java).apply {
                     putExtra(EventActivity.EVENT_ARG,it.eventInfo.id)
                 })
+            }
+        }
+
+        binding.openCommentButton.setOnClickListener {
+            requireActivity().supportFragmentManager.let{ fragmentManager ->
+                viewModel.post.value?.id?.let {
+                    val commentsBottomSheet = CommentsModalBottomFragment.newInstance(it)
+                    fragmentManager.beginTransaction().apply {
+                        setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        add(commentsBottomSheet, "PROFILE_IMAGE_FRAGMENT_DIALOG")
+                        addToBackStack(null)
+                        commit()
+                    }
+                }
             }
         }
 

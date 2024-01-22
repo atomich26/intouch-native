@@ -7,8 +7,8 @@ import kotlinx.coroutines.launch
 
 class EventCreatedViewModel : EventsFilterListViewModel() {
 
-    override fun onLoadEvents(userId: String?, isRefreshing: Boolean) = viewModelScope.launch {
-        if (userId.isNullOrBlank())
+    override fun onLoadEvents(id: String?, isRefreshing: Boolean) = viewModelScope.launch {
+        if (id.isNullOrBlank())
             return@launch updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
 
         if(!isRefreshing && _events.value?.isEmpty() == true)
@@ -17,7 +17,7 @@ class EventCreatedViewModel : EventsFilterListViewModel() {
         updateState(_LOADING, true)
 
         try {
-            _events.value = EventRepository.createdBy(userId)
+            _events.value = EventRepository.createdBy(id)
             updateState(_CONTENT_LOADED, true)
         } catch (e: Exception) {
             val messageId =

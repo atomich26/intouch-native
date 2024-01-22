@@ -79,7 +79,10 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
-    
+
+    <style name="CommentBottomSheetStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
     <style name="ShapeAppearanceOverlay.CornerCircle" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

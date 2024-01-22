@@ -7,9 +7,9 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.providers.AuthProvider
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.FirebaseException
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 
 class LoginViewModel : StateViewModel() {
 
@@ -33,14 +33,14 @@ class LoginViewModel : StateViewModel() {
                 email.value?.inputValue.toString(),
                 password.value?.inputValue.toString()
             )
-                .addOnSuccessListener {
-                    updateState(_LOGGED, true)
-                }
-                .addOnFailureListener {
-                    updateState(_ERROR, FirebaseExceptionUtil.localize(it))
-                }
-        } catch (e: IllegalArgumentException) {
-            updateState(_ERROR, R.string.form_blank_fields)
+            updateState(_LOGGED, true)
+        } catch (e: Exception) {
+            val messageId = when(e){
+                is IllegalArgumentException -> R.string.form_blank_fields
+                is FirebaseException -> FirebaseExceptionUtil.localize(e)
+                else -> R.string.internal_error
+            }
+            updateState(_ERROR, messageId)
         }
     }
 
@@ -59,12 +59,11 @@ class LoginViewModel : StateViewModel() {
     fun onSendResetPasswordEmail() = viewModelScope.launch {
         updateState(_LOADING, true)
 
-        AuthProvider.sendResetPasswordEmail(email.value?.inputValue.toString())
-            .addOnSuccessListener {
-                updateState(_RECOVERY_EMAIL_SENT, true)
-            }
-            .addOnFailureListener {
-                updateState(_ERROR, R.string.invalid_email)
-            }
+        try {
+            AuthProvider.sendResetPasswordEmail(email.value?.inputValue.toString())
+            updateState(_RECOVERY_EMAIL_SENT, true)
+        } catch (e: Exception) {
+            updateState(_ERROR, R.string.invalid_email)
+        }
     }
 }

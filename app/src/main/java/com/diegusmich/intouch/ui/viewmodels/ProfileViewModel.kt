@@ -19,6 +19,9 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel : StateViewModel() {
 
+    private val _LOGGED_OUT = MutableLiveData(false)
+    val LOGGED_OUT : LiveData<Boolean> = _LOGGED_OUT
+
     private val _id: MutableLiveData<String?> = MutableLiveData(null)
     val id: LiveData<String?> = _id
 
@@ -56,11 +59,23 @@ class ProfileViewModel : StateViewModel() {
         MutableLiveData(mutableListOf())
     val archivedPosts: LiveData<List<Post.ArchivePreview>> = _archivedPosts
 
+    private var onLogoutJob : Job? = null
     private var onUpdateUserListener : ListenerRegistration? = null
     private var onUpdateArchivePostListener : ListenerRegistration? = null
 
     //Il flag non è necessario se la libreria è fatta bene. A quanto pare Firebase non lo è.
-    fun onLogout() = AuthProvider.logout()
+    fun onLogout() {
+        if(_LOGGED_OUT.value == true || onLogoutJob?.isActive == true)
+            return
+        onLogoutJob = viewModelScope.launch {
+            try{
+                AuthProvider.logout()
+                updateState(_LOGGED_OUT, true)
+            }catch (e : Exception) {
+                updateState(_ERROR, R.string.firebaseLogoutException)
+            }
+        }
+    }
 
     fun onLoadUserData(userId: String?, isRefreshing: Boolean = false) : Job = viewModelScope.launch {
         if (userId == null)

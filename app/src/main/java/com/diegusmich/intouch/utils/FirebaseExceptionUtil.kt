@@ -1,6 +1,7 @@
 package com.diegusmich.intouch.utils
 
 import com.diegusmich.intouch.R
+import com.diegusmich.intouch.exceptions.InitFCMTokenFailedException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthEmailException
@@ -17,6 +18,7 @@ object FirebaseExceptionUtil {
             is FirebaseAuthEmailException -> R.string.firebaseAuthEmailException
             is FirebaseTooManyRequestsException -> R.string.firebaseTooManyRequestsException
             is FirebaseNetworkException -> R.string.firebaseNetworkException
+            is InitFCMTokenFailedException -> R.string.initFCMTokenException
             else -> R.string.firebaseDefaultExceptionMessage
         }
     }

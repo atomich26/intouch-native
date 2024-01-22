@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_weight="1"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/commentInputGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurfaceContainer"
+        android:orientation="horizontal">
+
+        <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+            android:id="@+id/commentTextInputLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:endIconDrawable="@drawable/baseline_send_24"
+            app:endIconMode="custom"
+            android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/commentTextEditLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="@integer/comment_length"
+                android:hint="@string/comment_input_hint"
+                android:background="@android:color/transparent"/>
+        </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

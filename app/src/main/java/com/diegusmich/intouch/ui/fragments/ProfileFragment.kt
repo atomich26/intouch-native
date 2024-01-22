@@ -1,5 +1,7 @@
 package com.diegusmich.intouch.ui.fragments
 
+import android.app.ActivityManager
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.core.view.isEmpty
@@ -30,6 +33,7 @@ import com.diegusmich.intouch.ui.activities.eventlist.EventJoinedActivity
 import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import java.io.File
 
 private const val USER_ID_ARG: String = "userId"
 private const val ACTIVITY_WRAPPED_ARG: String = "wrapped"
@@ -262,6 +266,18 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        viewModel.LOGGED_OUT.observe(viewLifecycleOwner){
+            if(it){
+                requireActivity().startActivity(
+                    Intent(
+                        requireContext(),
+                        AuthActivity::class.java
+                    ).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    })
+                requireActivity().finish()
+            }
+        }
         viewModel.archivedPosts.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty())
                 (binding.userPostsGridView.adapter as ArchivedPostsAdapter).replace(it)
@@ -299,14 +315,6 @@ class ProfileFragment : Fragment() {
 
                     R.id.logoutUserMenuOption -> {
                         viewModel.onLogout()
-                        requireActivity().startActivity(
-                            Intent(
-                                requireContext(),
-                                AuthActivity::class.java
-                            ).apply {
-                                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            })
-                        requireActivity().finish()
                         false
                     }
 

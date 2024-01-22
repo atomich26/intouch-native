@@ -7,11 +7,14 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.data.repository.UserRepository
 import com.diegusmich.intouch.data.response.FormErrorsCallableResponse
+import com.diegusmich.intouch.exceptions.InitFCMTokenFailedException
 import com.diegusmich.intouch.network.NetworkStateObserver
+import com.diegusmich.intouch.providers.AuthProvider
 import com.diegusmich.intouch.providers.NetworkProvider
 import com.diegusmich.intouch.ui.views.form.FormInputLayout.FormInputState
 import com.diegusmich.intouch.utils.ErrorUtil
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.functions.FirebaseFunctionsException
 import com.google.firebase.functions.ktx.functions
@@ -163,22 +166,12 @@ class UpsertUserViewModel : StateViewModel() {
             return@launch updateState(_ERROR, R.string.values_already_updated)
 
         updateState(_LOADING, true)
-
         try {
-            Firebase.functions.getHttpsCallable("users-upsert").call(requestFormData).await()
-
             if (editMode.value == false) {
-                Firebase.auth.signInWithEmailAndPassword(
-                    requestFormData[EMAIL_FIELD_FORM].toString(),
-                    requestFormData[PASSWORD_FIELD_FORM].toString()
-                )
-                    .addOnSuccessListener {
-                        updateState(_LOGGED, true)
-                    }
-                    .addOnFailureListener {
-                        updateState(_ERROR, FirebaseExceptionUtil.localize(it))
-                    }
+                AuthProvider.signUp(requestFormData)
+                updateState(_LOGGED, true)
             } else{
+                UserRepository.upsertUser(requestFormData)
                 onLoadUserCurrentData()
                 updateState(_EDITED, true)
             }
@@ -236,6 +229,9 @@ class UpsertUserViewModel : StateViewModel() {
                     updateState(_ERROR, R.string.firebaseDefaultExceptionMessage)
                 }
             }
+        }
+        catch (e : FirebaseException){
+            updateState(_ERROR, FirebaseExceptionUtil.localize(e))
         }
     }
 }

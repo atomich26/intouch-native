@@ -5,4 +5,5 @@
     <integer name="password_length">50</integer>
     <integer name="email_length">90</integer>
     <integer name="biography_length">160</integer>
+    <integer name="comment_length">250</integer>
 </resources>
