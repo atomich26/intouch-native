@@ -110,6 +110,19 @@
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <Button
+                    android:id="@+id/deletePostButton"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    app:icon="@drawable/baseline_delete_24"
+                    app:iconSize="26dp"
+                    app:iconTint="@android:color/white"
+                    app:layout_constraintBottom_toTopOf="@id/openCommentButton"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <Button
                     android:id="@+id/openCommentButton"
                     style="?attr/materialIconButtonStyle"
                     android:layout_width="wrap_content"

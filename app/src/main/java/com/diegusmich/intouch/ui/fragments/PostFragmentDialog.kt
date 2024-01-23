@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.diegusmich.intouch.R
+import com.diegusmich.intouch.authorization.Policies
 import com.diegusmich.intouch.databinding.FragmentPostBinding
 import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.activities.EventActivity
@@ -102,6 +103,10 @@ class PostFragmentDialog : DialogFragment() {
             }
         }
 
+        binding.deletePostButton.setOnClickListener {
+            viewModel.onDeletePost()
+        }
+
         binding.openCommentButton.setOnClickListener {
             requireActivity().supportFragmentManager.let{ fragmentManager ->
                 viewModel.post.value?.id?.let {
@@ -141,10 +146,19 @@ class PostFragmentDialog : DialogFragment() {
                     setUserInfo(it.userInfo)
                 }
 
+                if(Policies.canDeletePost(it))
+                    binding.deletePostButton.visibility = View.VISIBLE
+
                 binding.postCreatedAtText.apply {
                     visibility = View.VISIBLE
                     text = getString(R.string.post_created_at_formatted, PrettyTime().format(it.createdAt))
                 }
+            }
+        }
+
+        viewModel.POST_DELETED.observe(viewLifecycleOwner){
+            if(it){
+                dialog?.dismiss()
             }
         }
 

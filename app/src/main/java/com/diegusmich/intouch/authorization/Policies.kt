@@ -11,7 +11,7 @@ object Policies {
         return event.userInfo.id == AuthProvider.authUser()?.uid && event.startAt.time > Date().time
     }
 
-    fun canEditPost(post: Post.Full) : Boolean{
+    fun canDeletePost(post: Post.Full) : Boolean{
         return post.userInfo.id == AuthProvider.authUser()?.uid
     }
 }

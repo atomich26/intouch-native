@@ -107,7 +107,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.userImageProfile.setOnClickListener {
-            if(viewModel.isAuth.value!! && activityWrappedArg == false){
+            if(viewModel.isAuth.value!!){
                 val mediaPickModalBottomSheet = MediaPickModalBottomSheet.newInstance(viewModel.image.value)
                 requireActivity().supportFragmentManager.let {
                     if (it.findFragmentByTag(MediaPickModalBottomSheet.TAG) == null)
@@ -140,7 +140,7 @@ class ProfileFragment : Fragment() {
                         viewModel.preferences.value?.map { it.name }?.toTypedArray()
                     arguments = bundleOf(
                         PreferencesModalBottomSheet.PREFS_ARRAY to prefsNameArray,
-                        PreferencesModalBottomSheet.CAN_EDIT_ARG to (viewModel.isAuth.value == true && activityWrappedArg == false)
+                        PreferencesModalBottomSheet.CAN_EDIT_ARG to (viewModel.isAuth.value == true)
                     )
                 }
                 val fragmentManager = requireActivity().supportFragmentManager
@@ -354,7 +354,7 @@ class ProfileFragment : Fragment() {
 
     private fun loadProfileImage(imagePath: String, isAuth: Boolean) {
         binding.userImageProfileOverlay.visibility =
-            if (!activityWrappedArg!! && isAuth) View.VISIBLE else View.GONE
+            if (isAuth) View.VISIBLE else View.GONE
         binding.userImageProfileContent.load(CloudImageProvider.USERS.imageRef(imagePath))
     }
 

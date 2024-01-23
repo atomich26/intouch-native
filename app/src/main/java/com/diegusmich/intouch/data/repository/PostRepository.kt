@@ -48,7 +48,8 @@ object PostRepository : FirestoreCollection<PostWrapper, PostWrapper.Factory>(Po
         true
     }
 
-    suspend fun deletePost() = withContext(Dispatchers.IO) {
-        //TODO()
+    suspend fun deletePost(postId : String) = withContext(Dispatchers.IO) {
+        Firebase.functions.getHttpsCallable("posts-delete").call(mapOf("postId" to postId)).await()
+        true
     }
 }
