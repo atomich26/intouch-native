@@ -105,12 +105,12 @@ class UpsertUserViewModel : StateViewModel() {
     //I red hot chili peppers aiutano a risolvere bug
     fun onUpdateEmail(emailText: String) {
         if(!editMode.value!!)
-            updateFormInput(_email, emailText.trim(), emailText.isNotBlank(), null)
+            updateFormInput(_email, emailText, emailText.isNotBlank(), null)
     }
 
     fun onUpdatePassword(passwordText: String) {
         if(!editMode.value!!)
-            updateFormInput(_password, passwordText.trim(), passwordText.isNotBlank(), null)
+            updateFormInput(_password, passwordText, passwordText.isNotBlank(), null)
     }
 
     private fun <T> updateFormInput(input: MutableLiveData<FormInputState<T>>, newValue: T, rule: Boolean, currentValue: T?){
@@ -128,7 +128,7 @@ class UpsertUserViewModel : StateViewModel() {
 
     fun onUpdateBiography(biographyText: String) {
         if(editMode.value!!)
-            updateFormInput(_biography, biographyText.trim(), biographyText.isNotBlank(), userCurrentData?.biography)
+            updateFormInput(_biography, biographyText, biographyText.isNotBlank(), userCurrentData?.biography)
     }
 
     fun onUpdateDistanceRange(distanceRange: Float) {
@@ -137,11 +137,11 @@ class UpsertUserViewModel : StateViewModel() {
     }
 
     fun onUpdateName(nameText: String) {
-        updateFormInput(_name, nameText.trim(), nameText.isNotBlank(), userCurrentData?.name)
+        updateFormInput(_name, nameText, nameText.isNotBlank(), userCurrentData?.name)
     }
 
     fun onUpdateUsername(usernameText: String) {
-        updateFormInput(_username, usernameText.trim(), usernameText.isNotBlank(), userCurrentData?.username)
+        updateFormInput(_username, usernameText, usernameText.isNotBlank(), userCurrentData?.username)
     }
 
     fun onUpdateBirthdate(timestamp: Long) {
