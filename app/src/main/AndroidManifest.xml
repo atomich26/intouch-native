@@ -64,6 +64,7 @@
             android:name=".ui.activities.EventActivity"
             android:exported="false"
             android:screenOrientation="portrait"
+            android:parentActivityName=".ui.activities.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.activities.UserFriendsActivity"
@@ -89,6 +90,7 @@
             android:name=".ui.activities.UserActivity"
             android:exported="false"
             android:screenOrientation="portrait"
+            android:parentActivityName=".ui.activities.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.activities.MainActivity"
