@@ -50,8 +50,8 @@ object UserRepository : FirestoreCollection<UserWrapper, UserWrapper.Factory>(Us
         true
     }
 
-    suspend fun upsertUser(data : Map<String, Any?>) = withContext(Dispatchers.IO){
-        Firebase.functions.getHttpsCallable("user-upsert").call(data).await()
+    suspend fun upsertUser(data : Map<String, Any?>) : HttpsCallableResult = withContext(Dispatchers.IO){
+        Firebase.functions.getHttpsCallable("users-upsert").call(data).await()
     }
 
     suspend fun userFriends(id: String): List<User.Preview> = withContext(Dispatchers.IO) {

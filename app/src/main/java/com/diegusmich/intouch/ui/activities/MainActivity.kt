@@ -1,6 +1,7 @@
 package com.diegusmich.intouch.ui.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -8,10 +9,12 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
@@ -23,6 +26,7 @@ import com.diegusmich.intouch.ui.fragments.CategoriesFragment
 import com.diegusmich.intouch.ui.fragments.FeedFragment
 import com.diegusmich.intouch.ui.fragments.FriendshipRequestsFragment
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
+import com.diegusmich.intouch.ui.viewmodels.FriendshipRequestViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
@@ -32,8 +36,9 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     val binding get() = _binding!!
 
-    private var _onCameraPicturePicked: ((result: Boolean) -> Unit)? = null
+    val friendshipRequestsViewModel : FriendshipRequestViewModel by viewModels()
 
+    private var _onCameraPicturePicked: ((result: Boolean) -> Unit)? = null
     private lateinit var locationBroadcastReceiver: LocationBroadcasterReceiver
 
     val pickImageFromCamera =
@@ -61,11 +66,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lifecycleScope.launch {
+            val friendshipRequestsFragment = FriendshipRequestsFragment()
             val mainViewPagerAdapter = MainViewPagerAdapter(
                 arrayOf(
                     FeedFragment(),
                     CategoriesFragment(),
-                    FriendshipRequestsFragment(),
+                    friendshipRequestsFragment,
                     ProfileFragment.newInstance(Firebase.auth.currentUser?.uid, false)
                 ), supportFragmentManager, lifecycle
             )
@@ -81,8 +87,13 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
-        createNotificationChannel()
+        friendshipRequestsViewModel.friendshipRequests.observe(this){
+            addFriendshipIconBadge(it.size)
+        }
+
         requestPermission()
+        createNotificationChannels()
+
         binding.mainBottomNavigation.setOnItemSelectedListener {
 
             if (it.itemId == R.id.navigation_create) {
@@ -101,10 +112,24 @@ class MainActivity : AppCompatActivity() {
             binding.mainViewPager.setCurrentItem(pageId, false)
             true
         }
+
+        lifecycleScope.launch {
+            val token = NotificationProvider.getToken()
+            Log.d("FIREBASE_MESSAGING", token.toString())
+        }
     }
 
     fun addOnCameraPicturePickedCallback(callback: (Boolean) -> Unit) {
         _onCameraPicturePicked = callback
+    }
+
+    fun addFriendshipIconBadge(value: Int) {
+        if (value > 0) {
+            val badge =
+                binding.mainBottomNavigation.getOrCreateBadge(R.id.friendshipRequestsFragment)
+            badge.number = value
+        } else
+            binding.mainBottomNavigation.removeBadge(R.id.friendshipRequestsFragment)
     }
 
     private fun requestPermission() {
@@ -130,51 +155,18 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun createNotificationChannel() {
-
-       lifecycleScope.launch {
-           val token = NotificationProvider.getToken()
-           Log.d("FIREBASE_MESSAGING", "mainactivity" + token.toString())
-       }
-       /* NotificationProvider.createChannel(
-            getString(R.string.notification_friendship_ch),
-            getString(R.string.notification_friendship_id),
-            getString(R.string.notification_friendship_desc),
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-
-        NotificationProvider.createChannel(
-            getString(R.string.notification_event_ch),
-            getString(R.string.notification_event_id),
-            getString(R.string.notification_event_desc),
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        NotificationProvider.createChannel(
-            getString(R.string.notification_post_comment_ch),
-            getString(R.string.notification_post_comment_id),
-            getString(R.string.notification_post_comment_desc),
-            NotificationManager.IMPORTANCE_LOW
-        )
-*/
-
-        //TEST
-        val builder =
-            NotificationCompat.Builder(this, getString(R.string.notification_friendship_id))
-                .setSmallIcon(R.drawable.baseline_group_24_white)
-                .setContentTitle("My notification")
-                .setContentText("Hello World!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-
-        with(NotificationManagerCompat.from(this)) {
-            if (ActivityCompat.checkSelfPermission(
-                    this@MainActivity,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return@with
+    private fun createNotificationChannels() {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        sharedPref.getBoolean(getString(R.string.notification_created_pref_key), false).let {
+            if(!it) {
+                NotificationProvider.Channel.FRIENDSHIP.create(this)
+                NotificationProvider.Channel.EVENT.create(this)
+                NotificationProvider.Channel.COMMENT.create(this)
+                with(sharedPref.edit()) {
+                    putBoolean(getString(R.string.notification_created_pref_key), true)
+                    apply()
+                }
             }
-            notify(12, builder.build())
         }
     }
 

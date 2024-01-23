@@ -1,12 +1,9 @@
 package com.diegusmich.intouch.providers
 
-import android.util.Log
-import android.view.KeyEvent.DispatcherState
 import com.diegusmich.intouch.data.repository.UserRepository
 import com.diegusmich.intouch.exceptions.InitFCMTokenFailedException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -17,7 +14,7 @@ object AuthProvider {
 
     fun authUser() = auth.currentUser
 
-    suspend fun logout() = withContext(Dispatchers.IO){
+    suspend fun logout() = withContext(Dispatchers.IO) {
         NotificationProvider.deleteTokenforAuthUser()
         auth.signOut()
     }
@@ -27,13 +24,13 @@ object AuthProvider {
         assignFCMToken()
     }
 
-    suspend fun sendResetPasswordEmail(email: String) = withContext(Dispatchers.IO){
+    suspend fun sendResetPasswordEmail(email: String) = withContext(Dispatchers.IO) {
         auth.sendPasswordResetEmail(email).await()
     }
 
     suspend fun signUp(data: Map<String, Any?>) = withContext(Dispatchers.IO) {
         UserRepository.upsertUser(data)
-        login(data["email"].toString() , data["password"].toString())
+        login(data["email"].toString(), data["password"].toString())
     }
 
     private suspend fun assignFCMToken() = withContext(Dispatchers.IO) {

@@ -45,8 +45,9 @@
 
             <TextView
                 android:id="@+id/friendshipRequestText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:paddingHorizontal="@dimen/materialHorizontalPadding"
                 android:text="@string/user_confirm_friendship_text"
                 android:textSize="14sp"
@@ -155,8 +156,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/showUserPrefButton"
@@ -170,16 +170,42 @@
             android:drawablePadding="5dp"
             app:icon="@drawable/outline_style_24" />
 
-        <Button
-            android:id="@+id/friendButton"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="0dp"
+        <FrameLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:text="@string/user_add_friendship"
-            android:textStyle="bold"
-            app:icon="@drawable/baseline_person_add_alt_24" />
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/addFriendButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="gone"
+                android:text="@string/user_add_friendship"
+                android:textStyle="bold"
+                app:icon="@drawable/baseline_person_add_alt_24" />
+            <Button
+                android:id="@+id/removeFriendButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="gone"
+                android:text="@string/user_remove_friendship"
+                android:textStyle="bold"
+                app:icon="@drawable/baseline_person_remove_24" />
+            <Button
+                android:id="@+id/editProfileButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="gone"
+                android:text="@string/edit_profile_action"
+                android:textStyle="bold"
+                app:icon="@drawable/baseline_edit_24" />
+
+        </FrameLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -19,11 +19,13 @@
             android:id="@+id/nestedScroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:fillViewport="true">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/notificationsGridView"
+                android:id="@+id/friendshipRequestListView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:paddingHorizontal="10dp"/>
         </androidx.core.widget.NestedScrollView>
     </com.diegusmich.intouch.ui.views.IntouchSwipeRefreshLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

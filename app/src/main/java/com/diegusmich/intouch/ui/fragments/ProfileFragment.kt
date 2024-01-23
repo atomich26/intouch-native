@@ -16,7 +16,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
+import androidx.core.view.get
 import androidx.core.view.isEmpty
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
@@ -184,6 +186,31 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        binding.addFriendButton.setOnClickListener {
+            viewModel.onSendFriendshipRequest()
+        }
+
+        binding.removeFriendButton.setOnClickListener {
+            viewModel.onRemoveFriend()
+        }
+
+        binding.acceptFriendshipButton.setOnClickListener {
+            viewModel.onHandleFriendshipRequest(true)
+        }
+
+        binding.denyFriendshipButton.setOnClickListener {
+            viewModel.onHandleFriendshipRequest(false)
+        }
+
+        binding.editProfileButton.setOnClickListener {
+            requireContext().startActivity(
+                Intent(
+                    requireContext(),
+                    EditUserActivity::class.java
+                )
+            )
+        }
+
         binding.userPostsGridView.layoutManager =
             GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
 
@@ -226,33 +253,43 @@ class ProfileFragment : Fragment() {
 
         viewModel.isAuth.observe(viewLifecycleOwner) {
             if (it) {
-                binding.userProfileButtonGroup.visibility = View.VISIBLE
                 if (toolbar.menu.isEmpty() && activityWrappedArg == false)
                     setAuthToolbarMenu()
-            } else {
-                binding.userProfileButtonGroup.visibility = View.GONE
             }
         }
 
         viewModel.friendship.observe(viewLifecycleOwner) {
             it?.let {
                 when (it.status) {
+                    is Friendship.Status.AUTH -> {
+                        binding.editProfileButton.visibility = View.VISIBLE
+                    }
                     is Friendship.Status.PENDING -> {
-                        val isVisible = if (it.status.isActor) View.GONE else View.VISIBLE
-                        binding.friendshipRequestBanner.visibility = isVisible
+                        val bannerVisibility = if (it.status.isActor) View.GONE else View.VISIBLE
+                        binding.friendshipRequestBanner.visibility = bannerVisibility
+                        binding.addFriendButton.apply {
+                            visibility = View.VISIBLE
+                            isEnabled = false
+                            if(it.status.isActor)
+                                text = getString(R.string.pending_request_button)
+                        }
+                        binding.removeFriendButton.visibility  = View.GONE
                     }
 
                     is Friendship.Status.FRIEND -> {
-                        binding.userProfileButtonGroup.visibility = View.VISIBLE
+                        binding.friendshipRequestBanner.visibility = View.GONE
+                        binding.removeFriendButton.visibility  = View.VISIBLE
+                        binding.addFriendButton.visibility = View.GONE
                     }
 
                     is Friendship.Status.NONE -> {
                         binding.friendshipRequestBanner.visibility = View.GONE
-                        binding.userProfileButtonGroup.visibility = View.VISIBLE
-                    }
-
-                    else -> {
-
+                        binding.addFriendButton.apply {
+                            visibility = View.VISIBLE
+                            isEnabled = true
+                            text = getString(R.string.user_add_friendship)
+                        }
+                        binding.removeFriendButton.visibility = View.GONE
                     }
                 }
             }
@@ -286,6 +323,7 @@ class ProfileFragment : Fragment() {
         viewModel.LOADING.observe(viewLifecycleOwner) {
             binding.swipeRefreshLayout.isRefreshingDelayed(viewLifecycleOwner, it, 0)
             binding.showUserPrefButton.isEnabled = !it
+            binding.removeFriendButton.isEnabled = !it
         }
 
         viewModel.ERROR.observe(viewLifecycleOwner) {
@@ -303,16 +341,6 @@ class ProfileFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.editUserMenuOption -> {
-                        requireContext().startActivity(
-                            Intent(
-                                requireContext(),
-                                EditUserActivity::class.java
-                            )
-                        )
-                        true
-                    }
-
                     R.id.logoutUserMenuOption -> {
                         viewModel.onLogout()
                         false

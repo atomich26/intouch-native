@@ -13,7 +13,6 @@
     <string name="user_friends_activity">Amici</string>
     <string name="event_joined_activity">Eventi partecipati</string>
     <string name="event_created_activity">Eventi creati</string>
-
     <string name="user_edit_title">Modifica profilo</string>
     <string name="action_login_short">Accedi</string>
     <string name="action_create_account_short">Registrati</string>
@@ -82,7 +81,9 @@
     <string name="image_cache_path_name">content_images</string>
     <string name="post_created_at_formatted">\u25CF  %s</string>
     <string name="post_carousel_counter"> %1$d/%2$d</string>
+    <string name="pending_request_button">Richiesta inviata</string>
     <string name="comment_input_hint">Scrivi un commento…</string>
+    <string name="friendship_request_message"><![CDATA[<big><b>%s</b></big> vuole aggiungerti agli amici!]]></string>
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>
         <item quantity="other">Restano %d posti disponibili.</item>
@@ -136,11 +137,18 @@
     <string name="notification_friendship_ch">Richieste di amicizia</string>
     <string name="notification_friendship_id">INTOUCH_FRIENDSHIP_NOTIFICATION</string>
     <string name="notification_friendship_desc">Ricevi avvisi sullo stato delle richieste di amicizia</string>
+    <string name="notification_friendship_title">Richiesta d\'amicizia</string>
+    <string name="notification_friendship_sent_content">%s ha chiesto di essere tuo amico</string>
+    <string name="notification_friendship_accepted_content">%s ha accettato la tua richiesta d\'amicizia</string>
     <string name="notification_event_ch">Eventi</string>
     <string name="notification_event_id">INTOUCH_EVENT_NOTIFICATION</string>
     <string name="notification_event_desc">Ricevi avvisi quando i dettagli di un evento che segui cambiano</string>
+    <string name="notification_event_title">Evento aggiornato</string>
+    <string name="notification_event_content">L\'evento %s è stato aggiornato</string>
     <string name="notification_post_comment_ch">Commenti dei post</string>
     <string name="notification_post_comment_id">INTOUCH_POST_COMMENT_NOTIFICATION</string>
     <string name="notification_post_comment_desc">Notifica quando un utente commenta un post pubblicato da te</string>
-
+    <string name="notification_post_comment_title">Commento</string>
+    <string name="notification_post_comment_content">%s ha pubblicato un commento al tuo post</string>
+    <string name="notification_created_pref_key">notification_channels_created</string>
 </resources>
