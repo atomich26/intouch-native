@@ -4,17 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
@@ -36,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     val binding get() = _binding!!
 
-    val friendshipRequestsViewModel : FriendshipRequestViewModel by viewModels()
+    val friendshipRequestViewModel: FriendshipRequestViewModel by viewModels()
 
     private var _onCameraPicturePicked: ((result: Boolean) -> Unit)? = null
     private lateinit var locationBroadcastReceiver: LocationBroadcasterReceiver
@@ -65,32 +60,8 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        lifecycleScope.launch {
-            val friendshipRequestsFragment = FriendshipRequestsFragment()
-            val mainViewPagerAdapter = MainViewPagerAdapter(
-                arrayOf(
-                    FeedFragment(),
-                    CategoriesFragment(),
-                    friendshipRequestsFragment,
-                    ProfileFragment.newInstance(Firebase.auth.currentUser?.uid, false)
-                ), supportFragmentManager, lifecycle
-            )
-
-            binding.mainViewPager.adapter = mainViewPagerAdapter
-            binding.mainViewPager.registerOnPageChangeCallback(object :
-                ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    val fixedPosition = if (position > 1) position + 1 else position
-                    binding.mainBottomNavigation.menu.getItem(fixedPosition).isChecked = true
-                }
-            })
-        }
-
-        friendshipRequestsViewModel.friendshipRequests.observe(this){
-            addFriendshipIconBadge(it.size)
-        }
-
+        initMainFragments()
+        listenForFriendshipUpdate()
         requestPermission()
         createNotificationChannels()
 
@@ -119,11 +90,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun listenForFriendshipUpdate(){
+        friendshipRequestViewModel.listenForFriendshipRequestsUpdate()
+        friendshipRequestViewModel.friendshipRequests.observe(this) {
+            addFriendshipIconBadge(it.size)
+        }
+    }
+
+    private fun initMainFragments() = lifecycleScope.launch{
+        val friendshipRequestsFragment = FriendshipRequestsFragment()
+        val mainViewPagerAdapter = MainViewPagerAdapter(
+            arrayOf(
+                FeedFragment(),
+                CategoriesFragment(),
+                friendshipRequestsFragment,
+                ProfileFragment.newInstance(Firebase.auth.currentUser?.uid, false)
+            ), supportFragmentManager, lifecycle
+        )
+
+        binding.mainViewPager.adapter = mainViewPagerAdapter
+        binding.mainViewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val fixedPosition = if (position > 1) position + 1 else position
+                binding.mainBottomNavigation.menu.getItem(fixedPosition).isChecked = true
+            }
+        })
+    }
+
     fun addOnCameraPicturePickedCallback(callback: (Boolean) -> Unit) {
         _onCameraPicturePicked = callback
     }
 
-    fun addFriendshipIconBadge(value: Int) {
+    private fun addFriendshipIconBadge(value: Int) {
         if (value > 0) {
             val badge =
                 binding.mainBottomNavigation.getOrCreateBadge(R.id.friendshipRequestsFragment)
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
     private fun createNotificationChannels() {
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
         sharedPref.getBoolean(getString(R.string.notification_created_pref_key), false).let {
-            if(!it) {
+            if (!it) {
                 NotificationProvider.Channel.FRIENDSHIP.create(this)
                 NotificationProvider.Channel.EVENT.create(this)
                 NotificationProvider.Channel.COMMENT.create(this)

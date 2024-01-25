@@ -24,21 +24,19 @@ object FriendshipRepository :
     override val collectionRef: CollectionReference =
         Firebase.firestore.collection("friendship_requests")
 
-    fun runOnFriendshipUpdate(callback: (QuerySnapshot?, FirebaseFirestoreException?) -> Unit): ListenerRegistration {
+    fun runOnFriendshipRequestsUpdate(listener: (QuerySnapshot?, FirebaseFirestoreException?) -> Unit): ListenerRegistration? {
         return collectionRef.whereEqualTo("notifier", AuthProvider.authUser()?.uid!!)
             .addSnapshotListener { snapshots, e ->
-                callback(snapshots, e)
+                listener(snapshots, e)
             }
     }
 
-    suspend fun getAllFriendshipRequests() = withContext(Dispatchers.IO) {
-        AuthProvider.authUser()?.uid.let { uid ->
-            withQuery {
-                collectionRef.whereEqualTo("notifier", uid)
-            }.mapNotNull { friendshipWrapper ->
-                UserRepository.getDoc(friendshipWrapper.actor)?.let { userWrapper ->
-                    FriendshipRequest(friendshipWrapper, userWrapper)
-                }
+    suspend fun getAllFriendshipWithAuthUser() = withContext(Dispatchers.IO) {
+        withQuery {
+            collectionRef.whereEqualTo("notifier", AuthProvider.authUser()?.uid!!)
+        }.mapNotNull { friendshipWrapper ->
+            UserRepository.getDoc(friendshipWrapper.actor)?.let { userWrapper ->
+                FriendshipRequest(friendshipWrapper, userWrapper)
             }
         }
     }
@@ -72,18 +70,21 @@ object FriendshipRepository :
         }
     }
 
-    suspend fun sendRequest(userId: String) : HttpsCallableResult? = withContext(Dispatchers.IO) {
-        Firebase.functions.getHttpsCallable("friendships-send")
-            .call(mapOf("userId" to userId)).await()
-    }
+    suspend fun sendRequest(userId: String): HttpsCallableResult? =
+        withContext(Dispatchers.IO) {
+            Firebase.functions.getHttpsCallable("friendships-send")
+                .call(mapOf("userId" to userId)).await()
+        }
 
-    suspend fun handleRequest(requestId: String, confirm: Boolean) : HttpsCallableResult? = withContext(Dispatchers.IO) {
-        Firebase.functions.getHttpsCallable("friendships-handle")
-            .call(mapOf("requestId" to requestId, "result" to confirm)).await()
-    }
+    suspend fun handleRequest(requestId: String, confirm: Boolean): HttpsCallableResult? =
+        withContext(Dispatchers.IO) {
+            Firebase.functions.getHttpsCallable("friendships-handle")
+                .call(mapOf("requestId" to requestId, "result" to confirm)).await()
+        }
 
-    suspend fun removeFriendship(userId: String): HttpsCallableResult? = withContext(Dispatchers.IO) {
-        Firebase.functions.getHttpsCallable("friendships-remove")
-            .call(mapOf("userId" to userId)).await()
-    }
+    suspend fun removeFriendship(userId: String): HttpsCallableResult? =
+        withContext(Dispatchers.IO) {
+            Firebase.functions.getHttpsCallable("friendships-remove")
+                .call(mapOf("userId" to userId)).await()
+        }
 }

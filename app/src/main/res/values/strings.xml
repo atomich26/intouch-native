@@ -148,7 +148,7 @@
     <string name="notification_post_comment_ch">Commenti dei post</string>
     <string name="notification_post_comment_id">INTOUCH_POST_COMMENT_NOTIFICATION</string>
     <string name="notification_post_comment_desc">Notifica quando un utente commenta un post pubblicato da te</string>
-    <string name="notification_post_comment_title">Commento</string>
-    <string name="notification_post_comment_content">%s ha pubblicato un commento al tuo post</string>
+    <string name="notification_post_comment_title">%s ha pubblicato un commento al post</string>
+    <string name="notification_post_comment_content">%s</string>
     <string name="notification_created_pref_key">notification_channels_created</string>
 </resources>

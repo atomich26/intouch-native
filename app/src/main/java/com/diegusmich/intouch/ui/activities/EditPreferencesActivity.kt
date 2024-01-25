@@ -42,12 +42,10 @@ class EditPreferencesActivity : AppCompatActivity() {
 
         viewModel.editMode.value?.let{
             if(it){
-                binding.skipCategoriesButton.visibility = View.INVISIBLE
-                binding.skipCategoriesButton.text = getString(R.string.action_save_changes_form)
-
                 binding.descriptionAddCategories.visibility = View.GONE
                 binding.titleAddCategories.visibility = View.GONE
-
+                binding.saveCategoriesButton.text = getString(R.string.action_save_changes_form)
+                binding.skipCategoriesButton.visibility = View.INVISIBLE
                 binding.appBarLayout.materialAppBarLayout.visibility = View.VISIBLE
                 binding.appBarLayout.materialToolbar.apply {
                     title = getString(R.string.edit_preferences)
@@ -56,20 +54,20 @@ class EditPreferencesActivity : AppCompatActivity() {
                 }
             }
             else{
+                binding.saveCategoriesButton.text = getString(R.string.skip_text)
                 binding.skipCategoriesButton.visibility = View.VISIBLE
-                binding.skipCategoriesButton.text = getString(R.string.skip_text)
                 binding.descriptionAddCategories.visibility = View.VISIBLE
                 binding.titleAddCategories.visibility = View.VISIBLE
                 binding.appBarLayout.materialAppBarLayout.visibility = View.GONE
             }
         }
 
-        binding.filtersCategoryGroup.onCheckedChange {
-            viewModel.onUpdateCheckedCategories(it.checkedFilters())
-        }
-
         binding.skipCategoriesButton.setOnClickListener {
             startMainActivity()
+        }
+
+        binding.filtersCategoryGroup.onCheckedChange {
+            viewModel.onUpdateCheckedCategories(it.checkedFilters())
         }
 
         binding.saveCategoriesButton.setOnClickListener {
@@ -92,14 +90,17 @@ class EditPreferencesActivity : AppCompatActivity() {
 
         viewModel.LOADING.observe(this) {
             progressBar.visible(it)
-            binding.saveCategoriesButton.isEnabled =
-                !it && viewModel.checkedCategories.value!!.isNotEmpty()
+            binding.saveCategoriesButton.isEnabled = !it && viewModel.EDITED.value!!
         }
 
         viewModel.ERROR.observe(this) {
             if (it != null)
                 Toast.makeText(this@EditPreferencesActivity, getString(it), Toast.LENGTH_SHORT)
                     .show()
+        }
+
+        viewModel.EDITED.observe(this){
+            binding.saveCategoriesButton.isEnabled = it
         }
 
         viewModel.checkedCategories.observe(this) {

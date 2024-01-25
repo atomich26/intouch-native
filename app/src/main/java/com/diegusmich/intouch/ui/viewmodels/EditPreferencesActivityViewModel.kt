@@ -19,11 +19,16 @@ class EditPreferencesActivityViewModel : StateViewModel() {
     private val _PREFERENCES_SAVED = MutableLiveData(false)
     val PREFERENCES_SAVED: LiveData<Boolean> = _PREFERENCES_SAVED
 
+    private val _EDITED = MutableLiveData(false)
+    val EDITED : LiveData<Boolean> = _EDITED
+
     private val _editMode = MutableLiveData(false)
     val editMode: LiveData<Boolean> = _editMode
 
     private val _categories = MutableLiveData<List<Category>>(mutableListOf())
     val categories: LiveData<List<Category>> = _categories
+
+    private val _currentCheckedCategories = MutableLiveData<List<String>>(mutableListOf())
 
     private val _checkedCategories = MutableLiveData<List<String>>(listOf())
     val checkedCategories: LiveData<List<String>> = _checkedCategories
@@ -51,6 +56,8 @@ class EditPreferencesActivityViewModel : StateViewModel() {
                 _checkedCategories.value = CategoryRepository.getAuthUserCategories().map {
                     it.id
                 }
+                _currentCheckedCategories.value = _checkedCategories.value
+
                 if (this.isEmpty()) {
                     updateState(_ERROR, R.string.unable_to_update_error)
                     NetworkProvider.addOnNetworkAvailableObserver(this@EditPreferencesActivityViewModel.retryOnNetworkAvailable)
@@ -67,14 +74,14 @@ class EditPreferencesActivityViewModel : StateViewModel() {
 
     fun onUpdateCheckedCategories(checkedIds: List<String>) {
         _checkedCategories.value = checkedIds
+        _EDITED.value = _checkedCategories.value != _currentCheckedCategories.value
     }
 
     fun onSaveCategories() = viewModelScope.launch {
         updateState(_LOADING, true)
 
-        if (checkedCategories.value?.size == categories.value?.size) {
-            return@launch updateState(_PREFERENCES_SAVED, true)
-        }
+        if(_EDITED.value == false)
+            return@launch
 
         try {
             UserRepository.saveAuthUserPreferences(mapOf("preferences" to checkedCategories.value))

@@ -2,6 +2,7 @@ package com.diegusmich.intouch.providers
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -95,7 +96,7 @@ class NotificationProvider : FirebaseMessagingService() {
                     setSmallIcon(type.smallIcon)
                     setContentIntent(resultPendingIntent)
                     setContentTitle(ctx.getString(type.contentTitle))
-                    setContentText(ctx.getString(type.contentText, actorUsername))
+                    setStyle(NotificationCompat.BigTextStyle().bigText(ctx.getString(type.contentText, actorUsername)))
                     priority = type.priority
                     setAutoCancel(true)
                 }.build()

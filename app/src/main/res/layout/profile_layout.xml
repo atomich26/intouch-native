@@ -166,6 +166,7 @@
             android:layout_marginStart="5dp"
             android:paddingHorizontal="20dp"
             android:text="@string/user_pref_button"
+            android:enabled="false"
             android:textStyle="bold"
             android:drawablePadding="5dp"
             app:icon="@drawable/outline_style_24" />

@@ -36,12 +36,12 @@ class FriendshipRequestsFragment : Fragment() {
         _binding = FragmentFriendshipRequestsBinding.inflate(layoutInflater, container, false)
         toolbar = binding.appBarLayout.materialToolbar
 
+        viewModel = (requireActivity() as MainActivity).friendshipRequestViewModel
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = (requireActivity() as MainActivity).friendshipRequestsViewModel
 
         toolbar.title = getString(R.string.friendship_requests_title)
 
@@ -61,7 +61,6 @@ class FriendshipRequestsFragment : Fragment() {
             vm.friendshipRequests.observe(viewLifecycleOwner){
                 if(it != null){
                     (binding.friendshipRequestListView.adapter as FriendshipRequestAdapter).replace(it)
-                    (requireActivity() as MainActivity).addFriendshipIconBadge(it.size)
                 }
             }
 
