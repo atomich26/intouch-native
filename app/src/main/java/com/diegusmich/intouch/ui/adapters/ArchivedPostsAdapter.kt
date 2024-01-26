@@ -31,7 +31,7 @@ class ArchivedPostsAdapter(collection: List<Post.ArchivePreview>) :
         holder.bind(data[position])
     }
 
-    class ArchivedPostViewHolder(itemView: View, private val onClickListener : ((item : Post.ArchivePreview) -> Unit)? = null) : ViewHolder<Post.ArchivePreview>(itemView) {
+    class ArchivedPostViewHolder(itemView: View) : ViewHolder<Post.ArchivePreview>(itemView) {
         override fun bind(item: Post.ArchivePreview) {
             val imgRef = CloudImageProvider.POSTS.imageRef(item.thumbnail)
             itemView.findViewById<GlideImageView>(R.id.postPreviewProfileGridItem).load(imgRef)

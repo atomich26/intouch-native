@@ -13,6 +13,5 @@ data class CommentWrapper(val id: String, val userId: String, val content: Strin
                 createdAt = documentSnapshot.getDate("createdAt")!!
             )
         }
-
     }
 }

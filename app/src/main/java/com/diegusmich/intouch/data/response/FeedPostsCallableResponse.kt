@@ -3,6 +3,7 @@ package com.diegusmich.intouch.data.response
 import com.diegusmich.intouch.data.wrapper.FeedPostWrapper
 import com.google.firebase.Timestamp
 import com.google.firebase.functions.HttpsCallableResult
+import java.util.Date
 
 class FeedPostsCallableResponse(result: HttpsCallableResult): HttpsCallableResponseParser<List<FeedPostWrapper>>() {
 
@@ -13,9 +14,8 @@ class FeedPostsCallableResponse(result: HttpsCallableResult): HttpsCallableRespo
             this.map {
                 FeedPostWrapper(
                     id = it["id"] as String,
-                    viewed = it["viewed"] as Boolean,
                     userId = it["userId"] as String,
-                    createdAt = (it["createdAt"] as Timestamp).toDate()
+                    createdAt = Date(it["createdAt"] as Long)
                 )
             }
         }

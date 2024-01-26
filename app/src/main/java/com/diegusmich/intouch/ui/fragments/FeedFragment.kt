@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,16 +40,36 @@ class FeedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbar.title = getString(R.string.feed_title)
 
-        binding.postsFeedListView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        val fakeData = mutableListOf<Post.FeedPreview>()
-
-        for (i in 0..10){
-            fakeData.add(Post.FeedPreview("sada", false,
-                User.Preview("sadas", false,  "sdasda", "adasdasd", "sadasd")))
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.onLoadMainFeed(true)
         }
-        binding.postsFeedListView.adapter = PostFeedAdapter(fakeData)
 
-        viewModel.load()
+        binding.postsFeedListView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.postsFeedListView.adapter = PostFeedAdapter(mutableListOf())
+
+        viewModel.onLoadMainFeed()
+        observeData()
+    }
+
+    private fun observeData(){
+        viewModel.LOADING.observe(viewLifecycleOwner){
+            binding.swipeRefreshLayout.isRefreshing = it
+        }
+
+        viewModel.postFeed.observe(viewLifecycleOwner){
+            it?.let {
+                binding.postsFeedListView.apply {
+                    visibility = if(it.isEmpty()) View.GONE else View.VISIBLE
+                    (adapter as PostFeedAdapter).replace(it)
+                }
+            }
+        }
+
+        viewModel.ERROR.observe(viewLifecycleOwner){
+            it?.let {
+                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onResume() {

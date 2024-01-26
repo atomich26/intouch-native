@@ -40,6 +40,7 @@ class PostFragmentDialog : DialogFragment() {
     private val binding get() = _binding!!
 
     private var postId : String? = null
+    private var fromFeed : Boolean = false
 
     private val viewModel : PostViewModel by viewModels()
 
@@ -217,7 +218,6 @@ class PostFragmentDialog : DialogFragment() {
 
     companion object{
         const val POST_ID_ARG = "postId"
-        const val DELETED = "isDeleted"
 
         @JvmStatic
         fun newInstance(postId: String?) : PostFragmentDialog {

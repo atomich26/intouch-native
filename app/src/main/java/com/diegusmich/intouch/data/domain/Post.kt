@@ -32,12 +32,12 @@ sealed interface Post {
 
     data class FeedPreview(
         val id: String,
-        val viewed: Boolean,
+        val isOld: Boolean,
         val userInfo: User.Preview
     ) : Post {
         constructor(feedPostWrapper: FeedPostWrapper, userWrapper: UserWrapper) : this(
             id = feedPostWrapper.id,
-            viewed = feedPostWrapper.viewed,
+            isOld = feedPostWrapper.createdAt.time < Date().time - (24 * 60 * 60 * 1000),
             userInfo = User.Preview(userWrapper)
         )
     }

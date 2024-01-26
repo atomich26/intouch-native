@@ -14,7 +14,7 @@ class PostFeedView(ctx: Context) : LinearLayoutCompat(ctx) {
         inflate(ctx, R.layout.post_feed_preview, this)
     }
 
-    fun setViewedState(state: Boolean){
+    fun setIsOldState(state: Boolean){
         val colorId = if(state) R.color.md_theme_light_outline else R.color.seed
         findViewById<GlideImageView>(R.id.postFeedPreviewUserAvatar).setStrokeColorResource(colorId)
     }

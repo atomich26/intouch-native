@@ -48,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLength="@integer/comment_length"
+                android:singleLine="true"
                 android:hint="@string/comment_input_hint"
                 android:background="@android:color/transparent"/>
         </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
