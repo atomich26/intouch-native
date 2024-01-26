@@ -3,6 +3,7 @@ package com.diegusmich.intouch.ui.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Comment
 import com.diegusmich.intouch.data.repository.PostRepository
 import com.diegusmich.intouch.ui.views.form.FormInputLayout
@@ -35,7 +36,7 @@ class CommentsViewModel : StateViewModel() {
                 updateState(_CONTENT_LOADED, true)
             }
         }catch (e : Exception){
-            updateState(_ERROR, FirebaseExceptionUtil.localize(e))
+            updateState(_ERROR, R.string.firebaseNetworkException)
         }
     }
 
@@ -54,11 +55,11 @@ class CommentsViewModel : StateViewModel() {
                     PostRepository.addComment(postId, commentText.value?.inputValue.toString())
                     updateState(_COMMENT_ADDED, true)
                     onUpdateCommentText("")
+                    onLoadComments()
                 }
             }catch (e : Exception){
-                updateState(_ERROR, FirebaseExceptionUtil.localize(e))
+                updateState(_ERROR, R.string.firebaseNetworkException)
             }
-            onLoadComments()
         }
     }
 }

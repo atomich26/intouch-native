@@ -67,13 +67,13 @@ object PostRepository : FirestoreCollection<PostWrapper, PostWrapper.Factory>(Po
     }
 
     suspend fun addComment(postId : String, content: String) = withContext(Dispatchers.IO){
-        collectionRef.document(postId).collection("comments").add(
-            mapOf(
+        Firebase.firestore.runTransaction {
+            it.set(collectionRef.document(postId).collection("comments").document(),mapOf(
                 "userId" to AuthProvider.authUser()?.uid.toString(),
                 "content" to content,
                 "createdAt" to Date()
-            )
-        )
+            ))
+        }.await()
     }
 
     suspend fun deletePost(postId : String) = withContext(Dispatchers.IO) {
