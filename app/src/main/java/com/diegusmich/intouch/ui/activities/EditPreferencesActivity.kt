@@ -54,7 +54,7 @@ class EditPreferencesActivity : AppCompatActivity() {
                 }
             }
             else{
-                binding.saveCategoriesButton.text = getString(R.string.skip_text)
+                binding.saveCategoriesButton.text = getString(R.string.continue_text)
                 binding.skipCategoriesButton.visibility = View.VISIBLE
                 binding.descriptionAddCategories.visibility = View.VISIBLE
                 binding.titleAddCategories.visibility = View.VISIBLE
