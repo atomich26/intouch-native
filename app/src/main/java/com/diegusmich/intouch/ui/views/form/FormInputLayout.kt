@@ -17,9 +17,11 @@ abstract class FormInputLayout<T>(ctx : Context, attrs: AttributeSet) : TextInpu
                     editText?.setText(valueToText, TextView.BufferType.EDITABLE)
             }
         }
-        state.error?.let {
+        if(state.error != null){
             this@FormInputLayout.error = context.getString(state.error)
         }
+        else
+            this@FormInputLayout.error = null
     }
 
     data class FormInputState<T>(

@@ -115,7 +115,7 @@ class UpsertUserViewModel : StateViewModel() {
 
     private fun <T> updateFormInput(input: MutableLiveData<FormInputState<T>>, newValue: T, rule: Boolean, currentValue: T?){
         input.apply {
-            value = value?.copy(inputValue = newValue, isValid = rule)
+            value = value?.copy(inputValue = newValue, isValid = rule, error = null)
         }
 
         if(newValue?.equals(currentValue) == false){

@@ -142,7 +142,7 @@ class UpsertUserFragment : Fragment() {
         }
 
         viewModel.email.observe(viewLifecycleOwner) {
-            if(viewModel.editMode.value!!)
+            if(!viewModel.editMode.value!!)
                 binding.form.userFormEmailInputLayout.updateState(it)
         }
 
@@ -152,7 +152,7 @@ class UpsertUserFragment : Fragment() {
         }
 
         viewModel.password.observe(viewLifecycleOwner) {
-            if(viewModel.editMode.value!!)
+            if(!viewModel.editMode.value!!)
                 binding.form.userFormPasswordInputLayout.updateState(it)
         }
 
