@@ -31,6 +31,7 @@ import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.FullScreenCarouselStrategy
 import com.google.android.material.carousel.HeroCarouselStrategy
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.ocpsoft.prettytime.PrettyTime
 
 class PostFragmentDialog : DialogFragment() {
@@ -104,7 +105,17 @@ class PostFragmentDialog : DialogFragment() {
         }
 
         binding.deletePostButton.setOnClickListener {
-            viewModel.onDeletePost()
+            MaterialAlertDialogBuilder(requireContext()).apply {
+                setTitle(resources.getString(R.string.warning_dialog_title))
+                setMessage(resources.getString(R.string.delete_post_dialog_text))
+                setCancelable(true)
+                setNeutralButton(resources.getString(R.string.dialog_abort)) { dialog, which ->
+                    dialog.dismiss()
+                }
+                setPositiveButton(resources.getString(R.string.dialog_delete_confirm)) { dialog, which ->
+                    viewModel.onDeletePost()
+                }
+            }.show()
         }
 
         binding.openCommentButton.setOnClickListener {
@@ -206,6 +217,7 @@ class PostFragmentDialog : DialogFragment() {
 
     companion object{
         const val POST_ID_ARG = "postId"
+        const val DELETED = "isDeleted"
 
         @JvmStatic
         fun newInstance(postId: String?) : PostFragmentDialog {

@@ -15,7 +15,7 @@ class PostImagesCarouselAdapter(images: List<StorageReference>) : MutableAdapter
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder<StorageReference> {
+    ): PostImagesCarouselViewHolder {
         val imageView = LayoutInflater.from(parent.context).inflate(R.layout.post_image_carousel_item, parent, false)
         return PostImagesCarouselViewHolder(imageView)
     }

@@ -12,6 +12,7 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Post
 import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.fragments.PostFragmentDialog
+import com.diegusmich.intouch.ui.fragments.ProfileFragment
 import com.diegusmich.intouch.ui.views.GlideImageView
 import com.diegusmich.intouch.utils.TimeUtil
 
@@ -30,7 +31,7 @@ class ArchivedPostsAdapter(collection: List<Post.ArchivePreview>) :
         holder.bind(data[position])
     }
 
-    class ArchivedPostViewHolder(itemView: View) : ViewHolder<Post.ArchivePreview>(itemView) {
+    class ArchivedPostViewHolder(itemView: View, private val onClickListener : ((item : Post.ArchivePreview) -> Unit)? = null) : ViewHolder<Post.ArchivePreview>(itemView) {
         override fun bind(item: Post.ArchivePreview) {
             val imgRef = CloudImageProvider.POSTS.imageRef(item.thumbnail)
             itemView.findViewById<GlideImageView>(R.id.postPreviewProfileGridItem).load(imgRef)

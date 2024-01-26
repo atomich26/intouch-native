@@ -22,7 +22,7 @@ class FriendshipRequestAdapter(collection: List<FriendshipRequest>) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder<FriendshipRequest> {
+    ): FriendShipRequestViewholder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.friendship_request_list_item, parent, false)
         return FriendShipRequestViewholder(itemView)

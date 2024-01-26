@@ -83,6 +83,12 @@
     <string name="post_carousel_counter"> %1$d/%2$d</string>
     <string name="pending_request_button">Richiesta inviata</string>
     <string name="comment_input_hint">Scrivi un commento…</string>
+    <string name="comment_title_bottom_sheet">Commenti</string>
+    <string name="warning_dialog_title">Attenzione</string>
+    <string name="delete_post_dialog_text">Sei sicuro di voler eliminare questo post?</string>
+    <string name="dialog_delete_confirm">Elimina</string>
+    <string name="dialog_abort">Annulla</string>
+    <string name="comment_added">Commento aggiunto</string>
     <string name="friendship_request_message"><![CDATA[<big><b>%s</b></big> vuole aggiungerti agli amici!]]></string>
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>
@@ -148,7 +154,7 @@
     <string name="notification_post_comment_ch">Commenti dei post</string>
     <string name="notification_post_comment_id">INTOUCH_POST_COMMENT_NOTIFICATION</string>
     <string name="notification_post_comment_desc">Notifica quando un utente commenta un post pubblicato da te</string>
-    <string name="notification_post_comment_title">%s ha pubblicato un commento al post</string>
-    <string name="notification_post_comment_content">%s</string>
+    <string name="notification_post_comment_title">Nuovo commento</string>
+    <string name="notification_post_comment_content">%s ha aggiunto un commento al tuo post</string>
     <string name="notification_created_pref_key">notification_channels_created</string>
 </resources>

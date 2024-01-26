@@ -36,7 +36,7 @@ class PostViewModel : StateViewModel() {
     }
 
     fun onDeletePost() = viewModelScope.launch {
-        if(_post.value == null || Policies.canDeletePost(_post.value!!))
+        if(_post.value == null || !Policies.canDeletePost(_post.value!!))
             return@launch
 
         updateState(_LOADING, true)

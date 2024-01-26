@@ -22,6 +22,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Friendship
@@ -33,6 +35,7 @@ import com.diegusmich.intouch.ui.activities.UserFriendsActivity
 import com.diegusmich.intouch.ui.activities.eventlist.EventCreatedActivity
 import com.diegusmich.intouch.ui.activities.eventlist.EventJoinedActivity
 import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
+import com.diegusmich.intouch.ui.viewmodels.PostViewModel
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import java.io.File

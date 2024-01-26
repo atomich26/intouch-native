@@ -35,6 +35,7 @@
             android:maxLines="3"
             android:singleLine="false"
             android:text="message"
+            android:breakStrategy="simple"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/friendshipCreatedAtText"
             app:layout_constraintEnd_toEndOf="parent"

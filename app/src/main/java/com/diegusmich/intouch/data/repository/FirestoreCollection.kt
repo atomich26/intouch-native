@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.data.repository
 
+import android.content.pm.ChangedPackages
 import com.diegusmich.intouch.data.wrapper.SnapshotDeserializator
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
@@ -55,5 +56,10 @@ abstract class FirestoreCollection<T, F : SnapshotDeserializator<T>>(factoryClaz
         return collectionRef.addSnapshotListener { q, e ->
             callback(q, e)
         }
+    }
+
+    sealed interface ChangesType{
+        data object DELETED : ChangesType
+        data object ADDED : ChangesType
     }
 }

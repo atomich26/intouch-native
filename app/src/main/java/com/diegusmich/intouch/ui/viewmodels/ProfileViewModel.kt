@@ -7,11 +7,13 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Category
 import com.diegusmich.intouch.data.domain.Friendship
 import com.diegusmich.intouch.data.domain.Post
+import com.diegusmich.intouch.data.repository.FirestoreCollection
 import com.diegusmich.intouch.data.repository.FriendshipRepository
 import com.diegusmich.intouch.data.repository.PostRepository
 import com.diegusmich.intouch.data.repository.UserRepository
 import com.diegusmich.intouch.data.response.SendFriendshipRequestResponse
 import com.diegusmich.intouch.providers.AuthProvider
+import com.diegusmich.intouch.utils.FirebaseExceptionUtil
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -64,7 +66,29 @@ class ProfileViewModel : StateViewModel() {
 
     private var onLogoutJob : Job? = null
     private var onUpdateUserListener : ListenerRegistration? = null
-    private var onUpdateArchivePostListener : ListenerRegistration? = null
+
+    init {
+        PostRepository.addOnPostArchivedChangedListener { postId, changesType ->
+            viewModelScope.launch {
+                when (changesType) {
+                    is FirestoreCollection.ChangesType.DELETED -> {
+                        val deletedPostIndex = _archivedPosts.value?.indexOfFirst {
+                            it.id == postId
+                        }
+                        deletedPostIndex?.let {
+                            _archivedPosts.value = _archivedPosts.value?.toMutableList()?.apply {
+                                removeAt(deletedPostIndex)
+                            }
+                        }
+                    }
+
+                    is FirestoreCollection.ChangesType.ADDED -> {
+
+                    }
+                }
+            }
+        }
+    }
 
     //Il flag non è necessario se la libreria è fatta bene. A quanto pare Firebase non lo è.
     fun onLogout() {
@@ -81,7 +105,7 @@ class ProfileViewModel : StateViewModel() {
         }
     }
 
-    fun onLoadUserData(userId: String?, isRefreshing: Boolean = false) : Job = viewModelScope.launch {
+    fun onLoadUserData(userId: String?, isRefreshing: Boolean = false, includeArchivedPosts: Boolean = true) : Job = viewModelScope.launch {
         if (userId == null)
             return@launch updateState(_ERROR, R.string.firebaseAuthInvalidUserException)
 
@@ -102,11 +126,15 @@ class ProfileViewModel : StateViewModel() {
                 _preferences.value = it.preferences
             }
 
+            if(includeArchivedPosts)
+                _id.value?.let {
+                _archivedPosts.value = PostRepository.archived(it)
+                }
+
             if(onUpdateUserListener == null && isAuth.value!!)
                 onUpdateUserListener = UserRepository.runOnDocumentUpdate(userId){
-                    onLoadUserData(userId, true)
+                    onLoadUserData(userId, isRefreshing = true, includeArchivedPosts = false)
                 }
-            _archivedPosts.value = PostRepository.archived(userId)
             updateState(_CONTENT_LOADED, true)
         } catch (e: FirebaseFirestoreException) {
             val messageId =

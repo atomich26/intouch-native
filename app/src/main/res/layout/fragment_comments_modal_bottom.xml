@@ -6,22 +6,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="@dimen/materialHorizontalPadding"
+        android:text="@string/comment_title_bottom_sheet"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginBottom="10dp"
+        android:drawableLeft="@drawable/baseline_comment_24"
+        android:drawablePadding="10dp">
+    </TextView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_weight="1"/>
+        android:paddingHorizontal="@dimen/materialHorizontalPadding" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/commentInputGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorSurfaceContainer"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
             android:id="@+id/commentTextInputLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintEnabled="false"
             app:endIconDrawable="@drawable/baseline_send_24"
@@ -36,5 +51,6 @@
                 android:hint="@string/comment_input_hint"
                 android:background="@android:color/transparent"/>
         </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+        <include layout="@layout/linear_progress_bar" android:id="@+id/pgLayout"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>
