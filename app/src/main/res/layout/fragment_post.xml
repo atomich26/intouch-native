@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:maxLength="20"
+                    android:maxLength="40"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
                     app:icon="@drawable/baseline_event_24"
