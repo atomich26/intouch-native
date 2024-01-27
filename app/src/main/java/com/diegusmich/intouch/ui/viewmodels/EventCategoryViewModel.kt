@@ -3,6 +3,7 @@ package com.diegusmich.intouch.ui.viewmodels
 import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.repository.EventRepository
+import com.diegusmich.intouch.providers.UserLocationProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -18,7 +19,7 @@ class EventCategoryViewModel : EventsFilterListViewModel() {
         updateState(_LOADING, true)
 
         try {
-            _events.value = EventRepository.selectByCategory(id)
+            _events.value = EventRepository.selectByCategory(id, UserLocationProvider.getCurrentLocation())
             updateState(_CONTENT_LOADED, true)
         } catch (e: Exception) {
             val messageId =

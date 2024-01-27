@@ -60,11 +60,7 @@ object EventRepository :
         } ?: mutableListOf()
     }
 
-    suspend fun selectByCategory(categoryId: String) = withContext(Dispatchers.IO) {
-        val getLocationJob = async {
-            UserLocationProvider.getCurrentLocation()
-        }
-        val currentLocation = getLocationJob.await()
+    suspend fun selectByCategory(categoryId: String, currentLocation : Location) = withContext(Dispatchers.IO) {
         withQuery {
             it.whereEqualTo("categoryId", categoryId).whereGreaterThan("startAt", Date()).orderBy("startAt", Query.Direction.ASCENDING)
         }.mapNotNull { eventWrapper ->
