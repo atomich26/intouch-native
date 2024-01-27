@@ -44,7 +44,7 @@ object EventRepository :
                 CategoryRepository.getDoc(eventWrapper.categoryId)?.let { categoryWrapper ->
                     Event.Preview(eventWrapper, categoryWrapper)
                 }
-            }.sortedByDescending { it.startAt }
+            }.sortedBy { it.startAt }
         } ?: mutableListOf()
     }
 
@@ -56,19 +56,24 @@ object EventRepository :
                 CategoryRepository.getDoc(eventWrapper.categoryId)?.let { categoryWrapper ->
                     Event.Preview(eventWrapper, categoryWrapper)
                 }
-            }.sortedByDescending { it.startAt }
+            }.sortedBy{ it.startAt }
         } ?: mutableListOf()
     }
 
     suspend fun selectByCategory(categoryId: String, currentLocation : Location) = withContext(Dispatchers.IO) {
-        withQuery {
-            it.whereEqualTo("categoryId", categoryId).whereGreaterThan("startAt", Date()).orderBy("startAt", Query.Direction.ASCENDING)
-        }.mapNotNull { eventWrapper ->
-            CategoryRepository.getDoc(eventWrapper.categoryId)?.let {
-                Event.Preview(eventWrapper, it)
+        AuthProvider.authUser()?.uid?.let{
+            UserRepository.getDoc(it)?.let{ authWrapper ->
+                withQuery { collectionRef ->
+                    collectionRef.whereEqualTo("categoryId", categoryId).whereGreaterThan("startAt", Date()).orderBy("startAt", Query.Direction.ASCENDING)
+                }.mapNotNull { eventWrapper ->
+                    CategoryRepository.getDoc(eventWrapper.categoryId)?.let { catWrapper ->
+                        Event.Preview(eventWrapper, catWrapper)
+                    }
+                }.filter{ eventPreview ->
+                    val distance = currentLocation.distanceTo(eventPreview.geo)
+                    distance < authWrapper.distanceRange * 1000
+                }
             }
-        }.sortedBy {
-            currentLocation.distanceTo(it.geo)
         }
     }
 

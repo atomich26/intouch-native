@@ -14,6 +14,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -40,7 +41,6 @@ class PostFragmentDialog : DialogFragment() {
     private val binding get() = _binding!!
 
     private var postId : String? = null
-    private var fromFeed : Boolean = false
 
     private val viewModel : PostViewModel by viewModels()
 
@@ -176,6 +176,7 @@ class PostFragmentDialog : DialogFragment() {
 
         viewModel.LOADING.observe(viewLifecycleOwner){
             binding.postSwipeRefreshLayout.isRefreshing = it
+            binding.deletePostButton.isEnabled = !it
         }
 
         viewModel.ERROR.observe(viewLifecycleOwner){

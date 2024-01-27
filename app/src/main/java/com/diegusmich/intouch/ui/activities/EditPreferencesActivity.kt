@@ -91,6 +91,7 @@ class EditPreferencesActivity : AppCompatActivity() {
         viewModel.LOADING.observe(this) {
             progressBar.visible(it)
             binding.saveCategoriesButton.isEnabled = !it && viewModel.EDITED.value!!
+            binding.skipCategoriesButton.isEnabled= !it
         }
 
         viewModel.ERROR.observe(this) {
@@ -100,7 +101,7 @@ class EditPreferencesActivity : AppCompatActivity() {
         }
 
         viewModel.EDITED.observe(this){
-            binding.saveCategoriesButton.isEnabled = it
+            binding.saveCategoriesButton.isEnabled = it && viewModel.LOADING.value == false
         }
 
         viewModel.checkedCategories.observe(this) {

@@ -66,5 +66,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation ("org.ocpsoft.prettytime:prettytime:5.0.4.Final")
     implementation("id.zelory:compressor:3.0.1")
+    implementation("com.mapbox.maps:android:11.1.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 }

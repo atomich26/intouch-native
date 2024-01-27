@@ -3,11 +3,8 @@ package com.diegusmich.intouch.ui.activities
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -16,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityMainBinding
+import com.diegusmich.intouch.providers.AuthProvider
 import com.diegusmich.intouch.providers.NotificationProvider
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.CategoriesFragment
@@ -45,49 +43,49 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Firebase.auth.currentUser == null) {
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        if (AuthProvider.authUser() == null) {
             startActivity(Intent(this, AuthActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             })
             finish()
-        }
+        }else{
+            initMainFragments()
+            listenForFriendshipUpdate()
+            requestPermission()
+            createNotificationChannels()
 
-        _binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+            binding.mainBottomNavigation.setOnItemSelectedListener {
 
-        initMainFragments()
-        listenForFriendshipUpdate()
-        requestPermission()
-        createNotificationChannels()
+                if (it.itemId == R.id.navigation_create) {
+                    // Launch create event activity
+                    return@setOnItemSelectedListener false
+                }
 
-        binding.mainBottomNavigation.setOnItemSelectedListener {
+                val pageId = when (it.itemId) {
+                    R.id.feedFragment -> 0
+                    R.id.categoriesFragment -> 1
+                    R.id.friendshipRequestsFragment -> 2
+                    R.id.profileFragment -> 3
+                    else -> 0
+                }
 
-            if (it.itemId == R.id.navigation_create) {
-                // Launch create event activity
-                return@setOnItemSelectedListener false
+                binding.mainViewPager.setCurrentItem(pageId, false)
+                true
             }
-
-            val pageId = when (it.itemId) {
-                R.id.feedFragment -> 0
-                R.id.categoriesFragment -> 1
-                R.id.friendshipRequestsFragment -> 2
-                R.id.profileFragment -> 3
-                else -> 0
-            }
-
-            binding.mainViewPager.setCurrentItem(pageId, false)
-            true
         }
     }
 
-    private fun listenForFriendshipUpdate(){
+    private fun listenForFriendshipUpdate() {
         friendshipRequestViewModel.listenForFriendshipRequestsUpdate()
         friendshipRequestViewModel.friendshipRequests.observe(this) {
             addFriendshipIconBadge(it.size)
         }
     }
 
-    private fun initMainFragments() = lifecycleScope.launch{
+    private fun initMainFragments() = lifecycleScope.launch {
         val friendshipRequestsFragment = FriendshipRequestsFragment()
         val mainViewPagerAdapter = MainViewPagerAdapter(
             arrayOf(

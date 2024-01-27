@@ -2,7 +2,7 @@
 
     <style name="Intouch.Base.Theme.Material3" parent="Theme.Material3.Light.NoActionBar">
         <item name="fontFamily">sans-serif</item>
-       <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/md_theme_light_secondaryContainer</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -83,6 +83,7 @@
     <style name="CommentBottomSheetStyle" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
+
     <style name="ShapeAppearanceOverlay.CornerCircle" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
@@ -96,6 +97,11 @@
     <style name="ShapeAppearanceOverlay.EventThumbRadius" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10%</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="Base.Intouch.Theme.Material3" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
 </resources>

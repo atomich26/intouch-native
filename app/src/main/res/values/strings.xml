@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- App, frag and activities names -->
     <string name="app_name">Intouch</string>
     <string name="login_fragment_title">Accedi</string>
@@ -91,7 +91,8 @@
     <string name="comment_added">Commento aggiunto</string>
     <string name="info_dialog_confirm">Ho capito</string>
     <string name="info_dialog_title">Avviso</string>
-    <string name="location_failed_message">Non è stato possibile ottenere informazioni sulla tua posizione attuale pertanto ti verranno mostrati eventi in prossimità di una posizione di default corrispondente alla città di Roma</string>
+    <string name="show_events_on_map">Mostra mappa eventi</string>
+    <string name="location_failed_message">Non è stato possibile ottenere informazioni sulla tua posizione attuale pertanto ti verranno mostrati eventi in prossimità di una posizione di default corrispondente alla città di Roma.</string>
     <string name="friendship_request_message"><![CDATA[<big><b>%s</b></big> vuole aggiungerti agli amici!]]></string>
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>
@@ -160,4 +161,12 @@
     <string name="notification_post_comment_title">Nuovo commento</string>
     <string name="notification_post_comment_content">%s ha aggiunto un commento al tuo post</string>
     <string name="notification_created_pref_key">notification_channels_created</string>
+    <string name="title_activity_add_post">AddPostActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="mapbox_access_token" translatable="false" tools:ignore="UnusedResources">pk.eyJ1IjoiYXRvbTFjaCIsImEiOiJjbHJ3ZTdzMjUxM3o0Mml0ZXp1b2xkenVkIn0.CxPeK0I-9GIT3w2k2aZpOw</string>
 </resources>

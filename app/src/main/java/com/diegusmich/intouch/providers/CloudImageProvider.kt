@@ -1,6 +1,7 @@
 package com.diegusmich.intouch.providers
 
 import android.content.Context
+import android.util.Log
 import com.diegusmich.intouch.utils.FileUtil
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
@@ -25,16 +26,22 @@ enum class CloudImageProvider(path: String) {
         else null
     }
 
-    suspend fun uploadImage(ctx: Context, image: File): StorageReference {
-        val compressed = FileUtil.compressImage(ctx, image, 512_000)
-
+    suspend fun uploadImage(image: File): StorageReference {
         val hashedBytes =
             MessageDigest.getInstance("MD5").digest(AuthProvider.authUser()?.uid?.toByteArray()!!)
         val hexString = hashedBytes.joinToString("") { "%02x".format(it) }
 
         val fileRef = storageRef.child("${Date().time}_$hexString.jpg")
-        fileRef.putBytes(compressed.readBytes()).await()
+        fileRef.putBytes(image.readBytes()).await()
 
         return fileRef
+    }
+
+    fun deleteImage(imagePath: String){
+        try{
+            storageRef.child(imagePath).delete()
+        }catch (e : Exception){
+            Log.e("CLOUD_IMAGE_PROVIDER", e.message.toString())
+        }
     }
 }

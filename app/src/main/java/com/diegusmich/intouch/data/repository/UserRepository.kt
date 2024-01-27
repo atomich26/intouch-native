@@ -3,6 +3,7 @@ package com.diegusmich.intouch.data.repository
 import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.data.wrapper.UserWrapper
 import com.diegusmich.intouch.data.response.SearchCallableResponse
+import com.diegusmich.intouch.providers.AuthProvider
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.functions.HttpsCallableResult
 import com.google.firebase.functions.ktx.functions
@@ -35,9 +36,12 @@ object UserRepository : FirestoreCollection<UserWrapper, UserWrapper.Factory>(Us
             }
     }
 
-    suspend fun saveAuthUserPreferences(data: Map<String, Any?>): HttpsCallableResult = withContext(Dispatchers.IO){
-        Firebase.functions.getHttpsCallable("users-preferences")
-            .call(data).await()
+    suspend fun saveAuthUserPreferences(data: List<String>) = withContext(Dispatchers.IO){
+        Firebase.firestore.runTransaction {
+            AuthProvider.authUser()?.uid?.let{ uid ->
+                it.update(collectionRef.document(uid), "preferences", data)
+            }
+        }.await()
     }
 
     suspend fun changeProfileImg(imageName: String) = withContext(Dispatchers.IO){

@@ -6,6 +6,7 @@ import com.diegusmich.intouch.data.wrapper.PostWrapper
 import com.diegusmich.intouch.data.response.FeedPostsCallableResponse
 import com.diegusmich.intouch.data.wrapper.CommentWrapper
 import com.diegusmich.intouch.providers.AuthProvider
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
@@ -13,8 +14,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.Date
 
 object PostRepository : FirestoreCollection<PostWrapper, PostWrapper.Factory>(PostWrapper.Factory::class.java) {
@@ -73,6 +76,22 @@ object PostRepository : FirestoreCollection<PostWrapper, PostWrapper.Factory>(Po
                 "createdAt" to Date()
             ))
         }.await()
+    }
+
+    suspend fun createPost(data: Map<String, Any>) = withContext(Dispatchers.IO){
+        val sendDataJob = launch {
+            Firebase.functions.getHttpsCallable("posts-create").call(data).await()
+        }
+
+        val uploadAlbumJob = launch{
+            if(data["album"] is List<*>){
+                for (img in data["album"] as List<File>)
+                    CloudImageProvider.POSTS.uploadImage(img)
+            }
+        }
+
+        sendDataJob.join()
+        uploadAlbumJob.join()
     }
 
     suspend fun deletePost(postId : String) = withContext(Dispatchers.IO) {

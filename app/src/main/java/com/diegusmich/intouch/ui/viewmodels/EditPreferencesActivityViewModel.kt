@@ -78,10 +78,11 @@ class EditPreferencesActivityViewModel : StateViewModel() {
     }
 
     fun onSaveCategories(all: Boolean = false) = viewModelScope.launch {
-        updateState(_LOADING, true)
 
-        if(_EDITED.value == false)
+        if(_EDITED.value == false && !all)
             return@launch
+
+        updateState(_LOADING, true)
 
         try {
             val data = if(all)
@@ -89,7 +90,7 @@ class EditPreferencesActivityViewModel : StateViewModel() {
             else
                 checkedCategories.value
 
-            UserRepository.saveAuthUserPreferences(mapOf("preferences" to data))
+            UserRepository.saveAuthUserPreferences(data!!)
             updateState(_PREFERENCES_SAVED, true)
         }catch (e : Exception){
             val messageId =

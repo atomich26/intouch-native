@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.repository.UserRepository
 import com.diegusmich.intouch.providers.CloudImageProvider
+import com.diegusmich.intouch.utils.FileUtil
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
 import java.io.File
@@ -31,7 +32,8 @@ class EditProfileImageViewModel : StateViewModel() {
         updateState(_LOADING, true)
 
         try {
-            _currentImgRef.value = CloudImageProvider.USERS.uploadImage(ctx, image)
+            val compressed = FileUtil.compressImage(ctx, image, 512_000)
+            _currentImgRef.value = CloudImageProvider.USERS.uploadImage(compressed)
             UserRepository.changeProfileImg(_currentImgRef.value!!.name)
 
             updateState(_LOADING, false)
