@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.broadcast.LocationBroadcasterReceiver
 import com.diegusmich.intouch.databinding.ActivityMainBinding
 import com.diegusmich.intouch.providers.NotificationProvider
 import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     val friendshipRequestViewModel: FriendshipRequestViewModel by viewModels()
 
     private var _onCameraPicturePicked: ((result: Boolean) -> Unit)? = null
-    private lateinit var locationBroadcastReceiver: LocationBroadcasterReceiver
 
     val pickImageFromCamera =
         registerForActivityResult(ActivityResultContracts.TakePicture()) {
@@ -53,12 +51,6 @@ class MainActivity : AppCompatActivity() {
             })
             finish()
         }
-
-        locationBroadcastReceiver = LocationBroadcasterReceiver(this)
-        registerReceiver(
-            locationBroadcastReceiver,
-            IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
-        )
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -164,6 +156,5 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-        unregisterReceiver(locationBroadcastReceiver)
     }
 }
