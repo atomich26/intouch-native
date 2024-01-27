@@ -47,8 +47,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/eventsFeedListView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
+                        android:layout_height="match_parent"
+                        android:paddingHorizontal="5dp"/>
                 </androidx.core.widget.NestedScrollView>
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.core.widget.NestedScrollView>

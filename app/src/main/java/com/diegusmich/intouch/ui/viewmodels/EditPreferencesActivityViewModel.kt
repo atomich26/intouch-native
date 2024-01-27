@@ -74,17 +74,22 @@ class EditPreferencesActivityViewModel : StateViewModel() {
 
     fun onUpdateCheckedCategories(checkedIds: List<String>) {
         _checkedCategories.value = checkedIds
-        _EDITED.value = _checkedCategories.value != _currentCheckedCategories.value
+        _EDITED.value = _checkedCategories.value != _currentCheckedCategories.value && _checkedCategories.value?.isNotEmpty() == true
     }
 
-    fun onSaveCategories() = viewModelScope.launch {
+    fun onSaveCategories(all: Boolean = false) = viewModelScope.launch {
         updateState(_LOADING, true)
 
         if(_EDITED.value == false)
             return@launch
 
         try {
-            UserRepository.saveAuthUserPreferences(mapOf("preferences" to checkedCategories.value))
+            val data = if(all)
+                _categories.value?.map { it.id }
+            else
+                checkedCategories.value
+
+            UserRepository.saveAuthUserPreferences(mapOf("preferences" to data))
             updateState(_PREFERENCES_SAVED, true)
         }catch (e : Exception){
             val messageId =

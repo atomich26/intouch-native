@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/eventFeedCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="10dp"
+    android:clickable="true"
+    app:cardCornerRadius="20dp"
+    android:backgroundTint="?attr/colorPrimaryContainer"
+    style="?attr/materialCardViewFilledStyle">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp">
+
+        <com.diegusmich.intouch.ui.views.GlideImageView
+            android:id="@+id/eventFeedCover"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/eventFeedName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholder="@drawable/user_placeholder"/>
+
+        <TextView
+            android:id="@+id/eventFeedName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:maxLines="1"
+            android:maxLength="40"
+            android:ellipsize="end"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventFeedCover"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <com.diegusmich.intouch.ui.views.UserInfoThumbnail
+            android:id="@+id/eventUserInfoCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventFeedName"
+            android:layout_marginVertical="5dp"
+            android:layout_marginStart="7dp"/>
+
+        <TextView
+            android:id="@+id/eventFeedCityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginVertical="5dp"
+
+            android:textSize="14sp"
+            android:maxLength="30"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/baseline_location_on_24"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/eventUserInfoCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/eventFeedDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="4dp"
+            android:ellipsize="end"
+            android:maxLength="30"
+            android:textSize="12sp"
+            android:drawableStart="@drawable/baseline_calendar_month_24"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.966"
+            app:layout_constraintStart_toEndOf="@id/eventFeedCityName" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

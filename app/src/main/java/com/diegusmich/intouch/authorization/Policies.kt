@@ -14,4 +14,9 @@ object Policies {
     fun canDeletePost(post: Post.Full) : Boolean{
         return post.userInfo.id == AuthProvider.authUser()?.uid
     }
+
+    fun canAddPost(event: Event.Full) : Boolean{
+        val dateToEvaluate = event.endAt ?: event.startAt
+        return dateToEvaluate.before(Date())
+    }
 }

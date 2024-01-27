@@ -23,9 +23,11 @@ object CategoryRepository :
     }
 
     suspend fun getAuthUserCategories() = withContext(Dispatchers.IO){
-        UserRepository.getDoc(AuthProvider.authUser()!!.uid)?.let {
-            it.preferences.mapNotNull {  catId ->
-                get(catId)
+        AuthProvider.authUser()?.uid?.let{ uid ->
+            UserRepository.getDoc(uid)?.let {
+                it.preferences.mapNotNull {  catId ->
+                    get(catId)
+                }
             }
         } ?: listOf()
     }

@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.data.domain
 
+import android.location.Location
 import com.diegusmich.intouch.data.wrapper.CategoryWrapper
 import com.diegusmich.intouch.data.wrapper.EventWrapper
 import com.diegusmich.intouch.data.wrapper.UserWrapper
@@ -23,7 +24,7 @@ sealed interface Event{
         val available: Int,
         val address: String,
         val city: String,
-        val geo: GeoPoint,
+        val geo: Location,
         val restricted: Boolean,
     ) : Event{
         constructor(eventWrapper: EventWrapper, userWrapper: UserWrapper, categoryWrapper: CategoryWrapper) : this(
@@ -38,16 +39,42 @@ sealed interface Event{
             available = eventWrapper.available,
             address = eventWrapper.address,
             city = eventWrapper.city,
-            geo = eventWrapper.geo,
+            geo = Location("").apply {
+                latitude = eventWrapper.geo.latitude
+                longitude = eventWrapper.geo.longitude
+            },
             restricted = eventWrapper.restricted
         )
     }
 
+    data class FeedPreview(
+        val id: String,
+        val name: String,
+        val cover: String,
+        val userInfo: User.Preview,
+        val city: String,
+        val geo: Location,
+        val startAt: Date
+    ) : Event{
+        constructor(eventWrapper: EventWrapper, userWrapper: UserWrapper) : this(
+            id = eventWrapper.id,
+            name = eventWrapper.name,
+            cover = eventWrapper.cover,
+            userInfo = User.Preview(userWrapper),
+            geo = Location("").apply {
+                latitude = eventWrapper.geo.latitude
+                longitude = eventWrapper.geo.longitude
+            },
+            city = eventWrapper.city,
+            startAt = eventWrapper.startAt
+        )
+    }
     data class Preview(
         val id: String,
         val name: String,
         val cover: String,
         val city: String,
+        val geo: Location,
         val categoryInfo: Category,
         val startAt: Date,
     ) : Event{
@@ -55,6 +82,10 @@ sealed interface Event{
             id = eventWrapper.id,
             name = eventWrapper.name,
             cover = eventWrapper.cover,
+            geo = Location("").apply {
+                latitude = eventWrapper.geo.latitude
+                longitude = eventWrapper.geo.longitude
+            },
             categoryInfo = Category(categoryWrapper),
             city = eventWrapper.city,
             startAt = eventWrapper.startAt

@@ -15,9 +15,7 @@
         android:padding="1dp"
         android:scaleType="centerCrop"
         app:placeholder="@drawable/user_placeholder"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle"
-        app:strokeColor="@color/seed"
-        app:strokeWidth="1.5dp" />
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerCircle" />
 
     <TextView
         android:id="@+id/userUsernameText"

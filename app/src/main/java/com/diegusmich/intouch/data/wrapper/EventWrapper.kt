@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.data.wrapper
 
+import android.location.Location
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.GeoPoint

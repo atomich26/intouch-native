@@ -55,7 +55,6 @@ object PostRepository : FirestoreCollection<PostWrapper, PostWrapper.Factory>(Po
         }
     }
 
-
     suspend fun getPostComments(postId: String) = withContext(Dispatchers.IO){
         collectionRef.document(postId).collection("comments").orderBy("createdAt", Query.Direction.DESCENDING).get(Source.SERVER).await().mapNotNull {
             CommentWrapper.fromSnapshot(it).let{ wrapper ->

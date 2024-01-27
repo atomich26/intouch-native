@@ -13,14 +13,6 @@ class LocationBroadcasterReceiver(ctx: Context) : BroadcastReceiver() {
 
     override fun onReceive(ctx: Context, intent: Intent?) {
 
-        if(intent?.action == LocationManager.PROVIDERS_CHANGED_ACTION){
-            isLocationEnabled().let {
-                if(oldState != it && it)
-                   UserLocationProvider.currentLocation(ctx)
-
-                oldState = it
-            }
-        }
     }
 
     private fun isLocationEnabled() : Boolean{

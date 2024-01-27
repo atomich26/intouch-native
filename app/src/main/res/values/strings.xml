@@ -89,6 +89,9 @@
     <string name="dialog_delete_confirm">Elimina</string>
     <string name="dialog_abort">Annulla</string>
     <string name="comment_added">Commento aggiunto</string>
+    <string name="info_dialog_confirm">Ho capito</string>
+    <string name="info_dialog_title">Avviso</string>
+    <string name="location_failed_message">Non è stato possibile ottenere informazioni sulla tua posizione attuale pertanto ti verranno mostrati eventi in prossimità di una posizione di default corrispondente alla città di Roma</string>
     <string name="friendship_request_message"><![CDATA[<big><b>%s</b></big> vuole aggiungerti agli amici!]]></string>
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>

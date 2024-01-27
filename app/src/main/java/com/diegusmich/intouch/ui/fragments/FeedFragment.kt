@@ -12,9 +12,11 @@ import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Post
 import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.databinding.FragmentFeedBinding
+import com.diegusmich.intouch.ui.adapters.EventFeedAdapter
 import com.diegusmich.intouch.ui.adapters.PostFeedAdapter
 import com.diegusmich.intouch.ui.viewmodels.FeedViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class FeedFragment : Fragment() {
 
@@ -47,6 +49,9 @@ class FeedFragment : Fragment() {
         binding.postsFeedListView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.postsFeedListView.adapter = PostFeedAdapter(mutableListOf())
 
+        binding.eventsFeedListView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.eventsFeedListView.adapter = EventFeedAdapter(mutableListOf())
+
         viewModel.onLoadMainFeed()
         observeData()
     }
@@ -65,9 +70,30 @@ class FeedFragment : Fragment() {
             }
         }
 
+        viewModel.eventFeed.observe(viewLifecycleOwner){
+            it?.let{
+                binding.eventsFeedListView.apply {
+                    (adapter as EventFeedAdapter).replace(it)
+                }
+            }
+        }
+
         viewModel.ERROR.observe(viewLifecycleOwner){
             it?.let {
                 Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.GET_LOCATION_FAILED.observe(viewLifecycleOwner){
+            if(it && !viewModel.locationFailedMessageConsumed.value!!){
+                MaterialAlertDialogBuilder(requireContext()).apply {
+                    setTitle(resources.getString(R.string.info_dialog_title))
+                    setMessage(resources.getString(R.string.location_failed_message))
+                    setPositiveButton(resources.getString(R.string.info_dialog_confirm)) { dialog, which ->
+                        viewModel.consumeMessage()
+                        dialog.dismiss()
+                    }
+                }.show()
             }
         }
     }

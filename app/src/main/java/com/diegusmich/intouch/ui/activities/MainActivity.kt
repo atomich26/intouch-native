@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
@@ -41,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             _onCameraPicturePicked?.invoke(it)
         }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -82,11 +85,6 @@ class MainActivity : AppCompatActivity() {
 
             binding.mainViewPager.setCurrentItem(pageId, false)
             true
-        }
-
-        lifecycleScope.launch {
-            val token = NotificationProvider.getToken()
-            Log.d("FIREBASE_MESSAGING", token.toString())
         }
     }
 
@@ -132,20 +130,13 @@ class MainActivity : AppCompatActivity() {
             binding.mainBottomNavigation.removeBadge(R.id.friendshipRequestsFragment)
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestPermission() {
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            when {
-                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                    //Mostro un warning sulla posizione approssimativa
-                }
+        ) { _ -> return@registerForActivityResult }
 
-                else -> {
-                    //Altrimenti mostro un errore sulla posizione
-                }
-            }
-        }
         locationPermissionRequest.launch(
             arrayOf(
                 Manifest.permission.POST_NOTIFICATIONS,

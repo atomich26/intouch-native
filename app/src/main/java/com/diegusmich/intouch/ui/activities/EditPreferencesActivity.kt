@@ -63,7 +63,7 @@ class EditPreferencesActivity : AppCompatActivity() {
         }
 
         binding.skipCategoriesButton.setOnClickListener {
-            startMainActivity()
+            viewModel.onSaveCategories(true)
         }
 
         binding.filtersCategoryGroup.onCheckedChange {
