@@ -31,7 +31,7 @@
             android:textColor="?attr/colorSecondary"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             app:layout_constraintStart_toEndOf="@id/commentUserInfo"
             app:layout_constraintBottom_toTopOf="@id/commentText"
             app:layout_constraintTop_toTopOf="parent"
