@@ -32,11 +32,13 @@ object FriendshipRepository :
     }
 
     suspend fun getAllFriendshipWithAuthUser() = withContext(Dispatchers.IO) {
-        withQuery {
-            collectionRef.whereEqualTo("notifier", AuthProvider.authUser()?.uid!!)
-        }.mapNotNull { friendshipWrapper ->
-            UserRepository.getDoc(friendshipWrapper.actor)?.let { userWrapper ->
-                FriendshipRequest(friendshipWrapper, userWrapper)
+        AuthProvider.authUser()?.uid?.let{ uid ->
+            withQuery {
+                collectionRef.whereEqualTo("notifier", uid )
+            }.mapNotNull { friendshipWrapper ->
+                UserRepository.getDoc(friendshipWrapper.actor)?.let { userWrapper ->
+                    FriendshipRequest(friendshipWrapper, userWrapper)
+                }
             }
         }
     }

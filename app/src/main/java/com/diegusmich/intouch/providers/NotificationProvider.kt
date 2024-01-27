@@ -42,7 +42,8 @@ class NotificationProvider : FirebaseMessagingService() {
         super.onMessageReceived(message)
         Log.d("FIREBASE_MESSAGING", message.data.toString())
         val type = when(message.data["type"]){
-            "event" -> NotificationType.EVENT
+            "event_deleted" -> NotificationType.EVENT_DELETED
+            "event_updated" -> NotificationType.EVENT_UPDATED
             "comment" -> NotificationType.COMMENT
             "friendship_sent" -> NotificationType.FRIENDSHIP_REQUEST_SENT
             "friendship_accepted" -> NotificationType.FRIENDSHIP_REQUEST_ACCEPTED
@@ -146,10 +147,19 @@ class NotificationProvider : FirebaseMessagingService() {
             UserActivity::class.java,
             UserActivity.USER_ARG
         ),
-        EVENT( R.string.notification_event_id,
-            R.string.notification_event_title,
+
+        EVENT_UPDATED( R.string.notification_event_id,
+            R.string.notification_event_updated_title,
             R.drawable.baseline_event_24,
-            R.string.notification_event_content,
+            R.string.notification_event_updated_content,
+            NotificationCompat.PRIORITY_HIGH,
+            EventActivity::class.java,
+            EventActivity.EVENT_ARG),
+
+            EVENT_DELETED( R.string.notification_event_id,
+            R.string.notification_event_deleted_title,
+                R.drawable.baseline_event_busy_24,
+            R.string.notification_event_deleted_content,
             NotificationCompat.PRIORITY_HIGH,
             EventActivity::class.java,
             EventActivity.EVENT_ARG);

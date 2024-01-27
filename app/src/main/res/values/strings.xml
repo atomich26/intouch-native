@@ -153,8 +153,11 @@
     <string name="notification_event_ch">Eventi</string>
     <string name="notification_event_id">INTOUCH_EVENT_NOTIFICATION</string>
     <string name="notification_event_desc">Ricevi avvisi quando i dettagli di un evento che segui cambiano</string>
-    <string name="notification_event_title">Evento aggiornato</string>
-    <string name="notification_event_content">L\'evento %s è stato aggiornato</string>
+    <string name="notification_event_updated_title">Evento aggiornato</string>
+    <string name="notification_event_updated_content">L\'evento %s è stato aggiornato</string>
+    <string name="notification_event_deleted_title">Evento eliminato</string>
+    <string name="notification_event_deleted_content">L\'evento %s è stato eliminato</string>
+
     <string name="notification_post_comment_ch">Commenti dei post</string>
     <string name="notification_post_comment_id">INTOUCH_POST_COMMENT_NOTIFICATION</string>
     <string name="notification_post_comment_desc">Notifica quando un utente commenta un post pubblicato da te</string>
@@ -162,11 +165,6 @@
     <string name="notification_post_comment_content">%s ha aggiunto un commento al tuo post</string>
     <string name="notification_created_pref_key">notification_channels_created</string>
     <string name="title_activity_add_post">AddPostActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
     <string name="mapbox_access_token" translatable="false" tools:ignore="UnusedResources">pk.eyJ1IjoiYXRvbTFjaCIsImEiOiJjbHJ3ZTdzMjUxM3o0Mml0ZXp1b2xkenVkIn0.CxPeK0I-9GIT3w2k2aZpOw</string>
 </resources>
