@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             binding.mainBottomNavigation.setOnItemSelectedListener {
 
                 if (it.itemId == R.id.navigation_create) {
-                    // Launch create event activity
+                    startActivity(Intent(this, UpsertEventActivity::class.java))
                     return@setOnItemSelectedListener false
                 }
 

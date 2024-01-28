@@ -6,6 +6,7 @@ import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.data.response.SearchCallableResponse
 import com.diegusmich.intouch.data.wrapper.EventWrapper
 import com.diegusmich.intouch.providers.AuthProvider
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.providers.UserLocationProvider
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
@@ -20,6 +21,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.Date
 
 object EventRepository :
@@ -98,6 +100,15 @@ object EventRepository :
                 }
             }
         }
+    }
+
+    suspend fun createEvent(data: Map<String, Any>, coverImg: File) = withContext(Dispatchers.IO){
+        Firebase.functions.getHttpsCallable("events-upsert").call(data).await()
+        CloudImageProvider.EVENTS.uploadImage(coverImg)
+    }
+
+    suspend fun deleteEvent(eventId: String) = withContext(Dispatchers.IO){
+        Firebase.functions.getHttpsCallable("events-delete").call(mapOf("eventId" to eventId)).await()
     }
 
     suspend fun search(query: String) = withContext(Dispatchers.IO) {

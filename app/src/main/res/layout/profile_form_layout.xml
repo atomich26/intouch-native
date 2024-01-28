@@ -180,7 +180,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="@integer/password_length"
-                    android:inputType="text|date"
+                    android:inputType="none|date"
                     android:maxLength="@integer/password_length"
                     android:textSize="16sp" />
 
