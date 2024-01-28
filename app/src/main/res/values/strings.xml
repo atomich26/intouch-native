@@ -40,6 +40,8 @@
     <string name="prompt_event_startAt">Data inizio</string>
     <string name="prompt_event_endAt">Data di fine (opzionale)</string>
     <string name="prompt_restricted_event">Solo per gli amici</string>
+    <string name="prompt_event_image">Aggiungi immagine</string>
+    <string name="prompt_event_edit_image">Modifica immagine</string>
     <string name="add_geo_picker_button">Aggiungi posizione</string>
     <string name="prompt_category">Categoria</string>
     <string name="prompt_startAt_title">Inzio</string>
@@ -109,6 +111,8 @@
     <string name="info_dialog_confirm">Ho capito</string>
     <string name="info_dialog_title">Avviso</string>
     <string name="show_events_on_map">Mostra mappa eventi</string>
+    <string name="pick_location_title">Posizione evento</string>
+    <string name="select_location_button">Seleziona questa posizione</string>
     <string name="location_failed_message">Non è stato possibile ottenere informazioni sulla tua posizione attuale pertanto ti verranno mostrati eventi in prossimità di una posizione di default corrispondente alla città di Roma.</string>
     <string name="friendship_request_message"><![CDATA[<big><b>%s</b></big> vuole aggiungerti agli amici!]]></string>
     <plurals name="event_availability_warning">

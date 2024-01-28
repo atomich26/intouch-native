@@ -85,11 +85,14 @@ object EventRepository :
                 val userPrefs = authWrapper.preferences
 
                 withQuery { collectionRef ->
-                    collectionRef.whereGreaterThan("startAt", Date())
+                    collectionRef
+                        .whereGreaterThan("startAt", Date())
                         .whereIn("categoryId", userPrefs)
                         .orderBy("startAt", Query.Direction.ASCENDING)
                 }.filter{ eventWrapper ->
                     eventWrapper.available > 0 && if(eventWrapper.restricted) authWrapper.friends.contains(eventWrapper.userId) else true
+                }.filter{ eventWrapper ->
+                    eventWrapper.userId != authWrapper.id && !authWrapper.joined.contains(eventWrapper.id)
                 }.mapNotNull{ eventWrapper ->
                     UserRepository.getDoc(eventWrapper.userId)?.let{ userWrapper ->
                         Event.FeedPreview(eventWrapper, userWrapper)

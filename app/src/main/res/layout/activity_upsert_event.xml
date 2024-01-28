@@ -20,6 +20,17 @@
             android:paddingHorizontal="@dimen/materialHorizontalPadding"
             android:orientation="vertical">
 
+            <Button
+                android:id="@+id/eventFormAddImageButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="@string/create_event_title"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:textSize="16sp" />
             <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
                 android:id="@+id/eventFormNameInputLayout"
                 android:layout_width="match_parent"
@@ -157,7 +168,7 @@
                 android:layout_marginTop="5dp"
                 app:errorEnabled="true"
                 android:hint="@string/prompt_event_endAt"
-                app:startIconDrawable="@drawable/baseline_event_busy_24">
+                app:startIconDrawable="@drawable/baseline_event_available_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/eventFormEndAtTextField"
@@ -274,7 +285,6 @@
             android:paddingHorizontal="20dp"
             android:paddingVertical="12dp"
             android:textSize="16sp" />
-
 
     </androidx.appcompat.widget.LinearLayoutCompat>
     <include android:id="@+id/pgLayout" layout="@layout/linear_progress_bar"/>

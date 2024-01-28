@@ -8,6 +8,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
     }

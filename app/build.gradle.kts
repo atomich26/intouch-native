@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("kotlin-kapt")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -37,7 +38,15 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
+}
+
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
+    ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
+    ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
 }
 
 dependencies {
@@ -66,5 +75,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation ("org.ocpsoft.prettytime:prettytime:5.0.4.Final")
     implementation("id.zelory:compressor:3.0.1")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 }

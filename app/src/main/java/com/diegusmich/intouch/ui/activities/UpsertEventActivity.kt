@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.ui.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,6 +47,9 @@ class UpsertEventActivity : AppCompatActivity() {
             }
         }
 
+        binding.eventFormPickGeoButton.setOnClickListener {
+            startActivity(Intent(this, MapsPickerActivity::class.java))
+        }
         setContentView(binding.root)
     }
 
