@@ -33,8 +33,12 @@ class FeedViewModel : StateViewModel() {
 
         updateState(_LOADING, true)
         try {
-            _postFeed.value = PostRepository.feed()
-            _eventFeed.value = EventRepository.feed(getCurrentLocation().await())
+
+            val getPostFeedJob = async { PostRepository.feed() }
+            val getEventFeedJob = async { EventRepository.feed(getCurrentLocation().await()) }
+            _postFeed.value = getPostFeedJob.await()
+            _eventFeed.value = getEventFeedJob.await()
+
             updateState(_CONTENT_LOADED, true)
         } catch (e: Exception) {
             updateState(_ERROR, R.string.firebaseNetworkException)

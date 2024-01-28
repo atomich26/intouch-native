@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/material_toolbar" android:id="@+id/appBarLayout"/>
+    <include
+        android:id="@+id/appBarLayout"
+        layout="@layout/material_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -17,37 +18,57 @@
             android:id="@+id/upsertUserForm"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingHorizontal="@dimen/materialHorizontalPadding"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/materialHorizontalPadding">
 
-            <Button
-                android:id="@+id/eventFormAddImageButton"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="wrap_content"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/imageCoverContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:text="@string/create_event_title"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="12dp"
-                android:textSize="16sp" />
+                app:cardCornerRadius="15dp"
+                app:strokeWidth="0dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.diegusmich.intouch.ui.views.GlideImageView
+                        android:id="@+id/coverImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:foreground="@drawable/event_cover_overlay"
+                        app:srcCompat="@drawable/glide_image_placeholder_blank" />
+
+                    <Button
+                        android:id="@+id/eventFormAddImageButton"
+                        style="@style/Widget.Material3.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp"
+                        android:text="@string/prompt_event_image"
+                        android:textSize="14sp" />
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
                 android:id="@+id/eventFormNameInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:hint="@string/prompt_name"
-                app:startIconDrawable="@drawable/baseline_text_fields_24"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:startIconDrawable="@drawable/baseline_text_fields_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/eventFormNameTextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="@integer/name_length"
+                    android:ems="@integer/event_name"
                     android:inputType="text"
-                    android:maxLength="@integer/name_length"
-                    android:textSize="16sp" />
+                    android:maxLength="@integer/event_name"
+                    android:textSize="14sp" />
 
             </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
 
@@ -55,48 +76,85 @@
                 android:id="@+id/eventFormDescriptionInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:hint="@string/prompt_description"
-                app:startIconDrawable="@drawable/baseline_edit_24"
-                app:errorEnabled="true"
                 app:counterEnabled="true"
-                app:counterMaxLength="@integer/event_description">
+                app:counterMaxLength="@integer/event_description"
+                app:errorEnabled="true"
+                app:startIconDrawable="@drawable/baseline_edit_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/eventFormDescriptionTextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="@integer/event_description"
-                    android:inputType="textMultiLine"
-                    android:maxLines="5"
                     android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:maxLength="@integer/event_description"
+                    android:maxLines="5"
                     android:minLines="1"
                     android:scrollbars="vertical"
-                    android:maxLength="@integer/event_description"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
             </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/categoryFormEventInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:errorEnabled="true"
+                android:layout_weight="1"
                 android:hint="@string/prompt_category"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                app:errorEnabled="true">
 
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"/>
+                    android:textSize="14dp"
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
+                android:id="@+id/eventFormAvailableInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_available"
+                app:errorEnabled="true"
+                app:startIconDrawable="@drawable/baseline_do_not_disturb_on_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/eventFormAvailableTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="@integer/event_available_max"
+                    android:inputType="number"
+                    android:maxLength="@integer/event_available_max"
+                    android:textSize="14sp" />
+
+            </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/eventFormRestrictedSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:checked="false"
+                android:layout_marginBottom="10dp"
+                android:drawableStart="@drawable/baseline_group_24__black"
+                android:drawablePadding="5dp"
+                android:paddingHorizontal="5dp"
+                android:text="@string/prompt_restricted_event"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/geo_message_warning"
+                android:layout_marginBottom="2dp"
+                android:textSize="11sp" />
 
             <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
                 android:id="@+id/eventFormCityInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:hint="@string/prompt_city"
                 app:errorEnabled="true"
                 app:startIconDrawable="@drawable/baseline_location_city_24">
@@ -108,7 +166,7 @@
                     android:ems="@integer/event_city"
                     android:inputType="textAutoCorrect"
                     android:maxLength="@integer/event_city"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
             </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
 
@@ -116,9 +174,8 @@
                 android:id="@+id/eventFormAddressInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:errorEnabled="true"
                 android:hint="@string/prompt_address"
+                app:errorEnabled="true"
                 app:startIconDrawable="@drawable/baseline_home_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -127,58 +184,11 @@
                     android:layout_height="wrap_content"
                     android:ems="@integer/event_address"
                     android:inputType="textAutoCorrect"
-                    android:maxLength="@integer/email_length"
-                    android:textSize="16sp" />
+                    android:maxLength="@integer/event_address"
+                    android:textSize="14sp" />
             </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/eventFormRestrictedSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:checked="false"
-                android:paddingHorizontal="5dp"
-                android:textSize="16sp"
-                android:drawableStart="@drawable/baseline_group_24__black"
-                android:drawablePadding="5dp"
-                android:text="@string/prompt_restricted_event"/>
-
-            <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
-                android:id="@+id/eventFormStartAtInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:errorEnabled="true"
-                app:layout_constraintStart_toStartOf="parent"
-                android:hint="@string/prompt_event_startAt"
-                app:startIconDrawable="@drawable/baseline_calendar_month_24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/eventFormStartAtTextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none|date"
-                    android:textSize="16sp" />
-
-            </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
-
-            <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
-                android:id="@+id/eventFormEndAtInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:errorEnabled="true"
-                android:hint="@string/prompt_event_endAt"
-                app:startIconDrawable="@drawable/baseline_event_available_24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/eventFormEndAtTextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none|date"
-                    android:textSize="16sp" />
-            </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
-
-               <!-- <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/eventFormStartAtGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -188,22 +198,42 @@
                     android:id="@+id/eventFormStartAtTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="@string/prompt_startAt_title"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:text="@string/prompt_event_startAt"
-                    android:textSize="16sp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
+                    android:id="@+id/eventFormStartAtInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_date_event"
+                    android:layout_marginEnd="5dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintTop_toBottomOf="@id/eventFormStartAtTitle"
+                    app:layout_constraintEnd_toStartOf="@id/eventFormStartAtTimeInputLayout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:startIconDrawable="@drawable/baseline_calendar_month_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventFormStartAtTextField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none|date"
+                        android:textSize="14sp" />
+
+                </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
 
 
                 <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
                     android:id="@+id/eventFormStartAtTimeInputLayout"
-                    android:layout_width="150dp"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/eventFormStartAtTitle"
-                    app:layout_constraintStart_toEndOf="@id/eventFormStartAtInputLayout"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:hint="@string/prompt_time_event"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/eventFormStartAtInputLayout"
+                    app:layout_constraintTop_toBottomOf="@id/eventFormStartAtTitle"
                     app:startIconDrawable="@drawable/baseline_access_time_24">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -211,7 +241,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none|date"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -219,30 +249,46 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/eventFormEndAtGroup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/eventFormEndAtTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="@string/prompt_endAt_title"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:text="@string/prompt_event_endAt"
-                    android:textSize="16sp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
+                    android:id="@+id/eventFormEndAtInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/eventFormEndAtTitle"
+                    app:layout_constraintEnd_toStartOf="@id/eventFormEndAtTimeInputLayout"
+                    android:hint="@string/prompt_date_event"
+                    app:errorEnabled="true"
+                    app:startIconDrawable="@drawable/baseline_event_available_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventFormEndAtTextField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none|date"
+                        android:textSize="14sp" />
                 </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
 
                 <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
                     android:id="@+id/eventFormEndAtTimeInputLayout"
-                    android:layout_width="150dp"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/eventFormEndAtTitle"
-                    app:layout_constraintStart_toEndOf="@id/eventFormEndAtInputLayout"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:hint="@string/prompt_time_event"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/eventFormEndAtInputLayout"
+                    app:layout_constraintTop_toBottomOf="@id/eventFormEndAtTitle"
                     app:startIconDrawable="@drawable/baseline_access_time_24">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -250,28 +296,30 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none|date"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <Button
             android:id="@+id/eventFormPickGeoButton"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
             android:layout_weight="1"
-            android:text="@string/add_geo_picker_button"
             android:paddingHorizontal="20dp"
+            android:layout_marginEnd="5dp"
             android:paddingVertical="12dp"
+            android:text="@string/add_geo_picker_button"
             android:textSize="16sp" />
 
         <Button
@@ -279,14 +327,16 @@
             style="@style/Widget.Material3.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:text="@string/create_event_title"
             android:paddingHorizontal="20dp"
             android:paddingVertical="12dp"
+            android:text="@string/create_event_title"
             android:textSize="16sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-    <include android:id="@+id/pgLayout" layout="@layout/linear_progress_bar"/>
+
+    <include
+        android:id="@+id/pgLayout"
+        layout="@layout/linear_progress_bar" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

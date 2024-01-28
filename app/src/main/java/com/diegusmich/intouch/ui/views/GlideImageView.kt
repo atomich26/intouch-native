@@ -10,6 +10,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.diegusmich.intouch.R
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.storage.StorageReference
+import java.io.File
 
 @SuppressLint("CheckResult")
 class GlideImageView(ctx: Context, attrs: AttributeSet) : ShapeableImageView(ctx, attrs) {
@@ -33,6 +34,10 @@ class GlideImageView(ctx: Context, attrs: AttributeSet) : ShapeableImageView(ctx
                 recycle()
             }
         }
+    }
+
+    fun load(image: File){
+        Glide.with(context).load(image).apply(glideOptions).into(this@GlideImageView)
     }
 
     fun load(url: String) {

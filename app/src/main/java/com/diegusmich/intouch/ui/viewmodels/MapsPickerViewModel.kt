@@ -19,6 +19,10 @@ class MapsPickerViewModel : StateViewModel() {
 
     fun getDefaultLocation() = UserLocationProvider.defaultLocation
 
+    fun setLocation(location: Location){
+        _selectedLocation.value = location
+    }
+
     fun setLocation(location: LatLng) {
         _selectedLocation.value = Location("").apply {
             latitude = location.latitude

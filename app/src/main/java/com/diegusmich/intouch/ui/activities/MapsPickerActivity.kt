@@ -1,7 +1,11 @@
 package com.diegusmich.intouch.ui.activities
 
+import android.app.Activity
+import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
@@ -26,6 +30,8 @@ class MapsPickerActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val viewModel : MapsPickerViewModel by viewModels()
 
+    private lateinit var supportMapFragment : SupportMapFragment
+
     private lateinit var googleMap : GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +47,22 @@ class MapsPickerActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         setContentView(binding.root)
 
-        val mapFragment =
-            supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
+        intent.extras?.getParcelable<Location>(LOCATION_ARG)?.let{
+            viewModel.setLocation(it)
+        }
+
+        binding.selectPositionButton.setOnClickListener {
+            val resultData = Intent().apply {
+                putExtra(LOCATION_RESULT_KEY, viewModel.selectedLocation.value!!)
+            }
+            setResult(Activity.RESULT_OK, resultData)
+            finish()
+        }
+
+        supportMapFragment = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+        supportMapFragment.getMapAsync(this)
+
+        Toast.makeText(this, getString(R.string.map_picker_message), Toast.LENGTH_LONG).show()
 
         observeData()
     }
@@ -61,18 +80,33 @@ class MapsPickerActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.getDefaultLocation().toLatLng(), 5f))
-        googleMap.setOnMapClickListener {
-            addMarkerOnMap(it)
+        googleMap.apply {
+            uiSettings.setAllGesturesEnabled(false)
+            moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.getDefaultLocation().toLatLng(), 5f))
+            setOnMapClickListener {
+                addMarkerOnMap(it)
+            }
         }
 
         lifecycleScope.launch {
-            viewModel.getCurrentPosition().await().toLatLng().let {
+            val selected = viewModel.selectedLocation.value ?: viewModel.getCurrentPosition().await()
+            selected.toLatLng().let {
                 addMarkerOnMap(it)
-                delay(1500)
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it,13f));
-                googleMap.animateCamera(CameraUpdateFactory.zoomIn());
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f), 2000, null);
+                delay(1000)
+                googleMap.apply {
+                    moveCamera(CameraUpdateFactory.newLatLngZoom(it,13f))
+                    animateCamera(CameraUpdateFactory.zoomIn())
+                    animateCamera(CameraUpdateFactory.zoomTo(15f), 2000, object: GoogleMap.CancelableCallback{
+                        override fun onCancel() {
+                           return
+                        }
+
+                        override fun onFinish() {
+                            uiSettings.setAllGesturesEnabled(true)
+                        }
+
+                    })
+                }
             }
         }
     }
@@ -81,5 +115,10 @@ class MapsPickerActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel.setLocation(latLng)
         googleMap.clear()
         googleMap.addMarker(MarkerOptions().position(latLng))
+    }
+
+    companion object{
+        const val LOCATION_RESULT_KEY = "locationResult"
+        const val LOCATION_ARG = "locationArg"
     }
 }

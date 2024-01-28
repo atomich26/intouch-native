@@ -23,8 +23,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/eventFeedName"
-            app:layout_constraintTop_toTopOf="parent"
-            app:placeholder="@drawable/user_placeholder"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/eventFeedName"
