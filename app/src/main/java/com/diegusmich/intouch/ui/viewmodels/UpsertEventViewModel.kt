@@ -9,14 +9,23 @@ import com.diegusmich.intouch.data.domain.Category
 import com.diegusmich.intouch.data.domain.Event
 import com.diegusmich.intouch.data.repository.CategoryRepository
 import com.diegusmich.intouch.data.repository.EventRepository
+import com.diegusmich.intouch.data.response.FormErrorsCallableResponse
 import com.diegusmich.intouch.network.NetworkStateObserver
+import com.diegusmich.intouch.providers.AuthProvider
+import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.providers.NetworkProvider
 import com.diegusmich.intouch.ui.views.form.FormInputLayout
-import com.google.firebase.storage.StorageReference
+import com.diegusmich.intouch.utils.ErrorUtil
+import com.diegusmich.intouch.utils.FirebaseExceptionUtil
+import com.google.firebase.FirebaseException
+import com.google.firebase.functions.FirebaseFunctionsException
+import com.google.firebase.storage.StorageException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
+import java.net.ConnectException
+import java.net.UnknownHostException
 import java.util.Date
 
 private const val NAME_FIELD_FORM: String = "name"
@@ -35,6 +44,9 @@ class UpsertEventViewModel : StateViewModel() {
 
     private val _EDITED = MutableLiveData(false)
     val EDITED: LiveData<Boolean> = _EDITED
+
+    private val _EVENT_CREATED = MutableLiveData(false)
+    val EVENT_CREATED : LiveData<Boolean> = _EVENT_CREATED
 
     private val _EVENT_NOT_EXISTS = MutableLiveData(false)
     val EVENT_NOT_EXISTS: LiveData<Boolean> = _EVENT_NOT_EXISTS
@@ -65,9 +77,8 @@ class UpsertEventViewModel : StateViewModel() {
 
     private val _available =
         MutableLiveData(
-            FormInputLayout.FormInputState(
-                inputName = AVAILABLE_FIELD_FORM,
-                inputValue = 0
+            FormInputLayout.FormInputState<Int>(
+                inputName = AVAILABLE_FIELD_FORM
             )
         )
     val available: LiveData<FormInputLayout.FormInputState<Int>> = _available
@@ -78,9 +89,8 @@ class UpsertEventViewModel : StateViewModel() {
 
     private val _category =
         MutableLiveData(
-            FormInputLayout.FormInputState(
-                inputName = CATEGORY_FIELD_FORM,
-                inputValue = 0
+            FormInputLayout.FormInputState<Int>(
+                inputName = CATEGORY_FIELD_FORM
             )
         )
     val category: LiveData<FormInputLayout.FormInputState<Int>> = _category
@@ -113,59 +123,75 @@ class UpsertEventViewModel : StateViewModel() {
         MutableLiveData(FormInputLayout.FormInputState<Location>(inputName = GEO_FIELD_FORM))
     val geo: LiveData<FormInputLayout.FormInputState<Location>> = _geo
 
-    private var categories : List<Category>? = null
+    private val _categories = MutableLiveData<List<Category>?>(null)
+    val categories: LiveData<List<Category>?> = _categories
+
     private var eventCurrentData: Event.Full? = null
-    private var requestFormData = mutableMapOf<String, Any?>()
+    private var requestFormData = mutableMapOf<String, Any>()
 
     private var onNetworkAvailableJob = NetworkStateObserver {
         onLoadData()
     }
 
-    fun setEditMode(eventId : String?){
+    fun setEditMode(eventId: String?) {
         _eventId = eventId
         onLoadData()
     }
 
-    fun onLoadData(): Job = viewModelScope.launch {
+    private fun onLoadData(): Job = viewModelScope.launch {
         updateState(_LOADING, true)
 
-         try{
-             val getCategoriesJob = async{
-                 CategoryRepository.getAll()
-             }
-             val getCurrentEventData = async{
-                 _eventId?.let{
-                     EventRepository.event(_eventId!!)
-                 }
-             }
+        try {
+            if (_categories.value.isNullOrEmpty()) {
+                _categories.value = CategoryRepository.getAll()
+                onUpdateCategory(0)
+            }
 
-             categories = getCategoriesJob.await()
-             eventCurrentData = getCurrentEventData.await()
+            _eventId?.let {
+                eventCurrentData = EventRepository.event(_eventId!!)
+                if (eventCurrentData == null) {
+                    updateState(_EVENT_NOT_EXISTS, true)
+                } else
+                    eventCurrentData?.let {
+                        _editMode.value = true
+                        onUpdateName(it.name)
+                        onUpdateDescription(it.description)
+                        onUpdateCity(it.city)
+                        onUpdateAddress(it.address)
+                        onUpdateLocation(it.geo)
+                        onUpdateRestricted(it.restricted)
+                        onUpdateCategory(categories.value!!.indexOfFirst { cat -> cat.id == it.categoryInfo.id })
+                    }
+            }
+            updateState(_CONTENT_LOADED, true)
+            NetworkProvider.removeOnNetworkAvailableObserver(onNetworkAvailableJob)
 
-             if(eventCurrentData == null){
-                 return@launch updateState(_EVENT_NOT_EXISTS, true)
-             }
-             eventCurrentData?.let {
-                 onUpdateName(it.name)
-             }
-             categories = CategoryRepository.getAll()
-             updateState(_CONTENT_LOADED, true)
-             NetworkProvider.removeOnNetworkAvailableObserver(onNetworkAvailableJob)
-
-         } catch (e: Exception){
-             NetworkProvider.addOnNetworkAvailableObserver(onNetworkAvailableJob)
-             updateState(_ERROR, R.string.firebaseNetworkException)
-         }
+        } catch (e: Exception) {
+            NetworkProvider.addOnNetworkAvailableObserver(onNetworkAvailableJob)
+            updateState(_ERROR, R.string.firebaseNetworkException)
+        }
     }
 
     fun onUpdateCoverImage(image: File) {
         _cover.apply {
-            if(image.name == eventCurrentData?.cover){
+            if (image.name == eventCurrentData?.cover) {
                 requestFormData[value?.inputName!!] = image.name
             } else
                 requestFormData.remove(value?.inputName)
 
             value = value?.copy(inputValue = image, error = null)
+        }
+    }
+
+    fun onUpdateCategory(pos: Int) {
+        _category.apply {
+            val selected = _categories.value?.get(pos)
+            if (selected?.id != eventCurrentData?.categoryInfo?.id)
+                requestFormData[value?.inputName!!] = selected?.id ?: ""
+            else
+                requestFormData.remove(value?.inputName)
+
+            value = value?.copy(inputValue = pos, error = null)
         }
     }
 
@@ -177,6 +203,19 @@ class UpsertEventViewModel : StateViewModel() {
                 requestFormData.remove(value?.inputName)
 
             value = value?.copy(inputValue = location, error = null)
+
+            if (_editMode.value == false)
+                updateState(_LOCATION_ADDED, true)
+        }
+    }
+
+    fun onUpdateAvailable(newValue: String) {
+        if (_editMode.value == false) {
+            _available.apply {
+                val parsed = newValue.toInt()
+                requestFormData[value?.inputName!!] = parsed
+                value = value?.copy(inputValue = parsed, error = null)
+            }
         }
     }
 
@@ -187,7 +226,7 @@ class UpsertEventViewModel : StateViewModel() {
             } else
                 requestFormData.remove(value?.inputName)
 
-            value = value?.copy(inputValue = restrictedValue , error = null)
+            value = value?.copy(inputValue = restrictedValue, error = null)
         }
     }
 
@@ -198,44 +237,144 @@ class UpsertEventViewModel : StateViewModel() {
             } else
                 requestFormData.remove(value?.inputName)
 
-            value = value?.copy(inputValue = nameText , error = null)
+            value = value?.copy(inputValue = nameText, error = null)
         }
     }
 
     fun onUpdateDescription(descriptionText: String) {
         _description.apply {
             if (descriptionText != eventCurrentData?.description) {
-                requestFormData[value?.inputName!!] = description
+                requestFormData[value?.inputName!!] = descriptionText
             } else
                 requestFormData.remove(value?.inputName)
 
-            value = value?.copy(inputValue = descriptionText , error = null)
+            value = value?.copy(inputValue = descriptionText, error = null)
         }
     }
 
     fun onUpdateCity(cityText: String) {
         _city.apply {
-            if (cityText != eventCurrentData?.description) {
-                requestFormData[value?.inputName!!] = description
+            if (cityText != eventCurrentData?.city) {
+                requestFormData[value?.inputName!!] = cityText
             } else
                 requestFormData.remove(value?.inputName)
 
-            value = value?.copy(inputValue = cityText , error = null)
+            value = value?.copy(inputValue = cityText, error = null)
         }
     }
 
     fun onUpdateAddress(addressText: String) {
         _address.apply {
-            if (addressText != eventCurrentData?.description) {
-                requestFormData[value?.inputName!!] = description
+            if (addressText != eventCurrentData?.address) {
+                requestFormData[value?.inputName!!] = addressText
             } else
                 requestFormData.remove(value?.inputName)
 
-            value = value?.copy(inputValue = addressText , error = null)
+            value = value?.copy(inputValue = addressText, error = null)
         }
     }
 
-    private fun upsertEvent() = viewModelScope.launch {
+    fun onUpsertEvent() = viewModelScope.launch {
 
+        if (requestFormData.isEmpty() && editMode.value!!)
+            return@launch updateState(_ERROR, R.string.event_already_updated)
+
+        updateState(_LOADING, true)
+        try {
+            requestFormData["eventId"] = _eventId.toString()
+
+            val upsertJob = viewModelScope.async {
+                EventRepository.upsert(requestFormData)
+            }
+            val uploadImagejob = viewModelScope.async {
+                //CloudImageProvider.EVENTS.uploadImage(_cover.value?.inputValue!!)
+            }
+
+            upsertJob.await()
+            requestFormData.clear()
+            onLoadData()
+
+            if(editMode.value == true)
+                updateState(_EDITED, true)
+            else
+                updateState(_EVENT_CREATED, true)
+
+            uploadImagejob.await()
+        } catch (e: FirebaseFunctionsException) {
+            when (e.code) {
+                FirebaseFunctionsException.Code.INTERNAL -> {
+                    val messageId =
+                        if (e.cause is UnknownHostException || e.cause is ConnectException)
+                            R.string.firebaseNetworkException
+                        else
+                            R.string.internal_error
+
+                    updateState(_ERROR, messageId)
+                }
+
+                FirebaseFunctionsException.Code.INVALID_ARGUMENT -> {
+                    if (e.details != null) {
+                        val errors = FormErrorsCallableResponse(e.details).errors
+
+                        if (errors.containsKey("name"))
+                            _name.apply {
+                                value =
+                                    value?.copy(error = ErrorUtil.getMessage(errors["name"].toString()))
+                            }
+
+                        if (errors.containsKey("description"))
+                            _description.apply {
+                                value =
+                                    value?.copy(error = ErrorUtil.getMessage(errors["description"].toString()))
+                            }
+
+                        if (errors.containsKey("city"))
+                            _city.apply {
+                                value =
+                                    value?.copy(error = ErrorUtil.getMessage(errors["city"].toString()))
+                            }
+
+                        if (errors.containsKey("address"))
+                            _address.apply {
+                                value =
+                                    value?.copy(error = ErrorUtil.getMessage(errors["address"].toString()))
+                            }
+
+                        if (errors.containsKey("startAt"))
+                            _startAt.apply {
+                                value =
+                                    value?.copy(error = ErrorUtil.getMessage(errors["startAt"].toString()))
+                            }
+
+                        if (errors.containsKey("endAt"))
+                            _endAt.apply {
+                                value =
+                                    value?.copy(error = ErrorUtil.getMessage(errors["endAt"].toString()))
+                            }
+
+                        if (errors.containsKey("categoryId"))
+                            _category.apply {
+                                value =
+                                    value?.copy(error = ErrorUtil.getMessage(errors["categoryId"].toString()))
+                            }
+
+                        if (errors.containsKey("available"))
+                            _available.apply {
+                                value =
+                                    value?.copy(error = ErrorUtil.getMessage(errors["available"].toString()))
+                            }
+                        updateState(_LOADING, false)
+                    }
+                }
+
+                else -> {
+                    updateState(_ERROR, R.string.firebaseDefaultExceptionMessage)
+                }
+            }
+        } catch (e: StorageException) {
+            updateState(_ERROR, R.string.storageImageException)
+        } catch (e: FirebaseException) {
+            updateState(_ERROR, FirebaseExceptionUtil.localize(e))
+        }
     }
 }

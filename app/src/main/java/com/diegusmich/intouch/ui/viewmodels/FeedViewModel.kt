@@ -33,9 +33,8 @@ class FeedViewModel : StateViewModel() {
 
         updateState(_LOADING, true)
         try {
-
-            val getPostFeedJob = async { PostRepository.feed() }
-            val getEventFeedJob = async { EventRepository.feed(getCurrentLocation().await()) }
+            val getPostFeedJob = viewModelScope.async { PostRepository.feed() }
+            val getEventFeedJob = viewModelScope.async { EventRepository.feed(getCurrentLocation().await()) }
             _postFeed.value = getPostFeedJob.await()
             _eventFeed.value = getEventFeedJob.await()
 

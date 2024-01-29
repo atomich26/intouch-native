@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -14,12 +16,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
+import androidx.core.view.MenuProvider
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Event
 import com.diegusmich.intouch.databinding.ActivityEventBinding
 import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.ui.viewmodels.EventViewModel
 import com.diegusmich.intouch.utils.TimeUtil
+import com.google.android.material.appbar.MaterialToolbar
 import java.util.Date
 import kotlin.math.abs
 
@@ -51,7 +55,25 @@ class EventActivity : AppCompatActivity() {
         savedInstanceState?.let {
             isToolbarCollapsed = it.getBoolean(TOOLBAR_COLLAPSED)
         }
-        binding.collapsingMaterialToolbar.inflateMenu(R.menu.event_menu)
+
+        binding.collapsingMaterialToolbar.apply {
+            inflateMenu(R.menu.event_menu)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.editEventMenuItem -> {
+                        viewModel.event.value?.id?.let{
+                            startActivity(Intent(this@EventActivity, UpsertEventActivity::class.java).apply {
+                                putExtra(UpsertEventActivity.EVENT_ID_ARG, it)
+                            })
+                            true
+                        }
+                        false
+                    }
+
+                    else -> false
+                }
+            }
+        }
 
         setToolbarContentColor(isToolbarCollapsed)
         binding.collapsingAppBarLayout.addOnOffsetChangedListener { appBarLayout, offset ->
@@ -124,12 +146,6 @@ class EventActivity : AppCompatActivity() {
             binding.collapsingMaterialToolbar.menu.findItem(R.id.showAttendeesMenuItem).icon =
                 AppCompatResources.getDrawable(this, R.drawable.baseline_group_24_white)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.event_menu, menu)
-        return true
     }
 
     private fun observeData() {

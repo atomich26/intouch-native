@@ -105,9 +105,8 @@ object EventRepository :
         }
     }
 
-    suspend fun createEvent(data: Map<String, Any>, coverImg: File) = withContext(Dispatchers.IO){
+    suspend fun upsert(data: Map<String, Any>,) = withContext(Dispatchers.IO){
         Firebase.functions.getHttpsCallable("events-upsert").call(data).await()
-        CloudImageProvider.EVENTS.uploadImage(coverImg)
     }
 
     suspend fun deleteEvent(eventId: String) = withContext(Dispatchers.IO){

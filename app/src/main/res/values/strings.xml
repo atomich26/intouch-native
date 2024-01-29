@@ -34,8 +34,10 @@
     <string name="prompt_description">Descrizione</string>
     <string name="prompt_name_event">Nome evento</string>
     <string name="prompt_city">Città</string>
+    <string name="time_picker_title">Imposta un orario</string>
+    <string name="event_already_updated">L\'evento è già aggiornato.</string>
     <string name="prompt_address">Indirizzo</string>
-    <string name="prompt_available">Disponibilità</string>
+    <string name="prompt_available">Posti</string>
     <string name="prompt_geo">Località</string>
     <string name="prompt_event_startAt">Inizio</string>
     <string name="prompt_event_endAt">Fine</string>
@@ -142,6 +144,7 @@
     <string name="firebaseFirestoreException">Si è verificato un errore, riprova più tardi.</string>
     <string name="initFCMTokenException">Impossibile configurare l\'account, riprova più tardi.</string>
     <string name="firebaseLogoutException">Impossibile disconnettersi, controlla la connessione internet.</string>
+    <string name="storageImageException">Errore di rete, non è stato possibile caricare l\'immagine</string>
 
     <!-- Error messages API -->
     <string name="form_blank_fields">Compila tutti i campi</string>
