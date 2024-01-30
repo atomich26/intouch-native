@@ -79,8 +79,6 @@ class UpsertEventActivity : AppCompatActivity() {
 
         intent.extras?.getString(EVENT_ID_ARG).let {
             viewModel.setEditMode(it)
-            binding.eventFormAvailableInputLayout.visibility =
-                if (it == null) View.VISIBLE else View.GONE
         }
 
         val datePickerValidator = CalendarConstraints.Builder().setValidator(
@@ -143,8 +141,7 @@ class UpsertEventActivity : AppCompatActivity() {
 
         binding.eventFormAvailableInputLayout.editText?.doAfterTextChanged {
             it?.let {
-                if (viewModel.editMode.value == false)
-                    viewModel.onUpdateAvailable(it.toString())
+                viewModel.onUpdateAvailable(it.toString())
             }
         }
 

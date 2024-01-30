@@ -197,8 +197,9 @@
     <string name="event_category_invalid">Categoria non valida.</string>
     <string name="event_category_empty">Inserisci una categoria.</string>
     <string name="event_category_not_exists">La categoria inserita non esiste</string>
-    <string name="event_available_invalid">Il valore massimo della capienza è di 5000 utenti.</string>
-    <string name="event_available_empty">Inserisci la capienza massima per l\'evento.</string>
+    <string name="event_available_invalid">La disponibilità deve essere compresa tra 2 e 5000(inclusi).</string>
+    <string name="event_available_empty">Inserisci la disponibilità massima per l\'evento.</string>
+    <string name="event_availability_less_than_attendees">La disponibilità non può essere minore degli attuali partecipanti:</string>
     <string name="event_geo_invalid">Le coordinate non sono valide.</string>
     <string name="event_geo_empty">Inserisci le coordinate del luogo in cui si terrà l\'evento.</string>
     <string name="invalid_fields_value">Dati non validi</string>

@@ -49,6 +49,7 @@ object ErrorUtil {
         "EVENT_CATEGORY_EMPTY" to R.string.event_category_empty,
         "EVENT_AVAILABLE_INVALID" to R.string.event_available_invalid,
         "EVENT_AVAILABLE_EMPTY" to R.string.event_available_empty,
+        "AVAILABILITY_LESS_THAN_ATTENDEES" to R.string.event_availability_less_than_attendees,
         "EVENT_GEO_INVALID" to R.string.event_geo_invalid,
         "EVENT_GEO_EMPTY" to R.string.event_geo_empty,
         "INVALID_FIELDS_VALUE" to R.string.invalid_fields_value

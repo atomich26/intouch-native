@@ -160,10 +160,12 @@ class UpsertEventViewModel : StateViewModel() {
                 onUpdateCategory(0)
             }
 
-            val getCurrentPos = viewModelScope.async {
-                UserLocationProvider.getCurrentLocation()
+            if(editMode.value == false){
+                val getCurrentPos = viewModelScope.async {
+                    UserLocationProvider.getCurrentLocation()
+                }
+                onUpdateLocation(getCurrentPos.await(), false)
             }
-            onUpdateLocation(getCurrentPos.await(), false)
 
             _eventId?.let {
                 eventCurrentData = EventRepository.event(_eventId!!)
@@ -217,7 +219,7 @@ class UpsertEventViewModel : StateViewModel() {
             }
             value = value?.copy(inputValue = newDate.time, error = null)
 
-            if (newDate != currentDate)
+            if (newDate.time != currentDate)
                 requestFormData[value?.inputName!!] = value?.inputValue?.time!!
             else
                 requestFormData.remove(value?.inputName)
@@ -268,12 +270,15 @@ class UpsertEventViewModel : StateViewModel() {
     }
 
     fun onUpdateAvailable(newValue: String) {
-        if (_editMode.value == false) {
-            _available.apply {
-                val parsed = newValue.toInt()
-                requestFormData[value?.inputName!!] = parsed
-                value = value?.copy(inputValue = parsed, error = null)
-            }
+        _available.apply {
+            val parsed = try{ newValue.toInt() } catch (e: Exception){ null }
+
+            if(parsed != eventCurrentData?.available)
+                requestFormData[value?.inputName!!] = parsed ?: 0
+            else
+                requestFormData.remove(value?.inputName)
+
+            value = value?.copy(inputValue = parsed, error = null)
         }
     }
 
@@ -363,6 +368,7 @@ class UpsertEventViewModel : StateViewModel() {
                 updateState(_EDITED, true)
             else
                 updateState(_EVENT_CREATED, true)
+
         } catch (e: FirebaseFunctionsException) {
             when (e.code) {
                 FirebaseFunctionsException.Code.INTERNAL -> {
