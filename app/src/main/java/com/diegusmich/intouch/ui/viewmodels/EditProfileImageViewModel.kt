@@ -33,7 +33,7 @@ class EditProfileImageViewModel : StateViewModel() {
 
         try {
             val compressed = FileUtil.compressImage(ctx, image, 512_000)
-            _currentImgRef.value = CloudImageProvider.USERS.uploadImage(compressed)
+            _currentImgRef.value = CloudImageProvider.USERS.uploadImage(compressed, CloudImageProvider.USERS.newFileRef())
             UserRepository.changeProfileImg(_currentImgRef.value!!.name)
 
             updateState(_LOADING, false)

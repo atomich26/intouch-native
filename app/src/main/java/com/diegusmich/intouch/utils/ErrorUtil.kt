@@ -50,7 +50,8 @@ object ErrorUtil {
         "EVENT_AVAILABLE_INVALID" to R.string.event_available_invalid,
         "EVENT_AVAILABLE_EMPTY" to R.string.event_available_empty,
         "EVENT_GEO_INVALID" to R.string.event_geo_invalid,
-        "EVENT_GEO_EMPTY" to R.string.event_geo_empty
+        "EVENT_GEO_EMPTY" to R.string.event_geo_empty,
+        "INVALID_FIELDS_VALUE" to R.string.invalid_fields_value
     )
 
     fun getMessage(key : String) = messages[key] ?: R.string.default_invalid_error

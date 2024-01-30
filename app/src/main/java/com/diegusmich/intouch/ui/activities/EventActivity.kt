@@ -52,6 +52,10 @@ class EventActivity : AppCompatActivity() {
 
         binding.swipeRefreshLayout.setProgressViewOffset(true, 50, 250)
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.onLoadEvent(eventIdArg)
+        }
+
         savedInstanceState?.let {
             isToolbarCollapsed = it.getBoolean(TOOLBAR_COLLAPSED)
         }

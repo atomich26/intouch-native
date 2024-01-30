@@ -59,6 +59,7 @@
                 android:id="@+id/eventFormNameInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:hint="@string/prompt_name"
                 app:errorEnabled="true"
                 app:startIconDrawable="@drawable/baseline_text_fields_24">
@@ -99,48 +100,41 @@
 
             </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <com.diegusmich.intouch.ui.views.form.IntouchDropDownInputLayout
+                android:id="@+id/categoryFormEventInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <com.diegusmich.intouch.ui.views.form.IntouchDropDownInputLayout
-                    android:id="@+id/categoryFormEventInputLayout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
+                android:layout_weight="1"
+                android:hint="@string/prompt_category"
+                app:errorEnabled="true">
+
+                <AutoCompleteTextView
+                    android:id="@+id/categoriesDropdown"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="5dp"
-                    android:hint="@string/prompt_category"
-                    app:errorEnabled="true">
+                    android:textSize="14dp"
+                    android:singleLine="true"
+                    android:inputType="none" />
+            </com.diegusmich.intouch.ui.views.form.IntouchDropDownInputLayout>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/categoriesDropdown"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14dp"
-                        android:singleLine="true"
-                        android:inputType="none" />
-                </com.diegusmich.intouch.ui.views.form.IntouchDropDownInputLayout>
+            <com.diegusmich.intouch.ui.views.form.IntouchNumberInputLayout
+                android:id="@+id/eventFormAvailableInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_available"
+                app:errorEnabled="true">
 
-                <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
-                    android:id="@+id/eventFormAvailableInputLayout"
-                    android:layout_width="80dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/eventFormAvailableTextField"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_available"
-                    app:errorEnabled="true">
+                    android:ems="@integer/event_available_max"
+                    android:inputType="number"
+                    android:maxLength="@integer/event_available_max"
+                    android:textSize="14sp" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/eventFormAvailableTextField"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="@integer/event_available_max"
-                        android:inputType="number"
-                        android:maxLength="@integer/event_available_max"
-                        android:textSize="14sp" />
-
-                </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </com.diegusmich.intouch.ui.views.form.IntouchNumberInputLayout>
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/eventFormRestrictedSwitch"
@@ -230,17 +224,18 @@
                         android:id="@+id/eventFormStartAtTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none|date"
+                        android:inputType="none"
                         android:textSize="14sp" />
 
                 </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
 
 
-                <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
+                <com.diegusmich.intouch.ui.views.form.IntouchTimeInputLayout
                     android:id="@+id/eventFormStartAtTimeInputLayout"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_time_event"
+                    app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/eventFormStartAtInputLayout"
                     app:layout_constraintTop_toBottomOf="@id/eventFormStartAtTitle"
@@ -250,10 +245,10 @@
                         android:id="@+id/eventFormStartAtTimeTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none|date"
+                        android:inputType="none"
                         android:textSize="14sp" />
 
-                </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
+                </com.diegusmich.intouch.ui.views.form.IntouchTimeInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -287,11 +282,11 @@
                         android:id="@+id/eventFormEndAtTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none|date"
+                        android:inputType="none"
                         android:textSize="14sp" />
                 </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
 
-                <com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout
+                <com.diegusmich.intouch.ui.views.form.IntouchTimeInputLayout
                     android:id="@+id/eventFormEndAtTimeInputLayout"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
@@ -305,10 +300,10 @@
                         android:id="@+id/eventFormEndAtTimeTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none|date"
+                        android:inputType="none"
                         android:textSize="14sp" />
 
-                </com.diegusmich.intouch.ui.views.form.IntouchDateInputLayout>
+                </com.diegusmich.intouch.ui.views.form.IntouchTimeInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -342,7 +337,7 @@
             android:layout_weight="1"
             android:paddingHorizontal="20dp"
             android:paddingVertical="12dp"
-            android:text="@string/create_event_title"
+            android:text="@string/action_save_changes_form"
             android:textSize="16sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

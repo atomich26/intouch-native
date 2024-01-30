@@ -3,7 +3,9 @@ package com.diegusmich.intouch.ui.views.form
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
+import androidx.annotation.StringRes
 import com.google.android.material.textfield.TextInputLayout
+import org.checkerframework.common.value.qual.StringVal
 
 abstract class FormInputLayout<T>(ctx : Context, attrs: AttributeSet) : TextInputLayout(ctx, attrs){
 
@@ -17,6 +19,10 @@ abstract class FormInputLayout<T>(ctx : Context, attrs: AttributeSet) : TextInpu
                     editText?.setText(valueToText, TextView.BufferType.EDITABLE)
             }
         }
+        setError(state)
+    }
+
+    open fun setError(state: FormInputState<T>){
         if(state.error != null){
             this@FormInputLayout.error = context.getString(state.error)
         }

@@ -86,7 +86,9 @@ object PostRepository : FirestoreCollection<PostWrapper, PostWrapper.Factory>(Po
         val uploadAlbumJob = launch{
             if(data["album"] is List<*>){
                 for (img in data["album"] as List<File>)
-                    CloudImageProvider.POSTS.uploadImage(img)
+                    with(CloudImageProvider.POSTS) {
+                        uploadImage(img, newFileRef())
+                    }
             }
         }
 

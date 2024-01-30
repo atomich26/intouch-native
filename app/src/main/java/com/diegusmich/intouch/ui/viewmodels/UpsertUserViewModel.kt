@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.net.ConnectException
 import java.net.UnknownHostException
+import java.util.Date
 
 private const val EMAIL_FIELD_FORM: String = "email"
 private const val NAME_FIELD_FORM: String = "name"
@@ -67,8 +68,8 @@ class UpsertUserViewModel : StateViewModel() {
     private val _password = MutableLiveData(FormInputState<String>(inputName = PASSWORD_FIELD_FORM))
     val password: LiveData<FormInputState<String>> = _password
 
-    private val _birthdate = MutableLiveData(FormInputState<Long>(inputName = BIRTHDATE_FIELD_FORM))
-    val birthdate: LiveData<FormInputState<Long>> = _birthdate
+    private val _birthdate = MutableLiveData(FormInputState(inputName = BIRTHDATE_FIELD_FORM, inputValue = Date()))
+    val birthdate: LiveData<FormInputState<Date>> = _birthdate
 
     private var userCurrentData : User.Profile? = null
     private var requestFormData = mutableMapOf<String, Any?>()
@@ -145,7 +146,7 @@ class UpsertUserViewModel : StateViewModel() {
     }
 
     fun onUpdateBirthdate(timestamp: Long) {
-        updateFormInput(_birthdate, timestamp, true, userCurrentData?.birthdate?.time)
+        updateFormInput(_birthdate, Date(timestamp), true, userCurrentData?.birthdate)
     }
 
     fun onSendResetPasswordEmail() = viewModelScope.launch {
@@ -167,6 +168,9 @@ class UpsertUserViewModel : StateViewModel() {
 
         updateState(_LOADING, true)
         try {
+            if(requestFormData.containsKey(BIRTHDATE_FIELD_FORM))
+                requestFormData["birthdate"] = _birthdate.value?.inputValue?.time
+
             if (editMode.value == false) {
                 AuthProvider.signUp(requestFormData)
                 updateState(_LOGGED, true)

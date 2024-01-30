@@ -6,9 +6,9 @@
     <integer name="email_length">90</integer>
     <integer name="biography_length">160</integer>
     <integer name="comment_length">250</integer>
-    <integer name="event_name">40</integer>
+    <integer name="event_name">80</integer>
     <integer name="event_description">250</integer>
-    <integer name="event_city">40</integer>
+    <integer name="event_city">50</integer>
     <integer name="event_address">50</integer>
     <integer name="event_available_max">4</integer>
 </resources>

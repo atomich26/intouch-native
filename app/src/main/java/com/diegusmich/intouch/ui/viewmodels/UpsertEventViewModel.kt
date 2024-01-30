@@ -1,5 +1,6 @@
 package com.diegusmich.intouch.ui.viewmodels
 
+import android.content.Context
 import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,21 +12,24 @@ import com.diegusmich.intouch.data.repository.CategoryRepository
 import com.diegusmich.intouch.data.repository.EventRepository
 import com.diegusmich.intouch.data.response.FormErrorsCallableResponse
 import com.diegusmich.intouch.network.NetworkStateObserver
-import com.diegusmich.intouch.providers.AuthProvider
 import com.diegusmich.intouch.providers.CloudImageProvider
 import com.diegusmich.intouch.providers.NetworkProvider
+import com.diegusmich.intouch.providers.UserLocationProvider
 import com.diegusmich.intouch.ui.views.form.FormInputLayout
 import com.diegusmich.intouch.utils.ErrorUtil
+import com.diegusmich.intouch.utils.FileUtil
 import com.diegusmich.intouch.utils.FirebaseExceptionUtil
 import com.google.firebase.FirebaseException
 import com.google.firebase.functions.FirebaseFunctionsException
 import com.google.firebase.storage.StorageException
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
 import java.net.ConnectException
 import java.net.UnknownHostException
+import java.util.Calendar
 import java.util.Date
 
 private const val NAME_FIELD_FORM: String = "name"
@@ -46,7 +50,7 @@ class UpsertEventViewModel : StateViewModel() {
     val EDITED: LiveData<Boolean> = _EDITED
 
     private val _EVENT_CREATED = MutableLiveData(false)
-    val EVENT_CREATED : LiveData<Boolean> = _EVENT_CREATED
+    val EVENT_CREATED: LiveData<Boolean> = _EVENT_CREATED
 
     private val _EVENT_NOT_EXISTS = MutableLiveData(false)
     val EVENT_NOT_EXISTS: LiveData<Boolean> = _EVENT_NOT_EXISTS
@@ -58,6 +62,9 @@ class UpsertEventViewModel : StateViewModel() {
     val editMode: LiveData<Boolean> = _editMode
 
     private var _eventId: String? = null
+
+    private var _newEventId: String? = null
+    val newEventId get() = _newEventId
 
     private val _name =
         MutableLiveData(FormInputLayout.FormInputState<String>(inputName = NAME_FIELD_FORM))
@@ -83,9 +90,15 @@ class UpsertEventViewModel : StateViewModel() {
         )
     val available: LiveData<FormInputLayout.FormInputState<Int>> = _available
 
-    private val _cover =
-        MutableLiveData(FormInputLayout.FormInputState<File>(inputName = COVER_FIELD_FORM))
-    val cover: LiveData<FormInputLayout.FormInputState<File>> = _cover
+    private val _coverRef =
+        MutableLiveData(FormInputLayout.FormInputState<StorageReference>(inputName = COVER_FIELD_FORM))
+    val cover: LiveData<FormInputLayout.FormInputState<StorageReference>> = _coverRef
+
+    private val _coverFile = MutableLiveData<File?>(null)
+    val coverFile: LiveData<File?> = _coverFile
+
+    private var _currentCoverImage = MutableLiveData<StorageReference?>(null)
+    val currentCoverImage: LiveData<StorageReference?> = _currentCoverImage
 
     private val _category =
         MutableLiveData(
@@ -106,18 +119,18 @@ class UpsertEventViewModel : StateViewModel() {
     private val _startAt = MutableLiveData(
         FormInputLayout.FormInputState(
             inputName = START_FIELD_FORM,
-            inputValue = Date().time
+            inputValue = Date()
         )
     )
-    val startAt: LiveData<FormInputLayout.FormInputState<Long>> = _startAt
+    val startAt: LiveData<FormInputLayout.FormInputState<Date>> = _startAt
 
     private val _endAt = MutableLiveData(
-        FormInputLayout.FormInputState(
-            inputName = END_FIELD_FORM,
-            inputValue = Date().time
+        FormInputLayout.FormInputState<Date>(
+            inputName = END_FIELD_FORM
         )
     )
-    val endAt: LiveData<FormInputLayout.FormInputState<Long>> = _endAt
+
+    val endAt: LiveData<FormInputLayout.FormInputState<Date>> = _endAt
 
     private val _geo =
         MutableLiveData(FormInputLayout.FormInputState<Location>(inputName = GEO_FIELD_FORM))
@@ -147,6 +160,11 @@ class UpsertEventViewModel : StateViewModel() {
                 onUpdateCategory(0)
             }
 
+            val getCurrentPos = viewModelScope.async {
+                UserLocationProvider.getCurrentLocation()
+            }
+            onUpdateLocation(getCurrentPos.await(), false)
+
             _eventId?.let {
                 eventCurrentData = EventRepository.event(_eventId!!)
                 if (eventCurrentData == null) {
@@ -160,7 +178,13 @@ class UpsertEventViewModel : StateViewModel() {
                         onUpdateAddress(it.address)
                         onUpdateLocation(it.geo)
                         onUpdateRestricted(it.restricted)
+                        setCurrentCoverImage(it.cover)
+                        onUpdateDate(_startAt, timestamp = it.startAt.time, currentDate = it.startAt)
+                        it.endAt?.let{ it0 ->
+                            onUpdateDate(_endAt, timestamp = it0.time, currentDate = it0)
+                        }
                         onUpdateCategory(categories.value!!.indexOfFirst { cat -> cat.id == it.categoryInfo.id })
+
                     }
             }
             updateState(_CONTENT_LOADED, true)
@@ -172,15 +196,49 @@ class UpsertEventViewModel : StateViewModel() {
         }
     }
 
-    fun onUpdateCoverImage(image: File) {
-        _cover.apply {
-            if (image.name == eventCurrentData?.cover) {
-                requestFormData[value?.inputName!!] = image.name
-            } else
-                requestFormData.remove(value?.inputName)
+    fun onUpdateStartAt(timestamp: Long? = null, minutes: Int? = null, hours: Int? = null){
+        onUpdateDate(_startAt, timestamp, minutes, hours)
+    }
 
-            value = value?.copy(inputValue = image, error = null)
+    fun onUpdateEndAt(timestamp: Long? = null, minutes: Int? = null, hours: Int? = null){
+        onUpdateDate(_endAt, timestamp, minutes, hours)
+    }
+
+    private fun onUpdateDate(input: MutableLiveData<FormInputLayout.FormInputState<Date>>, timestamp: Long? = null, newMinutes: Int? = null, newHours: Int? = null, currentDate : Date? = null) {
+        input.apply {
+            val newDate = Calendar.getInstance().apply {
+                time = Date(timestamp ?: value?.inputValue?.time?: Date().time)
+                newMinutes?.let{
+                    set(Calendar.MINUTE, it)
+                }
+                newHours?.let{
+                    set(Calendar.HOUR, it)
+                }
+            }
+            value = value?.copy(inputValue = newDate.time, error = null)
+
+            if (newDate != currentDate)
+                requestFormData[value?.inputName!!] = value?.inputValue?.time!!
+            else
+                requestFormData.remove(value?.inputName)
         }
+    }
+
+    fun onUpdateCoverImage(ctx: Context, image: File) = viewModelScope.launch {
+        try {
+            _coverFile.value = FileUtil.compressImage(ctx, image, 512_000)
+            val fileRef = CloudImageProvider.EVENTS.newFileRef()
+            _coverRef.apply {
+                requestFormData[value?.inputName!!] = fileRef.name
+                value = value?.copy(inputValue = fileRef, error = null)
+            }
+        } catch (e: Exception) {
+            updateState(_ERROR, R.string.compressed_image_failed)
+        }
+    }
+
+    private fun setCurrentCoverImage(path: String) {
+        _currentCoverImage.value = CloudImageProvider.EVENTS.imageRef(path)
     }
 
     fun onUpdateCategory(pos: Int) {
@@ -195,16 +253,16 @@ class UpsertEventViewModel : StateViewModel() {
         }
     }
 
-    fun onUpdateLocation(location: Location) {
+    fun onUpdateLocation(location: Location, showMessage: Boolean = true) {
         _geo.apply {
             if (location != eventCurrentData?.geo) {
-                requestFormData[value?.inputName!!] = arrayOf(location.latitude, location.longitude)
+                requestFormData[value?.inputName!!] = listOf(location.latitude, location.longitude)
             } else
                 requestFormData.remove(value?.inputName)
 
             value = value?.copy(inputValue = location, error = null)
 
-            if (_editMode.value == false)
+            if (_editMode.value == false && showMessage)
                 updateState(_LOCATION_ADDED, true)
         }
     }
@@ -279,27 +337,32 @@ class UpsertEventViewModel : StateViewModel() {
         if (requestFormData.isEmpty() && editMode.value!!)
             return@launch updateState(_ERROR, R.string.event_already_updated)
 
+        if (editMode.value == false && _coverFile.value == null)
+            return@launch updateState(_ERROR, R.string.event_cover_empty)
+
         updateState(_LOADING, true)
         try {
-            requestFormData["eventId"] = _eventId.toString()
+            if (editMode.value == true)
+                requestFormData["eventId"] = _eventId.toString()
 
             val upsertJob = viewModelScope.async {
                 EventRepository.upsert(requestFormData)
             }
+
+            _newEventId = upsertJob.await().data.toString()
+
             val uploadImagejob = viewModelScope.async {
-                //CloudImageProvider.EVENTS.uploadImage(_cover.value?.inputValue!!)
+                _coverFile.value?.let {
+                    CloudImageProvider.EVENTS.uploadImage(it, _coverRef.value?.inputValue!!)
+                }
             }
-
-            upsertJob.await()
             requestFormData.clear()
-            onLoadData()
+            uploadImagejob.await()
 
-            if(editMode.value == true)
+            if (editMode.value == true)
                 updateState(_EDITED, true)
             else
                 updateState(_EVENT_CREATED, true)
-
-            uploadImagejob.await()
         } catch (e: FirebaseFunctionsException) {
             when (e.code) {
                 FirebaseFunctionsException.Code.INTERNAL -> {
@@ -313,6 +376,7 @@ class UpsertEventViewModel : StateViewModel() {
                 }
 
                 FirebaseFunctionsException.Code.INVALID_ARGUMENT -> {
+
                     if (e.details != null) {
                         val errors = FormErrorsCallableResponse(e.details).errors
 
@@ -363,13 +427,11 @@ class UpsertEventViewModel : StateViewModel() {
                                 value =
                                     value?.copy(error = ErrorUtil.getMessage(errors["available"].toString()))
                             }
-                        updateState(_LOADING, false)
                     }
+                    updateState(_ERROR, ErrorUtil.getMessage(e.message.toString()))
                 }
 
-                else -> {
-                    updateState(_ERROR, R.string.firebaseDefaultExceptionMessage)
-                }
+                else -> updateState(_ERROR, ErrorUtil.getMessage(e.message.toString()))
             }
         } catch (e: StorageException) {
             updateState(_ERROR, R.string.storageImageException)

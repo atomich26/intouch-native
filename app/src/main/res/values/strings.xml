@@ -37,7 +37,7 @@
     <string name="time_picker_title">Imposta un orario</string>
     <string name="event_already_updated">L\'evento è già aggiornato.</string>
     <string name="prompt_address">Indirizzo</string>
-    <string name="prompt_available">Posti</string>
+    <string name="prompt_available">Posti disponibili</string>
     <string name="prompt_geo">Località</string>
     <string name="prompt_event_startAt">Inizio</string>
     <string name="prompt_event_endAt">Fine</string>
@@ -114,8 +114,12 @@
     <string name="info_dialog_title">Avviso</string>
     <string name="show_events_on_map">Mostra mappa eventi</string>
     <string name="pick_location_title">Posizione evento</string>
+    <string name="event_created_message">Evento creato</string>
+    <string name="event_edited_message">Evento modificato</string>
     <string name="select_location_button">Seleziona questa posizione</string>
     <string name="geo_added_form_event">Posizione aggiunta</string>
+    <string name="event_image_empty">Immagine evento mancante!</string>
+    <string name="compressed_image_failed">Formato immagine non supportato.</string>
     <string name="map_picker_message">Clicca sulla mappa per selezionare una posizione per l\'evento.</string>
     <string name="geo_message_warning">Per geolocalizzare l\'evento ti ricordiamo di modificare le coordinate geografiche cliccando su \"Modifica posizione\". La posizione di default corrisponde a quella del dispositivo.</string>
     <string name="location_failed_message">Non è stato possibile ottenere informazioni sulla tua posizione attuale pertanto ti verranno mostrati eventi in prossimità di una posizione di default corrispondente alla città di Roma.</string>
@@ -167,7 +171,7 @@
     <string name="invalid_date">Data non valida</string>
     <string name="date_after_now">La data è successiva a quella corrente</string>
     <string name="empty_birthdate">La data di nascita non può essere vuota</string>
-    <string name="default_invalid_error">Campo non valido</string>
+    <string name="default_invalid_error">Errore</string>
     <string name="internal_error">Errore interno, riprova più tardi.</string>
     <string name="event_not_exists_error">L\'evento cercato non esiste</string>
     <string name="event_not_author">Non hai i permessi per modificare l\'evento</string>
@@ -197,6 +201,7 @@
     <string name="event_available_empty">Inserisci la capienza massima per l\'evento.</string>
     <string name="event_geo_invalid">Le coordinate non sono valide.</string>
     <string name="event_geo_empty">Inserisci le coordinate del luogo in cui si terrà l\'evento.</string>
+    <string name="invalid_fields_value">Dati non validi</string>
 
     <!-- Notification string -->
     <string name="notification_friendship_ch">Richieste di amicizia</string>
