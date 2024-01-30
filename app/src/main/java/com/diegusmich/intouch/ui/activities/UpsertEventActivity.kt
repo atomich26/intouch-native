@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -24,6 +25,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -100,7 +102,6 @@ class UpsertEventActivity : AppCompatActivity() {
             setTitleText(getString(R.string.time_picker_title))
         }
 
-
         binding.eventFormPickGeoButton.setOnClickListener {
             locationPicker.launch(Intent(this, MapsPickerActivity::class.java).apply {
                 putExtra(MapsPickerActivity.LOCATION_ARG, viewModel.geo.value?.inputValue)
@@ -153,6 +154,12 @@ class UpsertEventActivity : AppCompatActivity() {
             viewModel.onUpdateRestricted(value)
         }
 
+        onBackPressedDispatcher.addCallback {
+            if(viewModel.LOADING.value == false){
+                finish()
+            }
+        }
+
         setupDateInputs()
         setContentView(binding.root)
         observeData()
@@ -195,7 +202,21 @@ class UpsertEventActivity : AppCompatActivity() {
         }
 
         viewModel.available.observe(this) {
-            binding.eventFormAvailableInputLayout.updateState(it)
+            if(viewModel.editMode.value == false)
+                binding.eventFormAvailableInputLayout.updateState(it)
+        }
+
+        viewModel.editMode.observe(this){
+            if(!it){
+                binding.eventFormAvailableInputLayout.visibility = View.VISIBLE
+                binding.availableWarning.visibility = View.VISIBLE
+                binding.eventFormRestrictedSwitch.visibility = View.VISIBLE
+            }
+            else{
+                binding.eventFormAvailableInputLayout.visibility = View.GONE
+                binding.availableWarning.visibility = View.GONE
+                binding.eventFormRestrictedSwitch.visibility = View.GONE
+            }
         }
 
         viewModel.restricted.observe(this) {
@@ -263,6 +284,7 @@ class UpsertEventActivity : AppCompatActivity() {
             if (it) {
                 Toast.makeText(this, getString(R.string.event_edited_message), Toast.LENGTH_SHORT)
                     .show()
+                setResult(Activity.RESULT_OK, Intent())
                 finish()
             }
         }

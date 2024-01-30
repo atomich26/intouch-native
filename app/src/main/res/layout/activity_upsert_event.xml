@@ -118,10 +118,18 @@
                     android:inputType="none" />
             </com.diegusmich.intouch.ui.views.form.IntouchDropDownInputLayout>
 
+            <TextView
+                android:id="@+id/availableWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/availableWarning"
+                android:textSize="11sp" />
+
             <com.diegusmich.intouch.ui.views.form.IntouchNumberInputLayout
                 android:id="@+id/eventFormAvailableInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:hint="@string/prompt_available"
                 app:errorEnabled="true">
 
@@ -145,6 +153,7 @@
                 android:drawableStart="@drawable/baseline_group_24__black"
                 android:drawablePadding="5dp"
                 android:paddingHorizontal="5dp"
+                android:visibility="gone"
                 android:text="@string/prompt_restricted_event"
                 android:textSize="14sp" />
 

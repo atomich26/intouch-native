@@ -35,7 +35,7 @@ class EditPreferencesActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this) {
             viewModel.editMode.value?.let {
-                if(it)
+                if(it && viewModel.LOADING.value == false)
                     this@EditPreferencesActivity.finish()
             }
         }

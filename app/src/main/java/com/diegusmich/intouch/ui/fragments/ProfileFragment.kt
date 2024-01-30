@@ -1,7 +1,6 @@
 package com.diegusmich.intouch.ui.fragments
 
-import android.app.ActivityManager
-import android.content.Context.ACTIVITY_SERVICE
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,17 +12,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
-import androidx.core.view.get
 import androidx.core.view.isEmpty
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Friendship
@@ -35,10 +29,8 @@ import com.diegusmich.intouch.ui.activities.UserFriendsActivity
 import com.diegusmich.intouch.ui.activities.eventlist.EventCreatedActivity
 import com.diegusmich.intouch.ui.activities.eventlist.EventJoinedActivity
 import com.diegusmich.intouch.ui.adapters.ArchivedPostsAdapter
-import com.diegusmich.intouch.ui.viewmodels.PostViewModel
 import com.diegusmich.intouch.ui.viewmodels.ProfileViewModel
 import com.google.android.material.appbar.MaterialToolbar
-import java.io.File
 
 private const val USER_ID_ARG: String = "userId"
 private const val ACTIVITY_WRAPPED_ARG: String = "wrapped"

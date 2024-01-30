@@ -3,13 +3,14 @@ package com.diegusmich.intouch.ui.activities
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.databinding.ActivityMainBinding
@@ -19,11 +20,11 @@ import com.diegusmich.intouch.ui.adapters.MainViewPagerAdapter
 import com.diegusmich.intouch.ui.fragments.CategoriesFragment
 import com.diegusmich.intouch.ui.fragments.FeedFragment
 import com.diegusmich.intouch.ui.fragments.FriendshipRequestsFragment
+import com.diegusmich.intouch.ui.fragments.PostFragmentDialog
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
 import com.diegusmich.intouch.ui.viewmodels.FriendshipRequestViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +32,13 @@ class MainActivity : AppCompatActivity() {
     val binding get() = _binding!!
 
     val friendshipRequestViewModel: FriendshipRequestViewModel by viewModels()
+
+    private var onLocationPermissionCallback : (() -> Unit)? = null
+
+    private val permissionActivityResult =  registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()
+    ) { _ -> onLocationPermissionCallback?.invoke()
+        return@registerForActivityResult
+    }
 
     private var _onCameraPicturePicked: ((result: Boolean) -> Unit)? = null
 
@@ -51,10 +59,9 @@ class MainActivity : AppCompatActivity() {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             })
             finish()
-        }else{
+        } else {
             initMainFragments()
             listenForFriendshipUpdate()
-            requestPermission()
             createNotificationChannels()
 
             binding.mainBottomNavigation.setOnItemSelectedListener {
@@ -75,6 +82,16 @@ class MainActivity : AppCompatActivity() {
                 binding.mainViewPager.setCurrentItem(pageId, false)
                 true
             }
+
+            val postId = intent.extras?.getString(POST_ID_ARG) ?: savedInstanceState?.getString(
+                POST_ID_ARG
+            )
+
+            postId?.let {
+                if (supportFragmentManager.findFragmentByTag("POST_FRAGMENT") == null) {
+                    PostFragmentDialog.newInstance(it).show(supportFragmentManager, "POST_FRAGMENT")
+                }
+            }
         }
     }
 
@@ -85,13 +102,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initMainFragments() = lifecycleScope.launch {
-        val friendshipRequestsFragment = FriendshipRequestsFragment()
+    private fun initMainFragments() {
         val mainViewPagerAdapter = MainViewPagerAdapter(
             arrayOf(
                 FeedFragment(),
                 CategoriesFragment(),
-                friendshipRequestsFragment,
+                FriendshipRequestsFragment(),
                 ProfileFragment.newInstance(Firebase.auth.currentUser?.uid, false)
             ), supportFragmentManager, lifecycle
         )
@@ -120,20 +136,12 @@ class MainActivity : AppCompatActivity() {
             binding.mainBottomNavigation.removeBadge(R.id.friendshipRequestsFragment)
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun requestPermission() {
-        val locationPermissionRequest = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { _ -> return@registerForActivityResult }
-
-        locationPermissionRequest.launch(
-            arrayOf(
-                Manifest.permission.POST_NOTIFICATIONS,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
+    fun requestLocationPermission(callback : () -> Unit) {
+        onLocationPermissionCallback = callback
+        permissionActivityResult.launch( arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        ))
     }
 
     private fun createNotificationChannels() {
@@ -154,5 +162,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object {
+        const val POST_ID_ARG = "postId"
     }
 }

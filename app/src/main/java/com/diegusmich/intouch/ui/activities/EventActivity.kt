@@ -1,29 +1,29 @@
 package com.diegusmich.intouch.ui.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.CalendarContract
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
-import androidx.core.view.MenuProvider
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.data.domain.Event
 import com.diegusmich.intouch.databinding.ActivityEventBinding
 import com.diegusmich.intouch.providers.CloudImageProvider
+import com.diegusmich.intouch.ui.fragments.AttendeesModalBottomFragment
 import com.diegusmich.intouch.ui.viewmodels.EventViewModel
 import com.diegusmich.intouch.utils.TimeUtil
-import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Date
 import kotlin.math.abs
 
@@ -38,6 +38,13 @@ class EventActivity : AppCompatActivity() {
 
     private val viewModel: EventViewModel by viewModels()
 
+    private val editEventActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.onLoadEvent(eventIdArg)
+            }
+        }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(TOOLBAR_COLLAPSED, isToolbarCollapsed)
@@ -49,6 +56,12 @@ class EventActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         eventIdArg = intent.extras?.getString(EVENT_ARG)
+
+        onBackPressedDispatcher.addCallback {
+            if (viewModel.LOADING.value == false) {
+                finish()
+            }
+        }
 
         binding.swipeRefreshLayout.setProgressViewOffset(true, 50, 250)
 
@@ -65,13 +78,41 @@ class EventActivity : AppCompatActivity() {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.editEventMenuItem -> {
-                        viewModel.event.value?.id?.let{
-                            startActivity(Intent(this@EventActivity, UpsertEventActivity::class.java).apply {
-                                putExtra(UpsertEventActivity.EVENT_ID_ARG, it)
-                            })
+                        viewModel.event.value?.id?.let {
+                            editEventActivity.launch(
+                                Intent(
+                                    this@EventActivity,
+                                    UpsertEventActivity::class.java
+                                ).apply {
+                                    putExtra(UpsertEventActivity.EVENT_ID_ARG, it)
+                                })
                             true
                         }
                         false
+                    }
+
+                    R.id.deleteEventMenuItem -> {
+                        MaterialAlertDialogBuilder(this@EventActivity).apply {
+                            setTitle(resources.getString(R.string.warning_dialog_title))
+                            setMessage(resources.getString(R.string.delete_event_dialog_text))
+                            setCancelable(true)
+                            setNeutralButton(resources.getString(R.string.dialog_abort)) { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            setPositiveButton(resources.getString(R.string.dialog_delete_confirm)) { dialog, _ ->
+                                viewModel.onDeleteEvent()
+                                dialog.dismiss()
+                            }
+                        }.show()
+                        true
+                    }
+
+                    R.id.showAttendeesMenuItem -> {
+                        val attendeesModal = AttendeesModalBottomFragment()
+                        if (supportFragmentManager.findFragmentByTag("ATTENDEES_MODAL") == null) {
+                            attendeesModal.show(supportFragmentManager, "ATTENDEES_MODAL")
+                        }
+                        true
                     }
 
                     else -> false
@@ -102,6 +143,10 @@ class EventActivity : AppCompatActivity() {
             viewModel.event.value?.let {
                 addEventToCalendar(it)
             }
+        }
+
+        binding.eventButtonJoin.setOnClickListener {
+            viewModel.onJoinEvent()
         }
 
         binding.eventLocation.setOnClickListener {
@@ -154,7 +199,7 @@ class EventActivity : AppCompatActivity() {
 
     private fun observeData() {
 
-        viewModel.canEdit.observe(this){
+        viewModel.canEdit.observe(this) {
             binding.collapsingMaterialToolbar.menu.findItem(R.id.editEventMenuItem).isVisible = it
             binding.collapsingMaterialToolbar.menu.findItem(R.id.deleteEventMenuItem).isVisible = it
         }
@@ -181,6 +226,48 @@ class EventActivity : AppCompatActivity() {
             showAvailabilityWarning(it.available)
             putEventDateInfo(it.startAt, it.endAt)
 
+        }
+
+        viewModel.state.observe(this){
+            if(it != Event.STATE.ACTIVE_CLOSED && it != Event.STATE.TERMINATED_NOT_JOINED)
+                binding.eventButtonGroup.visibility = View.VISIBLE
+
+            when(it){
+                is Event.STATE.ACTIVE_AVAILABLE -> {
+                    binding.eventButtonJoin.apply {
+                        visibility = View.VISIBLE
+                        text = getString(R.string.event_join_action)
+                        isEnabled = true
+                    }
+                }
+                is Event.STATE.ACTIVE_CLOSED -> {
+                    binding.eventButtonGroup.visibility = View.GONE
+                }
+                is Event.STATE.ACTIVE_JOINED -> {
+                    binding.eventButtonJoin.visibility = View.VISIBLE
+                    binding.eventButtonJoin.isEnabled = true
+                    binding.eventButtonJoin.text = getString(R.string.event_left)
+                }
+                is Event.STATE.ACTIVE_NOT_AVAILABLE ->{
+                    binding.eventButtonJoin.visibility = View.VISIBLE
+                    binding.eventButtonJoin.isEnabled = false
+                }
+                is Event.STATE.TERMINATED_JOINED ->{
+                    binding.eventAddPostButton.visibility = View.VISIBLE
+                    binding.eventButtonJoin.visibility = View.GONE
+                }
+                is Event.STATE.TERMINATED_NOT_JOINED -> {
+                    binding.eventButtonGroup.visibility = View.GONE
+                }
+            }
+        }
+
+        viewModel.DELETED.observe(this) {
+            if (it) {
+                Toast.makeText(this, getString(R.string.event_deleted), Toast.LENGTH_SHORT)
+                    .show()
+                finish()
+            }
         }
 
         viewModel.ERROR.observe(this) {

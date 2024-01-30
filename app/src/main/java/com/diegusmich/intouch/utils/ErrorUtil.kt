@@ -52,7 +52,10 @@ object ErrorUtil {
         "AVAILABILITY_LESS_THAN_ATTENDEES" to R.string.event_availability_less_than_attendees,
         "EVENT_GEO_INVALID" to R.string.event_geo_invalid,
         "EVENT_GEO_EMPTY" to R.string.event_geo_empty,
-        "INVALID_FIELDS_VALUE" to R.string.invalid_fields_value
+        "INVALID_FIELDS_VALUE" to R.string.invalid_fields_value,
+        "TERMINATED_JOINED" to R.string.event_terminated,
+        "TERMINATED_NOT_JOINED" to R.string.event_terminated,
+        "EVENT_UNAVAILABLE" to R.string.event_unavailable
     )
 
     fun getMessage(key : String) = messages[key] ?: R.string.default_invalid_error

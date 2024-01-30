@@ -31,6 +31,7 @@ import java.net.ConnectException
 import java.net.UnknownHostException
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
@@ -119,10 +120,8 @@ class UpsertEventViewModel : StateViewModel() {
     val restricted: LiveData<FormInputLayout.FormInputState<Boolean>> = _restricted
 
     private val _startAt = MutableLiveData(
-        FormInputLayout.FormInputState(
-            inputName = START_FIELD_FORM,
-            inputValue = Date()
-        )
+        FormInputLayout.FormInputState<Date>(
+            inputName = START_FIELD_FORM)
     )
     val startAt: LiveData<FormInputLayout.FormInputState<Date>> = _startAt
 
@@ -163,10 +162,12 @@ class UpsertEventViewModel : StateViewModel() {
             }
 
             if(editMode.value == false){
+                onUpdateRestricted(false)
                 val getCurrentPos = viewModelScope.async {
                     UserLocationProvider.getCurrentLocation()
                 }
                 onUpdateLocation(getCurrentPos.await(), false)
+                onUpdateStartAt(Date().time)
             }
 
             _eventId?.let {
@@ -183,9 +184,9 @@ class UpsertEventViewModel : StateViewModel() {
                         onUpdateLocation(it.geo)
                         onUpdateRestricted(it.restricted)
                         setCurrentCoverImage(it.cover)
-                        onUpdateDate(_startAt, timestamp = it.startAt.time, currentDate = it.startAt)
+                        onUpdateDate(_startAt, timestamp = it.startAt.time, it.startAt.minutes, it.startAt.hours, currentDate = it.startAt)
                         it.endAt?.let{ it0 ->
-                            onUpdateDate(_endAt, timestamp = it0.time, currentDate = it0)
+                            onUpdateDate(_endAt, timestamp = it0.time, it0.minutes, it0.hours, currentDate = it0)
                         }
                         onUpdateCategory(categories.value!!.indexOfFirst { cat -> cat.id == it.categoryInfo.id })
 
@@ -213,7 +214,7 @@ class UpsertEventViewModel : StateViewModel() {
             val newDate = Calendar.getInstance().apply {
                 time = Date(timestamp ?: value?.inputValue?.time?: Date().time)
                 set(Calendar.MINUTE, newMinutes ?: value?.inputValue?.minutes ?: Date().minutes)
-                set(Calendar.HOUR, newHours?: value?.inputValue?.hours ?: Date().hours)
+                set(Calendar.HOUR_OF_DAY, newHours?: value?.inputValue?.hours ?: Date().hours)
                 set(Calendar.SECOND, 0)
                 set(Calendar.MILLISECOND, 0)
             }
@@ -270,15 +271,12 @@ class UpsertEventViewModel : StateViewModel() {
     }
 
     fun onUpdateAvailable(newValue: String) {
-        _available.apply {
-            val parsed = try{ newValue.toInt() } catch (e: Exception){ null }
-
-            if(parsed != eventCurrentData?.available)
+        if(editMode.value == false){
+            _available.apply {
+                val parsed = try{ newValue.toInt() } catch (e: Exception){ null }
                 requestFormData[value?.inputName!!] = parsed ?: 0
-            else
-                requestFormData.remove(value?.inputName)
-
-            value = value?.copy(inputValue = parsed, error = null)
+                value = value?.copy(inputValue = parsed, error = null)
+            }
         }
     }
 

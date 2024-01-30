@@ -1,8 +1,6 @@
 package com.diegusmich.intouch.providers
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -18,18 +16,15 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.diegusmich.intouch.R
 import com.diegusmich.intouch.ui.activities.EventActivity
+import com.diegusmich.intouch.ui.activities.MainActivity
+import com.diegusmich.intouch.ui.fragments.PostFragmentDialog
 import com.diegusmich.intouch.ui.activities.UserActivity
-import com.google.android.gms.tasks.Task
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.util.Date
-import kotlin.random.Random
 
 class NotificationProvider : FirebaseMessagingService() {
 
@@ -144,8 +139,8 @@ class NotificationProvider : FirebaseMessagingService() {
             R.drawable.baseline_comment_24,
             R.string.notification_post_comment_content,
             NotificationCompat.PRIORITY_DEFAULT,
-            UserActivity::class.java,
-            UserActivity.USER_ARG
+            MainActivity::class.java,
+            MainActivity.POST_ID_ARG
         ),
 
         EVENT_UPDATED( R.string.notification_event_id,

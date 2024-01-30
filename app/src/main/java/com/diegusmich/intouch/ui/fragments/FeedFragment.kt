@@ -1,22 +1,21 @@
 package com.diegusmich.intouch.ui.fragments
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.MenuProvider
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diegusmich.intouch.R
-import com.diegusmich.intouch.data.domain.Post
-import com.diegusmich.intouch.data.domain.User
 import com.diegusmich.intouch.databinding.FragmentFeedBinding
+import com.diegusmich.intouch.ui.activities.MainActivity
 import com.diegusmich.intouch.ui.adapters.EventFeedAdapter
 import com.diegusmich.intouch.ui.adapters.PostFeedAdapter
 import com.diegusmich.intouch.ui.viewmodels.FeedViewModel
@@ -25,23 +24,25 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class FeedFragment : Fragment() {
 
-    private var _binding : FragmentFeedBinding? = null
+    private var _binding: FragmentFeedBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var toolbar : MaterialToolbar
+    private lateinit var toolbar: MaterialToolbar
 
-    private val viewModel : FeedViewModel by activityViewModels()
+    private val viewModel: FeedViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentFeedBinding.inflate(layoutInflater, container, false)
         toolbar = binding.appBarLayout.materialToolbar
 
         return binding.root
+    }
+
+    fun loadDataOnPermissionChecked(){
+        viewModel.onLoadMainFeed()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,46 +53,54 @@ class FeedFragment : Fragment() {
             viewModel.onLoadMainFeed(true)
         }
 
-        binding.postsFeedListView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.postsFeedListView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.postsFeedListView.adapter = PostFeedAdapter(mutableListOf())
 
-        binding.eventsFeedListView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.eventsFeedListView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.eventsFeedListView.adapter = EventFeedAdapter(mutableListOf())
 
-        viewModel.onLoadMainFeed()
+        val checkResult = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission_group.LOCATION)
+        if(checkResult == PackageManager.PERMISSION_DENIED){
+            (requireActivity() as MainActivity).requestLocationPermission{
+                viewModel.onLoadMainFeed()
+            }
+        }else
+            viewModel.onLoadMainFeed()
         observeData()
     }
 
-    private fun observeData(){
-        viewModel.LOADING.observe(viewLifecycleOwner){
+    private fun observeData() {
+        viewModel.LOADING.observe(viewLifecycleOwner) {
             binding.swipeRefreshLayout.isRefreshing = it
         }
 
-        viewModel.postFeed.observe(viewLifecycleOwner){
+        viewModel.postFeed.observe(viewLifecycleOwner) {
             it?.let {
                 binding.postsFeedListView.apply {
-                    visibility = if(it.isEmpty()) View.GONE else View.VISIBLE
+                    visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
                     (adapter as PostFeedAdapter).replace(it)
                 }
             }
         }
 
-        viewModel.eventFeed.observe(viewLifecycleOwner){
-            it?.let{
+        viewModel.eventFeed.observe(viewLifecycleOwner) {
+            it?.let {
                 binding.eventsFeedListView.apply {
                     (adapter as EventFeedAdapter).replace(it)
                 }
             }
         }
 
-        viewModel.ERROR.observe(viewLifecycleOwner){
+        viewModel.ERROR.observe(viewLifecycleOwner) {
             it?.let {
                 Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
             }
         }
 
-        viewModel.GET_LOCATION_FAILED.observe(viewLifecycleOwner){
-            if(it && !viewModel.locationFailedMessageConsumed.value!!){
+        viewModel.GET_LOCATION_FAILED.observe(viewLifecycleOwner) {
+            if (it && !viewModel.locationFailedMessageConsumed.value!!) {
                 MaterialAlertDialogBuilder(requireContext()).apply {
                     setTitle(resources.getString(R.string.info_dialog_title))
                     setMessage(resources.getString(R.string.location_failed_message))
@@ -99,7 +108,7 @@ class FeedFragment : Fragment() {
                         viewModel.consumeMessage()
                         dialog.dismiss()
                     }
-                    setNegativeButton(getString(R.string.retry)){ dialog, _ ->
+                    setNegativeButton(getString(R.string.retry)) { dialog, _ ->
                         viewModel.onLoadMainFeed(true)
                         dialog.dismiss()
                     }

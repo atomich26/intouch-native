@@ -199,6 +199,18 @@ class ProfileViewModel : StateViewModel() {
         }
     }
 
+    fun removePostFromArchive(postId: String?){
+        postId?.let {
+            _archivedPosts.apply {
+                value = value?.toMutableList()?.apply {
+                    value?.indexOfFirst { post -> post.id == postId }?.let{
+                        removeAt(it)
+                    }
+                }?.toList()
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         onUpdateUserListener?.remove()

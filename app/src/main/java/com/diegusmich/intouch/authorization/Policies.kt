@@ -16,10 +16,33 @@ object Policies {
         return post.userInfo.id == AuthProvider.authUser()?.uid
     }
 
-    fun canAddPost(event: Event.Full, attendees: List<User.Preview>): Boolean {
-        val dateToEvaluate = event.endAt ?: event.startAt
-        val authId = AuthProvider.authUser()?.uid
+    fun canEventState(
+        event: Event.Full,
+        attendees: List<User.Preview>,
+        isFriend: Boolean
+    ): Event.STATE {
+        return AuthProvider.authUser()?.uid?.let {
+            val alreadyJoined = attendees.any { user -> user.id == it }
+            val isAvailable = event.available > 0
+            val isRestricted = event.restricted
+            val isStarted = event.startAt
+            val isTerminated = event.endAt?.let {
+                event.endAt < Date()
+            } ?: (event.startAt < Date())
 
-        return dateToEvaluate.before(Date()) && attendees.any { user -> user.id == authId }
+            if (!isTerminated) {
+                if (!isFriend && isRestricted) {
+                    Event.STATE.ACTIVE_CLOSED
+                } else if (alreadyJoined) {
+                    Event.STATE.ACTIVE_JOINED
+                } else if (!isAvailable)
+                    Event.STATE.ACTIVE_NOT_AVAILABLE
+                else
+                    Event.STATE.ACTIVE_AVAILABLE
+            } else if (alreadyJoined) {
+                Event.STATE.TERMINATED_JOINED
+            } else
+                Event.STATE.TERMINATED_NOT_JOINED
+        } ?: Event.STATE.TERMINATED_NOT_JOINED
     }
 }

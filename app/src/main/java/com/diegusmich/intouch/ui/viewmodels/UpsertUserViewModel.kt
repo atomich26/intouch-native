@@ -68,7 +68,7 @@ class UpsertUserViewModel : StateViewModel() {
     private val _password = MutableLiveData(FormInputState<String>(inputName = PASSWORD_FIELD_FORM))
     val password: LiveData<FormInputState<String>> = _password
 
-    private val _birthdate = MutableLiveData(FormInputState(inputName = BIRTHDATE_FIELD_FORM, inputValue = Date()))
+    private val _birthdate = MutableLiveData<FormInputState<Date>>(FormInputState(inputName = BIRTHDATE_FIELD_FORM))
     val birthdate: LiveData<FormInputState<Date>> = _birthdate
 
     private var userCurrentData : User.Profile? = null

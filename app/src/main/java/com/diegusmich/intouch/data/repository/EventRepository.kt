@@ -13,6 +13,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.functions.HttpsCallableResult
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.google.firestore.v1.StructuredQuery.Order
@@ -105,11 +106,26 @@ object EventRepository :
         }
     }
 
-    suspend fun upsert(data: Map<String, Any>,) = withContext(Dispatchers.IO){
+    suspend fun attendees(eventId: String?) = withContext(Dispatchers.IO){
+        eventId?.let{
+            val list = collectionRef.document(eventId).collection("attendees").get().await().documents[0].get("users") as List<String>
+            list.mapNotNull {
+                UserRepository.getDoc(it)?.let{ userWrapper ->
+                    User.Preview(userWrapper)
+                }
+            }
+        } ?: mutableListOf()
+    }
+
+    suspend fun join(eventId: String, confirm: Boolean) : HttpsCallableResult = withContext(Dispatchers.IO){
+        Firebase.functions.getHttpsCallable("events-join").call(mapOf("eventId" to eventId, "join" to confirm)).await()
+    }
+
+    suspend fun upsert(data: Map<String, Any>) : HttpsCallableResult = withContext(Dispatchers.IO){
         Firebase.functions.getHttpsCallable("events-upsert").call(data).await()
     }
 
-    suspend fun deleteEvent(eventId: String) = withContext(Dispatchers.IO){
+    suspend fun deleteEvent(eventId: String) : HttpsCallableResult = withContext(Dispatchers.IO){
         Firebase.functions.getHttpsCallable("events-delete").call(mapOf("eventId" to eventId)).await()
     }
 

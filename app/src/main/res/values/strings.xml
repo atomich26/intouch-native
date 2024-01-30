@@ -19,6 +19,7 @@
     <string name="action_save_changes_form">Salva</string>
     <string name="retry">Riprova</string>
     <string name="close_dialog">Chiudi</string>
+    <string name="availableWarning">La disponibilità non può essere modificata dopo aver creato l\'evento</string>
     <string name="search_query_hint_text">Cerca @utenti o eventi</string>
     <string name="action_recover_password">Password dimenticata?</string>
     <string name="action_reset_password">Cambia password</string>
@@ -84,6 +85,10 @@
     <string name="event_not_exists">L\'evento non esiste</string>
     <string name="event_join_action">Partecipa</string>
     <string name="title_event_toolbar">Scheda evento</string>
+    <string name="event_left">Libera posto</string>
+    <string name="add_post_event">Aggiungi un post</string>
+    <string name="work_active_warning_message">Operazione in corso. Terminare ora?</string>
+    <string name="work_terminate">Termina</string>
     <string name="event_location_formatted">%1$s, %2$s</string>
     <string name="username_formatted">"@"%s</string>
     <string name="edit_event">Modifica</string>
@@ -109,6 +114,9 @@
     <string name="comment_title_bottom_sheet">Commenti</string>
     <string name="warning_dialog_title">Attenzione</string>
     <string name="delete_post_dialog_text">Sei sicuro di voler eliminare questo post?</string>
+    <string name="delete_event_dialog_text">Sei sicuro di voler eliminare questo evento?</string>
+    <string name="event_deleted">Evento eliminato</string>
+    <string name="attendees_title_formatted">Partecipanti (%d) </string>
     <string name="dialog_delete_confirm">Elimina</string>
     <string name="dialog_abort">Annulla</string>
     <string name="comment_added">Commento aggiunto</string>
@@ -125,6 +133,8 @@
     <string name="map_picker_message">Clicca sulla mappa per selezionare una posizione per l\'evento.</string>
     <string name="geo_message_warning">Per geolocalizzare l\'evento ti ricordiamo di modificare le coordinate geografiche cliccando su \"Modifica posizione\". La posizione di default corrisponde a quella del dispositivo.</string>
     <string name="location_failed_message">Non è stato possibile ottenere informazioni sulla tua posizione attuale pertanto ti verranno mostrati eventi in prossimità di una posizione di default corrispondente alla città di Roma.</string>
+    <string name="event_terminated">Evento terminato</string>
+    <string name="event_unavailable">Evento non disponibile</string>
     <string name="friendship_request_message"><![CDATA[<big><b>%s</b></big> vuole aggiungerti agli amici!]]></string>
     <plurals name="event_availability_warning">
         <item quantity="one">Resta solo %d posto disponibile!</item>

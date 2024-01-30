@@ -101,4 +101,13 @@ sealed interface Event{
             name = wrapper.name
         )
     }
+
+    sealed interface STATE {
+        data object ACTIVE_AVAILABLE : STATE
+        data object ACTIVE_NOT_AVAILABLE : STATE
+        data object ACTIVE_JOINED : STATE
+        data object ACTIVE_CLOSED : STATE
+        data object TERMINATED_JOINED: STATE
+        data object TERMINATED_NOT_JOINED : STATE
+    }
 }

@@ -72,6 +72,14 @@ object FriendshipRepository :
         }
     }
 
+    suspend fun isFriend(userId: String) : Boolean = withContext(Dispatchers.IO){
+        AuthProvider.authUser()?.uid?.let { uid ->
+            UserRepository.getDoc(userId)?.let{
+                it.friends.any{ friendId -> friendId == uid}
+            }
+        } ?: false
+    }
+
     suspend fun sendRequest(userId: String): HttpsCallableResult? =
         withContext(Dispatchers.IO) {
             Firebase.functions.getHttpsCallable("friendships-send")

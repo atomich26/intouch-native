@@ -1,6 +1,5 @@
 package com.diegusmich.intouch.ui.viewmodels
 
-import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -22,10 +21,10 @@ class FeedViewModel : StateViewModel() {
     val eventFeed: LiveData<List<Event.FeedPreview>?> = _eventFeed
 
     private val _GET_LOCATION_FAILED = MutableLiveData(false)
-    val GET_LOCATION_FAILED : LiveData<Boolean> = _GET_LOCATION_FAILED
+    val GET_LOCATION_FAILED: LiveData<Boolean> = _GET_LOCATION_FAILED
 
     private val _locationFailedMessageConsumed = MutableLiveData(false)
-    val locationFailedMessageConsumed : LiveData<Boolean> = _locationFailedMessageConsumed
+    val locationFailedMessageConsumed: LiveData<Boolean> = _locationFailedMessageConsumed
 
     fun onLoadMainFeed(isRefreshing: Boolean = false) = viewModelScope.launch {
         if (_postFeed.value != null && !isRefreshing)
@@ -34,7 +33,8 @@ class FeedViewModel : StateViewModel() {
         updateState(_LOADING, true)
         try {
             val getPostFeedJob = viewModelScope.async { PostRepository.feed() }
-            val getEventFeedJob = viewModelScope.async { EventRepository.feed(getCurrentLocation().await()) }
+            val getEventFeedJob =
+                viewModelScope.async { EventRepository.feed(getCurrentLocation().await()) }
             _postFeed.value = getPostFeedJob.await()
             _eventFeed.value = getEventFeedJob.await()
 
@@ -44,14 +44,14 @@ class FeedViewModel : StateViewModel() {
         }
     }
 
-    fun consumeMessage(){
+    fun consumeMessage() {
         _locationFailedMessageConsumed.value = true
     }
 
     private fun getCurrentLocation() = viewModelScope.async {
         val currentLocation = UserLocationProvider.getCurrentLocation()
 
-        if(currentLocation == UserLocationProvider.defaultLocation)
+        if (currentLocation == UserLocationProvider.defaultLocation)
             updateState(_GET_LOCATION_FAILED, true)
 
         currentLocation

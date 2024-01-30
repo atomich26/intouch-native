@@ -6,15 +6,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnScrollChangeListener
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -28,10 +24,6 @@ import com.diegusmich.intouch.ui.activities.EventActivity
 import com.diegusmich.intouch.ui.activities.UserActivity
 import com.diegusmich.intouch.ui.adapters.PostImagesCarouselAdapter
 import com.diegusmich.intouch.ui.viewmodels.PostViewModel
-import com.google.android.material.carousel.CarouselLayoutManager
-import com.google.android.material.carousel.CarouselSnapHelper
-import com.google.android.material.carousel.FullScreenCarouselStrategy
-import com.google.android.material.carousel.HeroCarouselStrategy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.ocpsoft.prettytime.PrettyTime
 
@@ -40,9 +32,9 @@ class PostFragmentDialog : DialogFragment() {
     private var _binding: FragmentPostBinding? = null
     private val binding get() = _binding!!
 
-    private var postId : String? = null
+    private var postId: String? = null
 
-    private val viewModel : PostViewModel by viewModels()
+    private val viewModel: PostViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +70,7 @@ class PostFragmentDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(viewModel.post.value == null){
+        if (viewModel.post.value == null) {
             viewModel.onloadPost(postId, false)
         }
 
@@ -89,19 +81,27 @@ class PostFragmentDialog : DialogFragment() {
         binding.postUserInfoCard.apply {
             usernameTextView.setTextColor(Color.WHITE)
             setOnClickListener {
-                viewModel.post.value?.userInfo?.id?.let{
-                    requireActivity().startActivity(Intent(requireContext(), UserActivity::class.java).apply {
-                        putExtra(UserActivity.USER_ARG, it)
-                    })
+                viewModel.post.value?.userInfo?.id?.let {
+                    requireActivity().startActivity(
+                        Intent(
+                            requireContext(),
+                            UserActivity::class.java
+                        ).apply {
+                            putExtra(UserActivity.USER_ARG, it)
+                        })
                 }
             }
         }
 
         binding.postEventButton.setOnClickListener {
-            viewModel.post.value?.let{
-                requireContext().startActivity(Intent(requireContext(), EventActivity::class.java).apply {
-                    putExtra(EventActivity.EVENT_ARG,it.eventInfo.id)
-                })
+            viewModel.post.value?.let {
+                requireContext().startActivity(
+                    Intent(
+                        requireContext(),
+                        EventActivity::class.java
+                    ).apply {
+                        putExtra(EventActivity.EVENT_ARG, it.eventInfo.id)
+                    })
             }
         }
 
@@ -120,7 +120,7 @@ class PostFragmentDialog : DialogFragment() {
         }
 
         binding.openCommentButton.setOnClickListener {
-            requireActivity().supportFragmentManager.let{ fragmentManager ->
+            requireActivity().supportFragmentManager.let { fragmentManager ->
                 viewModel.post.value?.id?.let {
                     val commentsBottomSheet = CommentsModalBottomFragment.newInstance(it)
                     fragmentManager.beginTransaction().apply {
@@ -137,9 +137,9 @@ class PostFragmentDialog : DialogFragment() {
         observeData()
     }
 
-    private fun observeData(){
+    private fun observeData() {
 
-        viewModel.post.observe(viewLifecycleOwner){
+        viewModel.post.observe(viewLifecycleOwner) {
             it?.let {
                 binding.carouselRecyclerView.apply {
                     val imagesRef = it.album.mapNotNull { imgName ->
@@ -158,47 +158,52 @@ class PostFragmentDialog : DialogFragment() {
                     setUserInfo(it.userInfo)
                 }
 
-                if(Policies.canDeletePost(it))
+                if (Policies.canDeletePost(it))
                     binding.deletePostButton.visibility = View.VISIBLE
 
                 binding.postCreatedAtText.apply {
                     visibility = View.VISIBLE
-                    text = getString(R.string.post_created_at_formatted, PrettyTime().format(it.createdAt))
+                    text = getString(
+                        R.string.post_created_at_formatted,
+                        PrettyTime().format(it.createdAt)
+                    )
                 }
             }
         }
 
-        viewModel.POST_DELETED.observe(viewLifecycleOwner){
-            if(it){
+        viewModel.POST_DELETED.observe(viewLifecycleOwner) {
+            if (it) {
                 dialog?.dismiss()
             }
         }
 
-        viewModel.LOADING.observe(viewLifecycleOwner){
+        viewModel.LOADING.observe(viewLifecycleOwner) {
             binding.postSwipeRefreshLayout.isRefreshing = it
             binding.deletePostButton.isEnabled = !it
         }
 
-        viewModel.ERROR.observe(viewLifecycleOwner){
+        viewModel.ERROR.observe(viewLifecycleOwner) {
             it?.let {
                 Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun updateCarouselCounter(pos: Int){
-        binding.postCarouselCounter.text = getString(R.string.post_carousel_counter, pos, viewModel.post.value?.album?.size)
+    private fun updateCarouselCounter(pos: Int) {
+        binding.postCarouselCounter.text =
+            getString(R.string.post_carousel_counter, pos, viewModel.post.value?.album?.size)
     }
 
-    private fun setupSliderCounter(){
-        binding.carouselRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    private fun setupSliderCounter() {
+        binding.carouselRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.carouselRecyclerView)
 
         binding.carouselRecyclerView.addOnScrollListener(object : OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if(newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     val pos =
                         (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() + 1
                     updateCarouselCounter(pos)
@@ -217,11 +222,11 @@ class PostFragmentDialog : DialogFragment() {
         _binding = null
     }
 
-    companion object{
+    companion object {
         const val POST_ID_ARG = "postId"
 
         @JvmStatic
-        fun newInstance(postId: String?) : PostFragmentDialog {
+        fun newInstance(postId: String?): PostFragmentDialog {
             return PostFragmentDialog().apply {
                 arguments = bundleOf(POST_ID_ARG to postId)
             }
