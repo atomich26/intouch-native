@@ -10,10 +10,11 @@ class IntouchDateInputLayout(ctx: Context, attrs: AttributeSet) :
     FormInputLayout<Date>(ctx, attrs) {
 
     override fun updateState(state: FormInputState<Date>) {
-        super.updateState(state)
         state.inputValue?.let {
             editText?.setText(toText(it), TextView.BufferType.EDITABLE)
         }
+
+        setError(state)
     }
 
     override fun toText(date: Date?): String {

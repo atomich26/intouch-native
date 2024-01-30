@@ -95,8 +95,12 @@ class FeedFragment : Fragment() {
                 MaterialAlertDialogBuilder(requireContext()).apply {
                     setTitle(resources.getString(R.string.info_dialog_title))
                     setMessage(resources.getString(R.string.location_failed_message))
-                    setPositiveButton(resources.getString(R.string.info_dialog_confirm)) { dialog, which ->
+                    setPositiveButton(resources.getString(R.string.info_dialog_confirm)) { dialog, _ ->
                         viewModel.consumeMessage()
+                        dialog.dismiss()
+                    }
+                    setNegativeButton(getString(R.string.retry)){ dialog, _ ->
+                        viewModel.onLoadMainFeed(true)
                         dialog.dismiss()
                     }
                 }.show()

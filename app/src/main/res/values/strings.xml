@@ -17,6 +17,8 @@
     <string name="action_login_short">Accedi</string>
     <string name="action_create_account_short">Registrati</string>
     <string name="action_save_changes_form">Salva</string>
+    <string name="retry">Riprova</string>
+    <string name="close_dialog">Chiudi</string>
     <string name="search_query_hint_text">Cerca @utenti o eventi</string>
     <string name="action_recover_password">Password dimenticata?</string>
     <string name="action_reset_password">Cambia password</string>

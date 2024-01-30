@@ -31,6 +31,8 @@ import java.net.ConnectException
 import java.net.UnknownHostException
 import java.util.Calendar
 import java.util.Date
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 private const val NAME_FIELD_FORM: String = "name"
 private const val DESCRIPTION_FIELD_FORM: String = "description"
@@ -210,12 +212,10 @@ class UpsertEventViewModel : StateViewModel() {
         input.apply {
             val newDate = Calendar.getInstance().apply {
                 time = Date(timestamp ?: value?.inputValue?.time?: Date().time)
-                newMinutes?.let{
-                    set(Calendar.MINUTE, it)
-                }
-                newHours?.let{
-                    set(Calendar.HOUR, it)
-                }
+                set(Calendar.MINUTE, newMinutes ?: value?.inputValue?.minutes ?: Date().minutes)
+                set(Calendar.HOUR, newHours?: value?.inputValue?.hours ?: Date().hours)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
             }
             value = value?.copy(inputValue = newDate.time, error = null)
 
