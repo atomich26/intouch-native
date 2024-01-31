@@ -107,6 +107,7 @@ sealed interface Event{
         data object ACTIVE_NOT_AVAILABLE : STATE
         data object ACTIVE_JOINED : STATE
         data object ACTIVE_CLOSED : STATE
+        data object STARTED : STATE
         data object TERMINATED_JOINED: STATE
         data object TERMINATED_NOT_JOINED : STATE
     }

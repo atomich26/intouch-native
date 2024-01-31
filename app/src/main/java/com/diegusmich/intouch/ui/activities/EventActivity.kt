@@ -228,11 +228,11 @@ class EventActivity : AppCompatActivity() {
 
         }
 
-        viewModel.state.observe(this){
-            if(it != Event.STATE.ACTIVE_CLOSED && it != Event.STATE.TERMINATED_NOT_JOINED)
+        viewModel.state.observe(this) {
+            if (it != Event.STATE.ACTIVE_CLOSED && it != Event.STATE.TERMINATED_NOT_JOINED && it != Event.STATE.STARTED)
                 binding.eventButtonGroup.visibility = View.VISIBLE
 
-            when(it){
+            when (it) {
                 is Event.STATE.ACTIVE_AVAILABLE -> {
                     binding.eventButtonJoin.apply {
                         visibility = View.VISIBLE
@@ -240,22 +240,31 @@ class EventActivity : AppCompatActivity() {
                         isEnabled = true
                     }
                 }
+
                 is Event.STATE.ACTIVE_CLOSED -> {
                     binding.eventButtonGroup.visibility = View.GONE
                 }
+
+                is Event.STATE.STARTED -> {
+                    binding.eventButtonGroup.visibility = View.GONE
+                }
+
                 is Event.STATE.ACTIVE_JOINED -> {
                     binding.eventButtonJoin.visibility = View.VISIBLE
                     binding.eventButtonJoin.isEnabled = true
                     binding.eventButtonJoin.text = getString(R.string.event_left)
                 }
-                is Event.STATE.ACTIVE_NOT_AVAILABLE ->{
+
+                is Event.STATE.ACTIVE_NOT_AVAILABLE -> {
                     binding.eventButtonJoin.visibility = View.VISIBLE
                     binding.eventButtonJoin.isEnabled = false
                 }
-                is Event.STATE.TERMINATED_JOINED ->{
+
+                is Event.STATE.TERMINATED_JOINED -> {
                     binding.eventAddPostButton.visibility = View.VISIBLE
                     binding.eventButtonJoin.visibility = View.GONE
                 }
+
                 is Event.STATE.TERMINATED_NOT_JOINED -> {
                     binding.eventButtonGroup.visibility = View.GONE
                 }

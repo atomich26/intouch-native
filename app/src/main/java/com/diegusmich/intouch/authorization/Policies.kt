@@ -23,26 +23,26 @@ object Policies {
     ): Event.STATE {
         return AuthProvider.authUser()?.uid?.let {
             val alreadyJoined = attendees.any { user -> user.id == it }
-            val isAvailable = event.available > 0
-            val isRestricted = event.restricted
-            val isStarted = event.startAt
             val isTerminated = event.endAt?.let {
                 event.endAt < Date()
             } ?: (event.startAt < Date())
 
-            if (!isTerminated) {
-                if (!isFriend && isRestricted) {
+            if (event.startAt > Date()) {
+                if (!isFriend && event.restricted || event.userInfo.id == it) {
                     Event.STATE.ACTIVE_CLOSED
                 } else if (alreadyJoined) {
                     Event.STATE.ACTIVE_JOINED
-                } else if (!isAvailable)
+                } else if (event.available == 0)
                     Event.STATE.ACTIVE_NOT_AVAILABLE
                 else
                     Event.STATE.ACTIVE_AVAILABLE
-            } else if (alreadyJoined) {
-                Event.STATE.TERMINATED_JOINED
+            } else if (isTerminated) {
+                if (alreadyJoined)
+                    Event.STATE.TERMINATED_JOINED
+                else
+                    Event.STATE.TERMINATED_NOT_JOINED
             } else
-                Event.STATE.TERMINATED_NOT_JOINED
+                Event.STATE.STARTED
         } ?: Event.STATE.TERMINATED_NOT_JOINED
     }
 }
