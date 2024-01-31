@@ -118,13 +118,6 @@
                     android:inputType="none" />
             </com.diegusmich.intouch.ui.views.form.IntouchDropDownInputLayout>
 
-            <TextView
-                android:id="@+id/availableWarning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/availableWarning"
-                android:textSize="11sp" />
-
             <com.diegusmich.intouch.ui.views.form.IntouchNumberInputLayout
                 android:id="@+id/eventFormAvailableInputLayout"
                 android:layout_width="match_parent"
@@ -144,12 +137,19 @@
 
             </com.diegusmich.intouch.ui.views.form.IntouchNumberInputLayout>
 
+            <TextView
+                android:id="@+id/availableWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/event_cannot_edit_warning"
+                android:textSize="11sp"
+                android:layout_marginBottom="10dp"/>
+
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/eventFormRestrictedSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:checked="false"
-                android:layout_marginBottom="10dp"
                 android:drawableStart="@drawable/baseline_group_24__black"
                 android:drawablePadding="5dp"
                 android:paddingHorizontal="5dp"
@@ -160,9 +160,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/geo_message_warning"
-                android:layout_marginBottom="2dp"
-                android:textSize="11sp" />
+                android:drawableStart="@drawable/baseline_warning_24"
+                android:text="@string/event_cannot_edit_warning"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:textSize="12sp" />
 
             <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
                 android:id="@+id/eventFormCityInputLayout"
@@ -200,6 +202,13 @@
                     android:maxLength="@integer/event_address"
                     android:textSize="14sp" />
             </com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/geo_message_warning"
+                android:layout_marginBottom="10dp"
+                android:textSize="11sp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/eventFormStartAtGroup"

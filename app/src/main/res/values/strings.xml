@@ -116,6 +116,11 @@
     <string name="delete_post_dialog_text">Sei sicuro di voler eliminare questo post?</string>
     <string name="delete_event_dialog_text">Sei sicuro di voler eliminare questo evento?</string>
     <string name="event_deleted">Evento eliminato</string>
+    <string name="add_post_title">Aggiungi post</string>
+    <string name="add_post">Aggiungi post</string>
+    <string name="select_images_post">Seleziona foto</string>
+    <string name="post_added">Post aggiunto!</string>
+    <string name="event_cannot_edit_warning">Non potrai modificare questo valore in seguito.</string>
     <string name="attendees_title_formatted">Partecipanti (%d) </string>
     <string name="dialog_delete_confirm">Elimina</string>
     <string name="dialog_abort">Annulla</string>

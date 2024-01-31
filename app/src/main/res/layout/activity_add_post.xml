@@ -1,9 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.AddPostActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".ui.activities.EditPreferencesActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/material_toolbar" android:id="@+id/appBarLayout"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/materialHorizontalPadding"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="20dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/event_cover_overlay"
+                        android:layout_weight="1">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/postImagesRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp"
+                            android:clipChildren="false" />
+                    </FrameLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/imageCounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="10dp"
+                    android:visibility="invisible" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/descriptionPostFormInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true"
+                    android:hint="@string/prompt_description"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginHorizontal="@dimen/materialHorizontalPadding"
+                    app:startIconDrawable="@drawable/baseline_text_fields_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/descriptionPostFormEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="@integer/post_description"
+                        android:minLines="4"
+                        android:maxLines="6"
+                        android:singleLine="false"
+                        android:maxLength="@integer/post_description">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </ScrollView>
+
+    </FrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="@dimen/materialHorizontalPadding">
+
+        <Button
+            android:id="@+id/selectImagesPicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:paddingVertical="15dp"
+            android:text="@string/select_images_post"
+            style="@style/Widget.Material3.Button.OutlinedButton"/>
+
+        <Button
+            android:id="@+id/submitFormPost"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:paddingVertical="15dp"
+            android:textSize="16sp"
+            android:text="@string/add_post"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <include android:id="@+id/pgLayout" layout="@layout/linear_progress_bar"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

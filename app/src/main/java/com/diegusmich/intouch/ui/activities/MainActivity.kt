@@ -144,18 +144,17 @@ class MainActivity : AppCompatActivity() {
         ))
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun createNotificationChannels() {
-        val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        sharedPref.getBoolean(getString(R.string.notification_created_pref_key), false).let {
-            if (!it) {
-                NotificationProvider.Channel.FRIENDSHIP.create(this)
-                NotificationProvider.Channel.EVENT.create(this)
-                NotificationProvider.Channel.COMMENT.create(this)
-                with(sharedPref.edit()) {
-                    putBoolean(getString(R.string.notification_created_pref_key), true)
-                    apply()
-                }
-            }
+        val resultCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+        if(resultCheck == PackageManager.PERMISSION_DENIED){
+            registerForActivityResult(ActivityResultContracts.RequestPermission()){
+                return@registerForActivityResult
+            }.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }else{
+            NotificationProvider.Channel.FRIENDSHIP.create(this)
+            NotificationProvider.Channel.EVENT.create(this)
+            NotificationProvider.Channel.COMMENT.create(this)
         }
     }
 

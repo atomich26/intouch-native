@@ -167,6 +167,12 @@ class EventActivity : AppCompatActivity() {
             binding.swipeRefreshLayout.clearAnimation()
         }
 
+        binding.eventAddPostButton.setOnClickListener {
+            startActivity(Intent(this, AddPostActivity::class.java).apply {
+                putExtra(AddPostActivity.EVENT_ID, viewModel.event.value?.id)
+            });
+        }
+
         observeData()
         viewModel.onLoadEvent(eventIdArg)
     }
