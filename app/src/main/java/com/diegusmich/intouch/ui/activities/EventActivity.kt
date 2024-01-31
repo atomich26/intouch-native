@@ -253,6 +253,7 @@ class EventActivity : AppCompatActivity() {
 
                 is Event.STATE.STARTED -> {
                     binding.eventButtonGroup.visibility = View.GONE
+                    binding.eventAvailabilityTextWarning.visibility = View.GONE
                 }
 
                 is Event.STATE.ACTIVE_JOINED -> {

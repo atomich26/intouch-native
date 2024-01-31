@@ -1,7 +1,6 @@
 package com.diegusmich.intouch.ui.activities
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -22,6 +21,7 @@ import com.diegusmich.intouch.ui.fragments.FeedFragment
 import com.diegusmich.intouch.ui.fragments.FriendshipRequestsFragment
 import com.diegusmich.intouch.ui.fragments.PostFragmentDialog
 import com.diegusmich.intouch.ui.fragments.ProfileFragment
+import com.diegusmich.intouch.ui.viewmodels.FeedViewModel
 import com.diegusmich.intouch.ui.viewmodels.FriendshipRequestViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -33,12 +33,15 @@ class MainActivity : AppCompatActivity() {
 
     val friendshipRequestViewModel: FriendshipRequestViewModel by viewModels()
 
-    private var onLocationPermissionCallback : (() -> Unit)? = null
+    private var onLocationPermissionCallback: (() -> Unit)? = null
 
-    private val permissionActivityResult =  registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()
-    ) { _ -> onLocationPermissionCallback?.invoke()
+    /*private val permissionActivityResult =  registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()
+    ) { _ ->
+        val feedViewModel : FeedViewModel by viewModels()
+        feedViewModel.onLoadMainFeed()
+        onLocationPermissionCallback?.invoke()
         return@registerForActivityResult
-    }
+    }*/
 
     private var _onCameraPicturePicked: ((result: Boolean) -> Unit)? = null
 
@@ -62,7 +65,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             initMainFragments()
             listenForFriendshipUpdate()
-            createNotificationChannels()
 
             binding.mainBottomNavigation.setOnItemSelectedListener {
 
@@ -82,6 +84,9 @@ class MainActivity : AppCompatActivity() {
                 binding.mainViewPager.setCurrentItem(pageId, false)
                 true
             }
+
+            requestPermission()
+            createNotificationChannels()
 
             val postId = intent.extras?.getString(POST_ID_ARG) ?: savedInstanceState?.getString(
                 POST_ID_ARG
@@ -136,26 +141,37 @@ class MainActivity : AppCompatActivity() {
             binding.mainBottomNavigation.removeBadge(R.id.friendshipRequestsFragment)
     }
 
-    fun requestLocationPermission(callback : () -> Unit) {
-        onLocationPermissionCallback = callback
-        permissionActivityResult.launch( arrayOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        ))
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun requestPermission() {
+        val feedViewModel: FeedViewModel by viewModels()
+        val checkLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission_group.LOCATION)
+        val checkNotificationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+
+        if(checkLocationPermission == PackageManager.PERMISSION_DENIED){
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                feedViewModel.onLoadMainFeed()
+            }.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+            )
+        }
+        else
+            feedViewModel.onLoadMainFeed()
+
+        if(checkNotificationPermission == PackageManager.PERMISSION_DENIED)
+            registerForActivityResult(ActivityResultContracts.RequestPermission()){
+                createNotificationChannels()
+            }.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun createNotificationChannels() {
-        val resultCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-        if(resultCheck == PackageManager.PERMISSION_DENIED){
-            registerForActivityResult(ActivityResultContracts.RequestPermission()){
-                return@registerForActivityResult
-            }.launch(Manifest.permission.POST_NOTIFICATIONS)
-        }else{
-            NotificationProvider.Channel.FRIENDSHIP.create(this)
-            NotificationProvider.Channel.EVENT.create(this)
-            NotificationProvider.Channel.COMMENT.create(this)
-        }
+        NotificationProvider.Channel.FRIENDSHIP.create(this)
+        NotificationProvider.Channel.EVENT.create(this)
+        NotificationProvider.Channel.COMMENT.create(this)
     }
 
     override fun onDestroy() {

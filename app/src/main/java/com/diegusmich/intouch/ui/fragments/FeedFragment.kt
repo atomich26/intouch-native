@@ -31,6 +31,7 @@ class FeedFragment : Fragment() {
 
     private val viewModel: FeedViewModel by activityViewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -39,10 +40,6 @@ class FeedFragment : Fragment() {
         toolbar = binding.appBarLayout.materialToolbar
 
         return binding.root
-    }
-
-    fun loadDataOnPermissionChecked(){
-        viewModel.onLoadMainFeed()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,13 +58,6 @@ class FeedFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.eventsFeedListView.adapter = EventFeedAdapter(mutableListOf())
 
-        val checkResult = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission_group.LOCATION)
-        if(checkResult == PackageManager.PERMISSION_DENIED){
-            (requireActivity() as MainActivity).requestLocationPermission{
-                viewModel.onLoadMainFeed()
-            }
-        }else
-            viewModel.onLoadMainFeed()
         observeData()
     }
 
