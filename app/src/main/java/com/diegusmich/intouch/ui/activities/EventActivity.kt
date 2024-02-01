@@ -268,11 +268,13 @@ class EventActivity : AppCompatActivity() {
                 }
 
                 is Event.STATE.TERMINATED_JOINED -> {
+                    binding.eventAvailabilityTextWarning.visibility = View.GONE
                     binding.eventAddPostButton.visibility = View.VISIBLE
                     binding.eventButtonJoin.visibility = View.GONE
                 }
 
                 is Event.STATE.TERMINATED_NOT_JOINED -> {
+                    binding.eventAvailabilityTextWarning.visibility = View.GONE
                     binding.eventButtonGroup.visibility = View.GONE
                 }
             }

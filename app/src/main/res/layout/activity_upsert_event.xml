@@ -118,6 +118,13 @@
                     android:inputType="none" />
             </com.diegusmich.intouch.ui.views.form.IntouchDropDownInputLayout>
 
+            <TextView
+                android:id="@+id/availableWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/event_cannot_edit_warning"
+                android:textSize="11sp"/>
+
             <com.diegusmich.intouch.ui.views.form.IntouchNumberInputLayout
                 android:id="@+id/eventFormAvailableInputLayout"
                 android:layout_width="match_parent"
@@ -138,12 +145,11 @@
             </com.diegusmich.intouch.ui.views.form.IntouchNumberInputLayout>
 
             <TextView
-                android:id="@+id/availableWarning"
+                android:id="@+id/restrictedWarning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/event_cannot_edit_warning"
-                android:textSize="11sp"
-                android:layout_marginBottom="10dp"/>
+                android:textSize="11sp"/>
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/eventFormRestrictedSwitch"
@@ -156,15 +162,6 @@
                 android:visibility="gone"
                 android:text="@string/prompt_restricted_event"
                 android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/baseline_warning_24"
-                android:text="@string/event_cannot_edit_warning"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center"
-                android:textSize="12sp" />
 
             <com.diegusmich.intouch.ui.views.form.IntouchTextInputLayout
                 android:id="@+id/eventFormCityInputLayout"

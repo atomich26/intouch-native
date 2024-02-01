@@ -76,5 +76,9 @@ dependencies {
     implementation ("org.ocpsoft.prettytime:prettytime:5.0.4.Final")
     implementation("id.zelory:compressor:3.0.1")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    testImplementation("androidx.test:runner:1.5.2")
+    testImplementation("androidx.test:rules:1.5.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
+    testImplementation("org.mockito:mockito-core:3.+")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6")
 }
